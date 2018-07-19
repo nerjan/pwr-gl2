@@ -52,7 +52,6 @@ def prepare_env():
     for key in config['global']:
         val = config['global'][key]
         os.environ[key] = val
-        print(key, val)
 
 
 if __name__ == '__main__':
