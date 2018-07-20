@@ -14,10 +14,26 @@ traits = ('agreeableness', 'conscientiousness', 'extraversion', 'neuroticism',
 
 @app.route("/")
 def index():
+    '''Display main view of the app'''
 
     scope = [ 'report:{}'.format(t) for t in traits ]
     authorize_url = genomelink.OAuth.authorize_url(scope=scope)
 
+    menu = [
+        {'title': 'Genomic insight', 'url': url_for('genome')},
+        {'title': 'Self-assessment questionare',
+         'url': url_for('questionare')},
+        {'title': 'Self-assessment results',
+         'url': url_for('selfassessment')}
+    ]
+    return render_template('index.html', authorize_url=authorize_url,
+                           menu=menu)
+
+
+@app.route("/genome")
+def genome():
+    '''Display genomic insight based on GenomeLink API'''
+ 
     reports = []
     if session.get('oauth_token'):
         for name in traits:
@@ -25,11 +41,23 @@ def index():
                                                    population='european',
                                                    token=session['oauth_token']))
 
-    return render_template('index.html', authorize_url=authorize_url,
-                           reports=reports)
+    return render_template('genome.html', reports=reports,
+                           main_url=url_for('index'))
 
 
-@app.route('/callback')
+@app.route("/questionare")
+def questionare():
+    '''Show self-assessment questionare'''
+    pass
+
+
+@app.route("/selfassessment")
+def selfassessment():
+    '''Show self-assessment results'''
+    pass
+
+
+@app.route("/callback")
 def callback():
 
     try:

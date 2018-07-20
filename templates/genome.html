@@ -1,0 +1,34 @@
+{% extends "backbone.html" %}
+
+{% block content %}
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alert alert-danger" role="alert">
+          <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+          {{ message }}
+        </div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+
+  {% if reports %}
+    <table class="table">
+      <thead>
+        <tr><th>Trait</th><th>Value</th>
+      </thead>
+      <tbody>
+        {% for report in reports %}
+          <tr>
+            <td>{{ report.phenotype.display_name }}</td>
+            <td>{{ report.summary.score }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <a href="{{ main_url }}">main page</a>
+  {% else %}
+    No reports to show. Go to <a href="{{ main_url }}">main page</a> and connect
+    with your Genomelink account.
+  {% endif %}
+{% endblock %}
