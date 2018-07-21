@@ -17,6 +17,11 @@ class TestServer(LiveServerTestCase):
         response = urlopen(self.get_server_url())
         self.assertEqual(response.code, 200)
 
+    def test_if_environment_set(self):
+        self.assertIn('GENOMELINK_CLIENT_ID', os.environ)
+        self.assertIn('GENOMELINK_CLIENT_SECRET', os.environ)
+        self.assertIn('GENOMELINK_CALLBACK_URL', os.environ)
+
 
 if __name__ == '__main__':
     unittest.main()
