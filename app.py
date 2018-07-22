@@ -16,7 +16,7 @@ traits = ('agreeableness', 'conscientiousness', 'extraversion', 'neuroticism',
 def index():
     '''Display main view of the app'''
 
-    scope = [ 'report:{}'.format(t) for t in traits ]
+    scope = ['report:{}'.format(t) for t in traits]
     authorize_url = genomelink.OAuth.authorize_url(scope=scope)
 
     menu = [
@@ -30,16 +30,27 @@ def index():
                            menu=menu)
 
 
+@app.route("/login")
+def login():
+    pass
+
+
+@app.route("/logout")
+def logout():
+    pass
+
+
 @app.route("/genome")
 def genome():
     '''Display genomic insight based on GenomeLink API'''
- 
+
     reports = []
     if session.get('oauth_token'):
         for name in traits:
-            reports.append(genomelink.Report.fetch(name=name,
-                                                   population='european',
-                                                   token=session['oauth_token']))
+            reports.append(genomelink.Report.fetch(
+                                name=name,
+                                population='european',
+                                token=session['oauth_token']))
 
     return render_template('genome.html', reports=reports,
                            main_url=url_for('index'))
@@ -62,7 +73,7 @@ def callback():
 
     try:
         token = genomelink.OAuth.token(request_url=request.url)
-    
+
     except genomelink.errors.GenomeLinkError as e:
         flash('Authorization failed.')
         if os.environ.get('DEBUG') == '1':
@@ -75,7 +86,7 @@ def callback():
 
 def prepare_env():
     config = configparser.ConfigParser()
-    config.optionxform=str
+    config.optionxform = str
     config.read('config.ini')
     for key in config['global']:
         val = config['global'][key]
