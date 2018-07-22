@@ -5,7 +5,12 @@ Things to do in the first place:
 1. define database models of user, traits, questions and answers (see the file
    `db_declarative.py` for details)
 2. make login and logout views plus secure other functions with _authorization
-   required_ decorator (in `app.py`)
+   required_ decorator (in `app.py`); here, one could use some third-party
+   module for Flask, for instance:
+   https://flask-login.readthedocs.io/en/latest/
+   provides general login/logout forms, while
+   https://pythonhosted.org/Flask-Social/
+   alows to login through social networks like FB, Google and Twitter.
 3. develop an algorithm to translate user answers into trait scores: each
    questions (for example: _do you like exotic food?_) corresponds to some trait
    (say, openness), we need to convert the the answer to some point scale, so
