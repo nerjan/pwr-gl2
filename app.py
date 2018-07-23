@@ -93,7 +93,9 @@ def prepare_env():
         os.environ[key] = val
 
 
+prepare_env()
+app.secret_key = os.urandom(24)
+
+
 if __name__ == '__main__':
-    prepare_env()
-    app.secret_key = os.urandom(24)
     app.run(debug=True)
