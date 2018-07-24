@@ -1,19 +1,4 @@
 {% extends "backbone.html" %}
 
 {% block content %}
-  {% with messages = get_flashed_messages() %}
-    {% if messages %}
-      {% for message in messages %}
-        <div class="alert alert-danger" role="alert">
-          <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-          {{ message }}
-        </div>
-      {% endfor %}
-    {% endif %}
-  {% endwith %}
-
-  <a href="{{ authorize_url }}" class="btn btn-default">Connect with your genomelink account</a><br />
-  {% for entry in menu %}
-    <a href="{{ entry.url }}" class="btn btn-default">{{ entry.title }}</a><br />
-  {% endfor %}
 {% endblock %}

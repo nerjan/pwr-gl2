@@ -1,11 +1,13 @@
 from flask import Flask, render_template, request
 from flask import redirect, url_for, flash, session
+from flask_menu import Menu, register_menu
 import genomelink
 import configparser
 import os
 
 
 app = Flask(__name__)
+Menu(app=app)
 
 
 traits = ('agreeableness', 'conscientiousness', 'extraversion', 'neuroticism',
@@ -13,36 +15,29 @@ traits = ('agreeableness', 'conscientiousness', 'extraversion', 'neuroticism',
 
 
 @app.route("/")
+@register_menu(app, '.home', 'Home')
 def index():
     '''Display main view of the app'''
-
-    scope = ['report:{}'.format(t) for t in traits]
-    authorize_url = genomelink.OAuth.authorize_url(scope=scope)
-
-    menu = [
-        {'title': 'Genomic insight', 'url': url_for('genome')},
-        {'title': 'Self-assessment questionare',
-         'url': url_for('questionare')},
-        {'title': 'Self-assessment results',
-         'url': url_for('selfassessment')}
-    ]
-    return render_template('index.html', authorize_url=authorize_url,
-                           menu=menu)
+    return render_template('index.html')
 
 
 @app.route("/login")
 def login():
-    pass
+    return render_template('index.html')
 
 
 @app.route("/logout")
 def logout():
-    pass
+    return render_template('index.html')
 
 
 @app.route("/genome")
+@register_menu(app, '.genome', 'Genomic insight')
 def genome():
     '''Display genomic insight based on GenomeLink API'''
+
+    scope = ['report:{}'.format(t) for t in traits]
+    authorize_url = genomelink.OAuth.authorize_url(scope=scope)
 
     reports = []
     if session.get('oauth_token'):
@@ -53,19 +48,21 @@ def genome():
                                 token=session['oauth_token']))
 
     return render_template('genome.html', reports=reports,
-                           main_url=url_for('index'))
+                           authorize_url=authorize_url)
 
 
 @app.route("/questionare")
+@register_menu(app, '.questionare', 'Self-assessment questionare')
 def questionare():
     '''Show self-assessment questionare'''
-    pass
+    return render_template('index.html')
 
 
 @app.route("/selfassessment")
+@register_menu(app, '.selfassessment', 'Self-assessment results')
 def selfassessment():
     '''Show self-assessment results'''
-    pass
+    return render_template('index.html')
 
 
 @app.route("/callback")
@@ -98,4 +95,4 @@ app.secret_key = os.urandom(24)
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, host='0.0.0.0')
