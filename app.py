@@ -15,7 +15,7 @@ traits = ('agreeableness', 'conscientiousness', 'extraversion', 'neuroticism',
 
 
 @app.route("/")
-@register_menu(app, '.home', 'Home')
+@register_menu(app, '.home', 'Home', order=0)
 def index():
     '''Display main view of the app'''
     return render_template('index.html')
@@ -32,7 +32,7 @@ def logout():
 
 
 @app.route("/genome")
-@register_menu(app, '.genome', 'Genomic insight')
+@register_menu(app, '.genome', 'Genomic insight', order=1)
 def genome():
     '''Display genomic insight based on GenomeLink API'''
 
@@ -52,14 +52,14 @@ def genome():
 
 
 @app.route("/questionare")
-@register_menu(app, '.questionare', 'Self-assessment questionare')
+@register_menu(app, '.questionare', 'Self-assessment questionare', order=2)
 def questionare():
     '''Show self-assessment questionare'''
     return render_template('index.html')
 
 
 @app.route("/selfassessment")
-@register_menu(app, '.selfassessment', 'Self-assessment results')
+@register_menu(app, '.selfassessment', 'Self-assessment results', order=3)
 def selfassessment():
     '''Show self-assessment results'''
     return render_template('index.html')
@@ -75,10 +75,10 @@ def callback():
         flash('Authorization failed.')
         if os.environ.get('DEBUG') == '1':
             flash('[DEBUG] ({}) {}'.format(e.error, e.description))
-        return redirect(url_for('index'))
+        return redirect(url_for('genome'))
 
     session['oauth_token'] = token
-    return redirect(url_for('index'))
+    return redirect(url_for('genome'))
 
 
 def prepare_env():
