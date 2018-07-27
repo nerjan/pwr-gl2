@@ -1,5 +1,7 @@
 from flask import Flask
 from flask_menu import Menu
+from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
 import configparser
 import os
 from app.views import main
@@ -15,7 +17,14 @@ def prepare_env():
 
 
 app = Flask(__name__)
-Menu(app=app)
-prepare_env()
 app.secret_key = os.urandom(24)
 app.register_blueprint(main)
+
+Menu(app=app)
+
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+db = SQLAlchemy(app)
+migrate = Migrate(app, db)
+
+prepare_env()
