@@ -1,38 +1,36 @@
-from flask import Flask, render_template, request
+from flask import render_template, request, Blueprint
 from flask import redirect, url_for, flash, session
-from flask_menu import Menu, register_menu
+from flask_menu import register_menu
 import genomelink
-import configparser
 import os
 
 
-app = Flask(__name__)
-Menu(app=app)
+main = Blueprint('main', __name__)
 
 
 traits = ('agreeableness', 'conscientiousness', 'extraversion', 'neuroticism',
           'openness')
 
 
-@app.route("/")
-@register_menu(app, '.home', 'Home', order=0)
+@main.route("/")
+@register_menu(main, '.home', 'Home', order=0)
 def index():
     '''Display main view of the app'''
     return render_template('index.html')
 
 
-@app.route("/login")
+@main.route("/login")
 def login():
     return render_template('index.html')
 
 
-@app.route("/logout")
+@main.route("/logout")
 def logout():
     return render_template('index.html')
 
 
-@app.route("/genome")
-@register_menu(app, '.genome', 'Genomic insight', order=1)
+@main.route("/genome")
+@register_menu(main, '.genome', 'Genomic insight', order=1)
 def genome():
     '''Display genomic insight based on GenomeLink API'''
 
@@ -51,21 +49,21 @@ def genome():
                            authorize_url=authorize_url)
 
 
-@app.route("/questionare")
-@register_menu(app, '.questionare', 'Self-assessment questionare', order=2)
+@main.route("/questionare")
+@register_menu(main, '.questionare', 'Self-assessment questionare', order=2)
 def questionare():
     '''Show self-assessment questionare'''
     return render_template('index.html')
 
 
-@app.route("/selfassessment")
-@register_menu(app, '.selfassessment', 'Self-assessment results', order=3)
+@main.route("/selfassessment")
+@register_menu(main, '.selfassessment', 'Self-assessment results', order=3)
 def selfassessment():
     '''Show self-assessment results'''
     return render_template('index.html')
 
 
-@app.route("/callback")
+@main.route("/callback")
 def callback():
 
     try:
@@ -78,21 +76,4 @@ def callback():
         return redirect(url_for('genome'))
 
     session['oauth_token'] = token
-    return redirect(url_for('genome'))
-
-
-def prepare_env():
-    config = configparser.ConfigParser()
-    config.optionxform = str
-    config.read('config.ini')
-    for key in config['global']:
-        val = config['global'][key]
-        os.environ[key] = val
-
-
-prepare_env()
-app.secret_key = os.urandom(24)
-
-
-if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0')
+    return redirect(url_for('main.genome'))
