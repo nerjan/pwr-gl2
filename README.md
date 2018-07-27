@@ -16,8 +16,17 @@ $ pip install -r requirements.txt
 ```
 
 Download the `config.ini` file with key of our app (not included in the repo)
-and run:
+and place it in the top directory.
+
+First, make sure the database is built and perform migrations (if any):
+```
+export FLASK_APP=app
+flask db init
+flask db migrate
+```
+
+Finally, run the app:
 
 ```
-python app.py
+python run.py
 ```
