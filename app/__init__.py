@@ -28,3 +28,5 @@ db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
 prepare_env()
+
+from app.models import User
