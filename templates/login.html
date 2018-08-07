@@ -1,0 +1,37 @@
+{% extends "backbone.html" %}
+
+{% block content %}
+<!--
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for message in messages %}
+            <div class="alert alert-danger" role="alert" style="background-color: red ">
+                 <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true" style="color: black">
+                 {{ message }}
+                 </span>
+            </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+    -->
+    <h1>
+        {{title}}
+    </h1>
+    <form action="" method="post" novalidate>
+        {{ form.hidden_tag() }} <!-- Show text, like "Username" -->
+        <!-- Form to put Username -->
+        <p>
+            {{ form.username.label }}<br>
+            {{ form.username(size=32) }}
+        </p>
+        <!-- Form to put Password, entered characters are hidden -->
+        <p>
+            {{ form.password.label }}<br>
+            {{ form.password(size=32) }}
+        </p>
+        <!-- Checkbox if user want to be logged in even after closing website -->
+        <p>{{ form.remember_me() }} {{ form.remember_me.label }}</p>
+        <!-- Submit -->
+        <p>{{ form.submit() }}</p>
+    </form>
+{% endblock %}
