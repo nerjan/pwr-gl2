@@ -1,13 +1,22 @@
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import create_engine
-from sqlalchemy import Column, Integer, String, ForeignKey
+from sqlalchemy import create_engine, MetaData
+from sqlalchemy import Column, Integer, String, ForeignKey, Table
 from sqlalchemy.orm import relationship, sessionmaker
 import os
-
+from flask_login import UserMixin
 Base = declarative_base()
 
 
-class User(Base):
+def loadSession():
+    """load session that allows to use database quering"""
+    db_filename = 'main.db'
+    engine = create_engine('sqlite:///%s' % db_filename, echo=True)
+
+    Session = sessionmaker(bind=engine)
+    session = Session()
+    return session
+
+class User(UserMixin, Base):
     '''Table for storing registered users'''
     __tablename__ = 'users'
 
