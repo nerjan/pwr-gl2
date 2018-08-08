@@ -46,7 +46,7 @@ def login():
     form = LoginForm()
     if current_user.is_authenticated:
         flash("You are already logged in")
-        return redirect(url_for('index'))
+        return redirect(url_for('main.index'))
     if form.validate_on_submit():
         '''check if username is in database- search to first username,
         because I assume there is no 2 users with the same username!!!'''
@@ -58,7 +58,7 @@ def login():
             return render_template('index.html')
         else:
             flash("Wrong password or username")
-            return redirect(url_for('login'))
+            return redirect(url_for('main.login'))
     return render_template('login.html', title='Sing In ',
                            form=form)
 
@@ -71,7 +71,7 @@ def login_required(f):
             return f(*args, **kwargs)
         else:
             flash("You need to login first")
-            return redirect(url_for('login'))
+            return redirect(url_for('main.login'))
 
     return wrap
 
@@ -82,7 +82,7 @@ def login_required(f):
 #HERE HOW TO DO TO SHOW ONLY SING IN OR SING OUT??!!
 def logout():
     logout_user()
-    return redirect(url_for('index'))
+    return redirect(url_for('main.index'))
 
 
 @main.route("/genome")
@@ -132,7 +132,7 @@ def callback():
         flash('Authorization failed.')
         if os.environ.get('DEBUG') == '1':
             flash('[DEBUG] ({}) {}'.format(e.error, e.description))
-        return redirect(url_for('genome'))
+        return redirect(url_for('main.genome'))
 
     session['oauth_token'] = token
     return redirect(url_for('main.genome'))
