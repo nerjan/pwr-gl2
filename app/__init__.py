@@ -1,10 +1,10 @@
 from flask import Flask
 from flask_menu import Menu
-from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 import configparser
 import os
 from app.views import main
+from app.extensions import db, login_manager
 
 
 def prepare_env():
@@ -16,17 +16,26 @@ def prepare_env():
         os.environ[key] = val
 
 
-app = Flask(__name__)
-app.secret_key = os.urandom(24)
-app.register_blueprint(main)
+class Config(object):
 
-Menu(app=app)
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///app.db'
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-db = SQLAlchemy(app)
+
+def create_app(config=Config):
+    prepare_env()
+    app = Flask(__name__)
+    app.config.from_object(config)
+    app.secret_key = os.urandom(24)
+    app.register_blueprint(main)
+    Menu(app=app)
+    db.init_app(app)
+    login_manager.init_app(app)
+    return app
+
+
+app = create_app()
 migrate = Migrate(app, db)
 
-prepare_env()
 
 from app.models import User

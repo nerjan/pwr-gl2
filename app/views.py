@@ -6,12 +6,11 @@ import os
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField
 from flask_login import login_user, logout_user, LoginManager, current_user
+from .extensions import db, login_manager
 from .models import User
-from . import db
 from functools import wraps
 
 main = Blueprint('main', __name__)
-login = LoginManager(main)
 
 traits = ('agreeableness', 'conscientiousness', 'extraversion', 'neuroticism',
           'openness')
@@ -34,7 +33,7 @@ class LoginForm(FlaskForm):
     submit = SubmitField('Sign In')
 
 
-@login.user_loader
+@login_manager.user_loader
 def load_user(id):
     '''This callback is used to reload the user object from the user ID
     stored in the session'''
