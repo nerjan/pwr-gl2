@@ -40,8 +40,18 @@ def load_user(id):
     return db.session.query(User).get(int(id))
 
 
+def is_authenticated():
+    if 'user_authenticated' not in session:
+        return False
+    if session['user_authenticated']:
+        return True
+    else:
+        return False
+
+
 @main.route("/login", methods=['GET', 'POST'])
-@register_menu(main, '.login', 'Sing in', order=4)
+@register_menu(main, '.login', 'Sing in', order=4,
+               visible_when=lambda: not is_authenticated())
 def login():
     form = LoginForm()
     if current_user.is_authenticated:
@@ -55,6 +65,7 @@ def login():
         if user and form.password.data == user.password: #if username and password is ok login
             flash('Logged in successfully as {}'.format(form.username.data))
             login_user(user, remember=form.remember_me.data)
+            session['user_authenticated'] = True
             return render_template('index.html')
         else:
             flash("Wrong password or username")
@@ -78,8 +89,8 @@ def login_required(f):
 
 @main.route("/logout")
 @login_required
-@register_menu(main, '.logout', 'Sing out', order=5)
-#HERE HOW TO DO TO SHOW ONLY SING IN OR SING OUT??!!
+@register_menu(main, '.logout', 'Sing out', order=5,
+               visible_when=is_authenticated)
 def logout():
     logout_user()
     return redirect(url_for('main.index'))
