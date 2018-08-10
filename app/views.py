@@ -55,7 +55,7 @@ def is_authenticated():
 def login():
     form = LoginForm()
     if current_user.is_authenticated:
-        flash("You are already logged in")
+        flash("You are already logged in", 'warning')
         return redirect(url_for('main.index'))
     if form.validate_on_submit():
         '''check if username is in database- search to first username,
@@ -63,12 +63,13 @@ def login():
         user = db.session.query(User).filter_by(
                 username=form.username.data).first()
         if user and form.password.data == user.password: #if username and password is ok login
-            flash('Logged in successfully as {}'.format(form.username.data))
+            flash('Logged in successfully as {}'.format(form.username.data),
+                  'message')
             login_user(user, remember=form.remember_me.data)
             session['user_authenticated'] = True
             return render_template('index.html')
         else:
-            flash("Wrong password or username")
+            flash("Wrong password or username", 'warning')
             return redirect(url_for('main.login'))
     return render_template('login.html', title='Sing In ',
                            form=form)
@@ -81,7 +82,7 @@ def login_required(f):
         if current_user.is_authenticated:
             return f(*args, **kwargs)
         else:
-            flash("You need to login first")
+            flash("You need to login first", 'warning')
             return redirect(url_for('main.login'))
 
     return wrap
@@ -140,9 +141,9 @@ def callback():
         token = genomelink.OAuth.token(request_url=request.url)
 
     except genomelink.errors.GenomeLinkError as e:
-        flash('Authorization failed.')
+        flash('Authorization failed.', 'warning')
         if os.environ.get('DEBUG') == '1':
-            flash('[DEBUG] ({}) {}'.format(e.error, e.description))
+            flash('({}) {}'.format(e.error, e.description), 'info')
         return redirect(url_for('main.genome'))
 
     session['oauth_token'] = token

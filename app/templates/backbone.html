@@ -7,11 +7,13 @@
   </head>
   <body>
 
-    {% with messages = get_flashed_messages() %}
+    {% with messages = get_flashed_messages(with_categories=true) %}
       {% if messages %}
-        {% for message in messages %}
-          <div class="alert alert-danger" role="alert">
-            <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category }}" role="alert">
+			<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+			  <span aria-hidden="true">&times;</span>
+			</button>
             {{ message }}
           </div>
         {% endfor %}
@@ -19,19 +21,20 @@
     {% endwith %}
 
     <nav class="navbar navbar-dark bg-dark">
-	  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarMain" aria-controls="navbarMain" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-	  </button>
-	  <div class="collapse navbar-collapse" id="navbarMain">
-        <ul class="navbar-nav mr-auto">
+	  <div class="dropdown">
+	    <button class="btn btn-secondary dropdown-toggle" type="button"
+			  data-toggle="dropdown" id="dropdownMenuButton"
+			  aria-expanded="false" aria-haspopup="true">
+          <span class="navbar-toggler-icon"></span>
+	    </button>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
           {% for entry in current_menu.children %}
-		  {% if entry.visible %}
-		  <li class="nav-item{% if entry.active %} active{% endif %}">
-              <a class="nav-link" href="{{ entry.url }}">{{ entry.text }}</a>
-            </li>
-		  {% endif %}
+	        {% if entry.visible %}
+              <a class="dropdown-item{% if not entry.active %}
+                  disabled{% endif %}" href="{{ entry.url }}">{{ entry.text }}</a>
+	        {% endif %}
           {% endfor %}
-	    </ul>
+		</div>
 	  </div>
     </nav>
 
