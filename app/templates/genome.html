@@ -3,14 +3,14 @@
 {% block content %}
   {% if reports %}
 
-  	<div class="row justify-content-md-center">
-	<div class="col-10">
+  	<div class="row justify-content-center">
+	<div class="col-sm-12">
 	<canvas id="GLChart"></canvas>
 	</div>
 	</div>
 
 	<script>
-	  var FS = 16;
+	  var FS = 12;
 	  Chart.defaults.global.defaultFontSize = FS;
 	  var ctx = document.getElementById('GLChart').getContext('2d');
       var chart = new Chart(ctx, {
@@ -27,7 +27,7 @@
 		  ]},
 	    options: {
 		  layout: {
-		    padding: { left: 10, right: 10, top: 10, bottom: 10 }
+		    padding: { left: 0, right: 0, top: 10, bottom: 10 }
 		  },
 		  scale: {
 		    ticks: { min: 0.0, max: 5.0, stepSize: 1.0 },
