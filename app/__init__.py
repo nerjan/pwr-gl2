@@ -7,6 +7,9 @@ from app.views import main
 from app.extensions import db, login_manager
 
 
+app_dir = os.getcwd()
+
+
 def prepare_env():
     config = configparser.ConfigParser()
     config.optionxform = str
@@ -18,7 +21,7 @@ def prepare_env():
 
 class Config(object):
 
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///app.db'
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///{}/app.db'.format(app_dir)
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 

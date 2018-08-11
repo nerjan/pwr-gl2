@@ -23,6 +23,7 @@ First, make sure the database is built and perform migrations (if any):
 export FLASK_APP=app
 flask db init
 flask db migrate
+flask db upgrade
 ```
 
 Finally, run the app:
