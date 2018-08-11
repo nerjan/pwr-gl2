@@ -22,10 +22,16 @@ class GLTrait(db.Model):
     '''Local storage for personality-related traits obtained from
     Genomelink API'''
     id = db.Column(db.Integer, primary_key=True)
-    trait = db.Column(db.String)
+    trait = db.Column(db.String(50), nullable=False)
+    description = db.Column(db.String(200))
     t_score = db.Column(db.Integer)   # Score for every trait eg. 1-5
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     user = db.relationship("User", back_populates="gltrait")
+
+    def serialize(self):
+        return { 'name': self.trait,
+                 'description': self.description,
+                 'score': self.t_score }
 
 
 class Question(db.Model):

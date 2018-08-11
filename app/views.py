@@ -7,13 +7,13 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField
 from flask_login import login_user, logout_user, LoginManager, current_user
 from .extensions import db, login_manager
-from .models import User
+from .models import User, GLTrait
 from functools import wraps
 
 main = Blueprint('main', __name__)
 
-traits = ('agreeableness', 'conscientiousness', 'extraversion', 'neuroticism',
-          'openness')
+handled_traits = ('agreeableness', 'conscientiousness', 'extraversion',
+                  'neuroticism', 'openness')
 
 
 @main.route("/")
@@ -67,6 +67,7 @@ def login():
                   'message')
             login_user(user, remember=form.remember_me.data)
             session['user_authenticated'] = True
+            session['user_id'] = user.id
             return render_template('index.html')
         else:
             flash("Wrong password or username", 'warning')
@@ -103,16 +104,49 @@ def logout():
 def genome():
     '''Display genomic insight based on GenomeLink API'''
 
-    scope = ['report:{}'.format(t) for t in traits]
+    scope = ['report:{}'.format(t) for t in handled_traits]
     authorize_url = genomelink.OAuth.authorize_url(scope=scope)
 
-    reports = []
-    if session.get('oauth_token'):
-        for name in traits:
-            reports.append(genomelink.Report.fetch(
+    user_id = int(session['user_id'])
+    user = User.query.filter_by(id=user_id).first()
+    if not user: return
+
+    # Retrieve reports for current user from the DB
+    report_objects = {}
+    db_traits = GLTrait.query.filter_by(user=user)
+    for name in handled_traits:
+        record = db_traits.filter_by(trait=name).first()
+        if record:
+            report_objects[name] = record
+
+    if session.get('gl_oauth_token'):
+
+        # Reports were fetched from Genomelink API
+        for name in handled_traits:
+            fetched = genomelink.Report.fetch(
                                 name=name,
                                 population='european',
-                                token=session['oauth_token']))
+                                token=session['gl_oauth_token'])
+            description = fetched.phenotype['display_name']
+            score = fetched.summary['score']
+
+            if name in report_objects:
+                # Replace record if exists
+                report_objects[name].description = description
+                report_objects[name].t_score = score
+            else:
+                # No such record, then add to the DB
+                tr = GLTrait(trait=name,
+                         description=description,
+                         t_score=score,
+                         user=user)
+                report_objects[name] = tr
+                db.session.add(tr)
+        db.session.commit()
+
+    reports = [ rep.serialize() for rep in report_objects.values() ]
+    print(report_objects)
+    print(reports)
 
     return render_template('genome.html', reports=reports,
                            authorize_url=authorize_url)
@@ -146,5 +180,5 @@ def callback():
             flash('({}) {}'.format(e.error, e.description), 'info')
         return redirect(url_for('main.genome'))
 
-    session['oauth_token'] = token
+    session['gl_oauth_token'] = token
     return redirect(url_for('main.genome'))
