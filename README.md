@@ -21,6 +21,7 @@ and place it in the top directory.
 First, make sure the database is built and perform migrations (if any):
 ```
 export FLASK_APP=app
+export FLASK_DEBUG=1
 flask db init
 flask db migrate
 flask db upgrade

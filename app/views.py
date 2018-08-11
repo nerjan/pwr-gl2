@@ -145,10 +145,16 @@ def genome():
         db.session.commit()
 
     reports = [ rep.serialize() for rep in report_objects.values() ]
-    print(report_objects)
-    print(reports)
+    chart_data = {
+        'labels': [ r['description'] for r in reports ],
+        'datasets': [
+            { 'label': 'Genomelink data',
+              'data' : [ r['score'] for r in reports ],
+            }
+        ]}
 
     return render_template('genome.html', reports=reports,
+                           chart_data=chart_data,
                            authorize_url=authorize_url)
 
 
