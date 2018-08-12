@@ -47,11 +47,12 @@ def login():
         flash("You are already logged in", 'warning')
         return redirect(url_for('main.index'))
     if form.validate_on_submit():
-        '''check if username is in database- search to first username,
-        because I assume there is no 2 users with the same username!!!'''
+        # Check if username in database; get first first record only,
+        # since username is unique
         user = db.session.query(User).filter_by(
                 username=form.username.data).first()
-        if user and form.password.data == user.password: #if username and password is ok login
+        if user and form.password.data == user.password:
+            # authentication successful, proceed to login
             flash('Logged in successfully as {}'.format(form.username.data),
                   'message')
             login_user(user, remember=form.remember_me.data)
