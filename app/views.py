@@ -3,11 +3,10 @@ from flask import redirect, url_for, flash, session
 from flask_menu import register_menu
 import genomelink
 import os
-from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField
 from flask_login import login_user, logout_user, LoginManager, current_user
 from .extensions import db, login_manager
 from .models import User, GLTrait
+from .forms import LoginForm
 from functools import wraps
 
 main = Blueprint('main', __name__)
@@ -21,16 +20,6 @@ handled_traits = ('agreeableness', 'conscientiousness', 'extraversion',
 def index():
     '''Display main view of the app'''
     return render_template('index.html')
-
-
-class LoginForm(FlaskForm):
-    '''Form that allows to login. At the end of the project all forms could
-    be in separated file'''
-    username = StringField('Username')  #, validators=[DataRequired()])
-                                        # I dont use it to make message "Wrong password or username" visible
-    password = PasswordField('Password')
-    remember_me = BooleanField('Remember Me')
-    submit = SubmitField('Sign In')
 
 
 @login_manager.user_loader
