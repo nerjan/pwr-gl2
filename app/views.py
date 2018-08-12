@@ -113,6 +113,9 @@ def genome():
                 db.session.add(tr)
         db.session.commit()
 
+        # Clear token, so that refresh is skipped on reload
+        session.pop('gl_oauth_token', None)
+
     reports = []
     for name in handled_traits:
         if name in report_objects:
