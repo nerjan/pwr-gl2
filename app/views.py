@@ -113,7 +113,11 @@ def genome():
                 db.session.add(tr)
         db.session.commit()
 
-    reports = [ report_objects[name].serialize() for name in handled_traits ]
+    reports = []
+    for name in handled_traits:
+        if name in report_objects:
+            reports.append(report_objects[name].serialize())
+
     chart_data = {
         'labels': [ r['description'] for r in reports ],
         'datasets': [
