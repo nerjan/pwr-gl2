@@ -9,6 +9,7 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String(120), unique=True, nullable=False)
     #password = db.Column(db.Binary(256), nullable=False)
     password = db.Column(db.String(256), nullable=False)
+    authenticated = db.Column(db.Boolean, default=False)
 
     gltrait = db.relationship("GLTrait", back_populates='user')
     answers = db.relationship("Answer", back_populates='author')
@@ -16,6 +17,25 @@ class User(UserMixin, db.Model):
     def __repr__(self):
         form = "User(id = {}, username = {})"
         return form.format(self.id, self.username)
+
+    @property
+    def is_authenticated(self):
+        # Flask-Login needs this; probably for the remember-me feature
+        return bool(self.authenticated)
+
+    @property
+    def is_active(self):
+        # A place-holder, required by Flask-Login.
+        # Always return True, until we implement this feature
+        return True
+
+    @property
+    def is_anonymous(self):
+        # Required by Flask-Login; we don't support anonymous users
+        return False
+
+    def get_id(self):
+        return str(self.id)
 
 
 class GLTrait(db.Model):

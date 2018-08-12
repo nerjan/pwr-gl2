@@ -34,11 +34,10 @@ def create_app(config=Config):
     Menu(app=app)
     db.init_app(app)
     login_manager.init_app(app)
+    login_manager.login_view = "main.login"
+    login_manager.login_message_category = "warning"
     return app
 
 
 app = create_app()
 migrate = Migrate(app, db)
-
-
-from app.models import User

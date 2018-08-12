@@ -3,11 +3,10 @@ from flask import redirect, url_for, flash, session
 from flask_menu import register_menu
 import genomelink
 import os
-from flask_login import login_user, logout_user, LoginManager, current_user
+from flask_login import login_user, logout_user, current_user, login_required
 from .extensions import db, login_manager
 from .models import User, GLTrait
 from .forms import LoginForm
-from functools import wraps
 
 main = Blueprint('main', __name__)
 
@@ -29,18 +28,9 @@ def load_user(id):
     return db.session.query(User).get(int(id))
 
 
-def is_authenticated():
-    if 'user_authenticated' not in session:
-        return False
-    if session['user_authenticated']:
-        return True
-    else:
-        return False
-
-
 @main.route("/login", methods=['GET', 'POST'])
 @register_menu(main, '.login', 'Sing in', order=4,
-               visible_when=lambda: not is_authenticated())
+               visible_when=lambda: not current_user.is_authenticated)
 def login():
     form = LoginForm()
     if current_user.is_authenticated:
@@ -56,8 +46,8 @@ def login():
             flash('Logged in successfully as {}'.format(form.username.data),
                   'message')
             login_user(user, remember=form.remember_me.data)
-            session['user_authenticated'] = True
-            session['user_id'] = user.id
+            user.authenticated = True
+            db.session.commit()
             return render_template('index.html')
         else:
             flash("Wrong password or username", 'warning')
@@ -66,25 +56,14 @@ def login():
                            form=form)
 
 
-def login_required(f):
-    '''is used to redirec if one want to get to page that should be allowed only for logged in user'''
-    @wraps(f)
-    def wrap(*args, **kwargs):
-        if current_user.is_authenticated:
-            return f(*args, **kwargs)
-        else:
-            flash("You need to login first", 'warning')
-            return redirect(url_for('main.login'))
-
-    return wrap
-
-
 @main.route("/logout")
 @login_required
-@register_menu(main, '.logout', 'Sing out', order=5,
-               visible_when=is_authenticated)
+@register_menu(main, '.logout', 'Sign out', order=5,
+               visible_when=lambda: current_user.is_authenticated)
 def logout():
     logout_user()
+    current_user.authenticated = False
+    db.session.commit()
     return redirect(url_for('main.index'))
 
 
