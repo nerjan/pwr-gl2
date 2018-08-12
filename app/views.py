@@ -41,7 +41,7 @@ def login():
         # since username is unique
         user = db.session.query(User).filter_by(
                 username=form.username.data).first()
-        if user and form.password.data == user.password:
+        if user and user.check_password(form.password.data):
             # authentication successful, proceed to login
             flash('Logged in successfully as {}'.format(form.username.data),
                   'message')

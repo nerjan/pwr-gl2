@@ -1,5 +1,6 @@
 from .extensions import db
 from flask_login import UserMixin
+from werkzeug.security import generate_password_hash, check_password_hash
 
 
 class User(UserMixin, db.Model):
@@ -7,12 +8,16 @@ class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(20), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
-    #password = db.Column(db.Binary(256), nullable=False)
     password = db.Column(db.String(256), nullable=False)
     authenticated = db.Column(db.Boolean, default=False)
 
     gltrait = db.relationship("GLTrait", back_populates='user')
     answers = db.relationship("Answer", back_populates='author')
+
+    def __init__(self, username, email, password):
+        self.username = username
+        self.email = email
+        self.set_password(password)
 
     def __repr__(self):
         form = "User(id = {}, username = {})"
@@ -36,6 +41,12 @@ class User(UserMixin, db.Model):
 
     def get_id(self):
         return str(self.id)
+
+    def set_password(self, password):
+        self.password = generate_password_hash(password)
+
+    def check_password(self, password):
+        return check_password_hash(self.password, password)
 
 
 class GLTrait(db.Model):
