@@ -32,3 +32,15 @@ Finally, run the app:
 ```
 python run.py
 ```
+
+## Testing
+
+Testing uses additional modules: `Flask-Testing` and `selenium`. Testing the
+frontend with selenium can be tricky. You need a matching set of `selenium`,
+`firefox` and `geckodriver`. The latter one can be found here:
+https://github.com/mozilla/geckodriver/releases
+A working combination of those three is Firefox 60, Selenium 3.13 and
+geckodriver 0.21. Test can be run automatically:
+```
+python -m unittest
+```

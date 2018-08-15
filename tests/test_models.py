@@ -1,14 +1,27 @@
 from flask_testing import TestCase
-from app import create_app, db
+from app import create_app, db, yaml
 from app.models import *
 
 
-class TestUser(TestCase):
+class ModelTestCase(TestCase):
 
     SQLALCHEMY_DATABASE_URI = 'sqlite:///:memory:'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     ENV = 'development'
     TESTING = True
+
+    def create_app(self):
+        return create_app(self)
+
+    def setUp(self):
+        db.create_all()
+
+    def tearDown(self):
+        db.session.remove()
+        db.drop_all()
+
+
+class TestUser(ModelTestCase):
 
     USER1 = {'username': 'mike',
              'email': 'mike@dot.com',
@@ -21,16 +34,6 @@ class TestUser(TestCase):
     USER3 = {'username': 'bob',
              'email': 'bob@dot.com',
              'password': 'bob123'}
-
-    def create_app(self):
-        return create_app(self)
-
-    def setUp(self):
-        db.create_all()
-
-    def tearDown(self):
-        db.session.remove()
-        db.drop_all()
 
     def test_users_add(self):
 
@@ -54,6 +57,29 @@ class TestUser(TestCase):
         user = User(**self.USER1)
         correct = self.USER1['password']
         incorrect = correct+"abc"
-        
+
         self.assertTrue(user.check_password(correct))
         self.assertFalse(user.check_password(incorrect))
+
+
+class TestQuestion(ModelTestCase):
+
+    YAML = """
+- !Question
+  question: Lorem ipsum
+  trait: latin
+  impact: positive
+- !Question
+  question: Quick brown fox
+  trait: english
+  impact: negative
+"""
+
+    def test_yaml_load(self):
+
+        quest = yaml.load(self.YAML)
+
+        self.assertEqual(len(quest), 2)
+        self.assertEqual(quest[0].question, "Lorem ipsum")
+        self.assertEqual(quest[0].trait, "latin")
+        self.assertEqual(quest[0].impact, "positive")

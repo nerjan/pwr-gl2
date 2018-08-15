@@ -77,7 +77,6 @@ class Question(db.Model):
 
 def Question_constructor(loader, node):
     values = loader.construct_mapping(node, deep=True)
-    print(values)
     return Question(**values)
 
 
