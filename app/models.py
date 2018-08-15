@@ -60,18 +60,25 @@ class GLTrait(db.Model):
     user = db.relationship("User", back_populates="gltrait")
 
     def serialize(self):
-        return { 'name': self.trait,
-                 'description': self.description,
-                 'score': self.t_score }
+        return {'name': self.trait,
+                'description': self.description,
+                'score': self.t_score}
 
 
 class Question(db.Model):
     '''Table for storing questions related to personality traits'''
+
     id = db.Column(db.Integer, primary_key=True)
-    id = db.Column(db.Integer, primary_key=True)
-    question = db.Column(db.String)
-    trait = db.Column(db.String)
+    question = db.Column(db.String(1000))
+    trait = db.Column(db.String(100))
+    impact = db.Column(db.String(20))
     answers = db.relationship("Answer", back_populates="question")
+
+
+def Question_constructor(loader, node):
+    values = loader.construct_mapping(node, deep=True)
+    print(values)
+    return Question(**values)
 
 
 class Answer(db.Model):

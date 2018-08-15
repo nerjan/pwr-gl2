@@ -4,7 +4,8 @@ from flask_migrate import Migrate
 import configparser
 import os
 from app.views import main
-from app.extensions import db, login_manager
+from app.extensions import db, login_manager, yaml
+from app.models import Question_constructor
 
 
 app_dir = os.getcwd()
@@ -41,3 +42,5 @@ def create_app(config=Config):
 
 app = create_app()
 migrate = Migrate(app, db)
+
+yaml.add_constructor('!Question', Question_constructor)

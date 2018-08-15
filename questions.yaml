@@ -1,33 +1,20 @@
-%YAML 1.1
----
-    value: 'Do you like onions?'
-    weight: 9
-    answers: 
-            answer1: 
-                    value: 'Yes, i like onions very much'
-                    score: 4
-            answer2: 
-                    value: 'I do not like onions'
-                    score: -5
-            answer3: 
-                    value: 'I am Shrek, i am made of onions'
-                    score: 11
-            answer4: 
-                    value: 'I am addicted to onions'
-                    score: -2
----
-    value: 'Bananas are the whole life for you?'
-    weight: 4
-    answers: 
-            answer1: 
-                    value: 'Yes, indeed'
-                    score: 9
-            answer2: 
-                    value: 'I would like to choose rather apples'
-                    score: -2
-            answer3: 
-                    value: 'The only thing that matters is onion'
-                    score: 16
-            answer4: 
-                    value: 'I could say, that question is outragous'
-                    score: -5        
+- !Question
+  question: Am the life of the party.
+  trait: extraversion
+  impact: positive
+- !Question
+  question: Feel little concern for others.
+  trait: agreeableness
+  impact: negative
+- !Question
+  question: Am always prepared.
+  trait: conscientiousness
+  impact: positive
+- !Question
+  question: Get stressed out easily.
+  trait: neuroticism
+  impact: positive
+- !Question
+  question: Have a rich vocabulary.
+  trait: openness
+  impact: positive
