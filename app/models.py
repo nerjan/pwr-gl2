@@ -69,15 +69,33 @@ class Question(db.Model):
     '''Table for storing questions related to personality traits'''
 
     id = db.Column(db.Integer, primary_key=True)
-    question = db.Column(db.String(1000))
+    value = db.Column(db.String(1000))
+    weight = db.Column(db.Integer)
     trait = db.Column(db.String(100))
     impact = db.Column(db.String(20))
+    choices = db.relationship("Choice", back_populates="question")
     answers = db.relationship("Answer", back_populates="question")
 
 
 def Question_constructor(loader, node):
     values = loader.construct_mapping(node, deep=True)
     return Question(**values)
+
+
+class Choice(db.Model):
+    '''Possible answers to Questions that user will be offered to choose
+    from'''
+
+    id = db.Column(db.Integer, primary_key=True)
+    value = db.Column(db.String(1000))
+    score = db.Column(db.Integer)
+    trait_id = db.Column(db.Integer, db.ForeignKey('question.id'))
+    question = db.relationship("Question", back_populates="choices")
+
+
+def Choice_constructor(loader, node):
+    values = loader.construct_mapping(node, deep=True)
+    return Choice(**values)
 
 
 class Answer(db.Model):
