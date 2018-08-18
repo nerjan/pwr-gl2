@@ -167,7 +167,8 @@ def callback():
 
 
 @main.route('/register/', methods=["GET", "POST"])
-@register_menu(main, '.register', 'Registration', order=6, visible_when=lambda: not current_user.is_authenticated)
+@register_menu(main, '.register', 'Registration', order=6,
+               visible_when=lambda: not current_user.is_authenticated)
 def register():
     form = RegistrationForm(request.form)
 
@@ -177,7 +178,7 @@ def register():
         password = form.password.data
         #if there is no users with this username
         if db.session.query(User).filter_by(username=form.username.data).first():
-            flash("That username is already used, please choose another one.")
+            flash("The username is taken, please choose another one.")
             return render_template('register.html', form=form)
         elif db.session.query(User).filter_by(email=form.email.data).first():
             flash("That email is already used.")
@@ -197,5 +198,4 @@ def flash_errors(form):
     """Flashes form errors"""
     for field, errors in form.errors.items():
         for error in errors:
-            flash(u"%s" % (error))
-
+            flash("%s" % (error))
