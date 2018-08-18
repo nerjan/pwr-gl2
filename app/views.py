@@ -5,8 +5,8 @@ import genomelink
 import os
 from flask_login import login_user, logout_user, current_user, login_required
 from .extensions import db, login_manager
-from .models import User, GLTrait
-from .forms import LoginForm
+from .models import User, GLTrait, Question, Answer
+from .forms import LoginForm, RegistrationForm, QuestionareForm
 
 main = Blueprint('main', __name__)
 
@@ -133,12 +133,32 @@ def genome():
                            chart_data=chart_data,
                            authorize_url=authorize_url)
 
-
-@main.route("/questionare")
+#not the best way
+questionNumber=1 # 1 because first if form.is_submitted() below is not executed(there wasnt submit yet
+@main.route("/questionare", methods=['GET', 'POST'])
 @login_required
 @register_menu(main, '.questionare', 'Self-assessment questionare', order=2)
 def questionare():
     '''Show self-assessment questionare'''
+    global questionNumber
+    length = Question.query.count() #how many questions
+    if questionNumber<length:
+        form =QuestionareForm()
+        if form.is_submitted():
+            questionNumber+=1
+        question = Question.query.filter_by(id=questionNumber).first() #take a question
+
+        # put answers to question in form.answers
+        answers=[]
+        for choice in range(len(question.choices)):
+            answers.append((choice, question.choices[choice].value))
+        form.answers.choices=answers
+
+        db.session.add(Answer(question_id=questionNumber, answer=int(form.answers.data)+1, user_id=current_user.get_id()))
+        db.session.commit()
+        return render_template('questionare.html', data=question, form=form, questionNumber=questionNumber)
+    questionNumber = 1 #reset
+    flash("Great, you answer on every questions. Your answers are saved.")
     return render_template('index.html')
 
 
@@ -164,3 +184,38 @@ def callback():
 
     session['gl_oauth_token'] = token
     return redirect(url_for('main.genome'))
+
+
+@main.route('/register/', methods=["GET", "POST"])
+@register_menu(main, '.register', 'Registration', order=6, visible_when=lambda: not current_user.is_authenticated)
+def register():
+    form = RegistrationForm(request.form)
+
+    if form.validate_on_submit():
+        username = form.username.data
+        email = form.email.data
+        password = form.password.data
+        #if there is no users with this username
+        if db.session.query(User).filter_by(username=form.username.data).first():
+            flash("That username is already used, please choose another one.")
+            return render_template('register.html', form=form)
+        elif db.session.query(User).filter_by(email=form.email.data).first():
+            flash("That email is already used.")
+            return render_template('register.html', form=form)
+        else:
+            db.session.add(User(username=username, email=email, password=password))
+            db.session.commit()
+            flash("You registered succesfully!")
+            db.session.close()
+            return redirect(url_for('main.login'))
+    else:
+        flash_errors(form)
+        return render_template("register.html", form=form)
+
+
+def flash_errors(form):
+    """Flashes form errors"""
+    for field, errors in form.errors.items():
+        for error in errors:
+            flash(u"%s" % (error))
+
