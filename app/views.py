@@ -29,7 +29,7 @@ def load_user(id):
 
 
 @main.route("/login", methods=['GET', 'POST'])
-@register_menu(main, '.login', 'Sing in', order=4,
+@register_menu(main, '.login', 'Sign in', order=4,
                visible_when=lambda: not current_user.is_authenticated)
 def login():
     form = LoginForm()
@@ -52,7 +52,7 @@ def login():
         else:
             flash("Wrong password or username", 'warning')
             return redirect(url_for('main.login'))
-    return render_template('login.html', title='Sing In ',
+    return render_template('login.html', title='Sign In',
                            form=form)
 
 
@@ -178,15 +178,16 @@ def register():
         password = form.password.data
         #if there is no users with this username
         if db.session.query(User).filter_by(username=form.username.data).first():
-            flash("The username is taken, please choose another one.")
+            flash("The username is taken, please choose another one.",
+                  "warning")
             return render_template('register.html', form=form)
         elif db.session.query(User).filter_by(email=form.email.data).first():
-            flash("That email is already used.")
+            flash("That email is already used.", "warning")
             return render_template('register.html', form=form)
         else:
             db.session.add(User(username=username, email=email, password=password))
             db.session.commit()
-            flash("You registered succesfully!")
+            flash("You registered succesfully!", "info")
             db.session.close()
             return redirect(url_for('main.login'))
     else:
