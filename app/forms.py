@@ -1,11 +1,24 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField
+from wtforms import StringField, PasswordField, BooleanField, SubmitField, validators
 
 
 class LoginForm(FlaskForm):
-    '''Form that allows to login. At the end of the project all forms could
-    be in separated file'''
+    '''Form that allows to login.'''
     username = StringField('Username')
     password = PasswordField('Password')
     remember_me = BooleanField('Remember Me')
     submit = SubmitField('Sign In')
+
+
+class RegistrationForm(FlaskForm):
+    username = StringField('Username', [validators.Length(min=4, max=20, message="Username has to be between 4 and 20 characters")])
+    email = StringField('Email Address', [validators.Length(min=6, max=50, message="Email has to be between 6 and 50 characters")])
+    password = PasswordField('Password', [
+        validators.Required(message="Please, give password."),
+        validators.EqualTo('confirm', message='Passwords must match.')
+    ])
+    confirm = PasswordField('Repeat Password')
+    accept_tos = BooleanField('I accept the Terms of Service and Privacy Notice',
+                              [validators.Required(message="You have to accept this terms to use this site!")])
+    submit = SubmitField('Register')
+

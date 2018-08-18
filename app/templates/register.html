@@ -1,0 +1,39 @@
+{% extends "backbone.html" %}
+
+{% block content %}
+<!--
+    -->
+    <h1>
+        {{title}}
+    </h1>
+    <form action="" method="post" novalidate>
+        {{ form.hidden_tag() }} <!-- Show text, like "Username" -->
+        <!-- Form to put Username -->
+        <p>
+            {{ form.username.label }}<br>
+            {{ form.username(size=32) }}
+        </p>
+        <!-- Form to put email -->
+        <p>
+            {{ form.email.label }}<br>
+            {{ form.email(size=32) }}
+        </p>
+        <!-- Form to put Password, entered characters are hidden -->
+        <p>
+            {{ form.password.label }}<br>
+            {{ form.password(size=32) }}
+        </p>
+        <!-- Form to put confirm password -->
+        <p>
+            {{ form.confirm.label }}<br>
+            {{ form.confirm(size=32) }}
+        </p>
+        <!-- Form to accept Terms of Service etc.-->
+        <p>
+            {{form.accept_tos}}
+            {{ form.accept_tos.label }}
+        </p>
+        <!-- Submit -->
+        <p>{{ form.submit() }}</p>
+    </form>
+{% endblock %}
