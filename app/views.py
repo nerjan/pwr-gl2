@@ -148,10 +148,12 @@ def questionare():
                         user_id=current_user.get_id())
         db.session.add(answer)
         db.session.commit()
+        form = QuestionareForm(formdata=None)
     my_answers = Answer.query.filter_by(author=current_user)
     answered_ids = [ ans.question_id for ans in my_answers ]
     questions_to_answer = Question.query.filter(~Question.id.in_(answered_ids))
-    if not questions_to_answer.count():
+    questions_left = questions_to_answer.count()
+    if not questions_left:
         flash("Great, you have answered to all questions. Your answers were saved.")
         return render_template('index.html')
     question = questions_to_answer.first()
@@ -160,7 +162,11 @@ def questionare():
     for choice in range(len(question.choices)):
         answers.append((choice, question.choices[choice].value))
     form.answers.choices = answers
-    return render_template('questionare.html', data=question, form=form)
+    data = {
+        'question': question.value,
+        'id': question.id,
+        'count': questions_left}
+    return render_template('questionare.html', data=data, form=form)
 
 
 @main.route("/selfassessment")
