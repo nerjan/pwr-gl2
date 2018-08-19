@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, \
-                    SubmitField, RadioField, validators
+                    SubmitField, RadioField, HiddenField, validators
 
 
 class LoginForm(FlaskForm):
@@ -32,6 +32,6 @@ class RegistrationForm(FlaskForm):
 
 
 class QuestionareForm(FlaskForm):
-    submit = SubmitField('Submit')
+    id = HiddenField("Question ID")
     answers = RadioField('Label', default=0) #default value make sure that some answer will be chosen.
-
+    submit = SubmitField('Submit')

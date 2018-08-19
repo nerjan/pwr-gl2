@@ -1,11 +1,16 @@
 {% extends "backbone.html" %}
 
 {% block content %}
-<h4>{{questionNumber}}</h4>
-    <h1>{{ data.value }}</h1>
-<form method="post">
-         <p>{{ form.answers() }}</p>
+  <h1>Self-assessment questionare</h1>
+  <h4>{{ data.id }}: {{ data.value }}</h4>
+  <form method="post">
+     {{ form.id(value=data.id) }}
+	 <p>
+	 {% for field in form.answers %}
+	   {{ field }}{{ field.label }}<br />
+	 {% endfor %}
+	 </p>
      <!-- Submit -->
-        <p>{{ form.submit() }}</p>
-</form>
+     <p>{{ form.submit() }}</p>
+  </form>
 {% endblock %}

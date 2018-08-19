@@ -79,7 +79,8 @@ def genome():
 
     user_id = int(session['user_id'])
     user = User.query.filter_by(id=user_id).first()
-    if not user: return
+    if not user:
+        return
 
     # Retrieve reports for current user from the DB
     report_objects = {}
@@ -107,9 +108,9 @@ def genome():
             else:
                 # No such record, then add to the DB
                 tr = GLTrait(trait=name,
-                         description=description,
-                         t_score=score,
-                         user=user)
+                             description=description,
+                             t_score=score,
+                             user=user)
                 report_objects[name] = tr
                 db.session.add(tr)
         db.session.commit()
@@ -123,44 +124,43 @@ def genome():
             reports.append(report_objects[name].serialize())
 
     chart_data = {
-        'labels': [ r['description'] for r in reports ],
+        'labels': [r['description'] for r in reports],
         'datasets': [
-            { 'label': 'Genomelink data',
-              'data' : [ r['score'] for r in reports ],
-            }
+            {'label': 'Genomelink data',
+             'data': [r['score'] for r in reports]}
         ]}
 
     return render_template('genome.html', reports=reports,
                            chart_data=chart_data,
                            authorize_url=authorize_url)
 
-#not the best way
-questionNumber=1 # 1 because first if form.is_submitted() below is not executed(there wasnt submit yet
+
 @main.route("/questionare", methods=['GET', 'POST'])
 @login_required
 @register_menu(main, '.questionare', 'Self-assessment questionare', order=2)
 def questionare():
     '''Show self-assessment questionare'''
-    global questionNumber
-    length = Question.query.count() #how many questions
-    if questionNumber<length:
-        form =QuestionareForm()
-        if form.is_submitted():
-            questionNumber+=1
-        question = Question.query.filter_by(id=questionNumber).first() #take a question
 
-        # put answers to question in form.answers
-        answers=[]
-        for choice in range(len(question.choices)):
-            answers.append((choice, question.choices[choice].value))
-        form.answers.choices=answers
-
-        db.session.add(Answer(question_id=questionNumber, answer=int(form.answers.data)+1, user_id=current_user.get_id()))
+    form = QuestionareForm()
+    if form.is_submitted():
+        answer = Answer(question_id=form.id.data,
+                        answer=int(form.answers.data)+1,
+                        user_id=current_user.get_id())
+        db.session.add(answer)
         db.session.commit()
-        return render_template('questionare.html', data=question, form=form, questionNumber=questionNumber)
-    questionNumber = 1 #reset
-    flash("Great, you answer on every questions. Your answers are saved.")
-    return render_template('index.html')
+    my_answers = Answer.query.filter_by(author=current_user)
+    answered_ids = [ ans.question_id for ans in my_answers ]
+    questions_to_answer = Question.query.filter(~Question.id.in_(answered_ids))
+    if not questions_to_answer.count():
+        flash("Great, you have answered to all questions. Your answers were saved.")
+        return render_template('index.html')
+    question = questions_to_answer.first()
+
+    answers = []
+    for choice in range(len(question.choices)):
+        answers.append((choice, question.choices[choice].value))
+    form.answers.choices = answers
+    return render_template('questionare.html', data=question, form=form)
 
 
 @main.route("/selfassessment")
