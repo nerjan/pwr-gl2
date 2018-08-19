@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, \
-                    SubmitField, validators
+                    SubmitField, RadioField, validators
 
 
 class LoginForm(FlaskForm):
@@ -29,3 +29,9 @@ class RegistrationForm(FlaskForm):
         'I accept the Terms of Service and Privacy Notice',
         [validators.Required(message="You have to accept this terms to use this site!")])
     submit = SubmitField('Register')
+
+
+class QuestionareForm(FlaskForm):
+    submit = SubmitField('Submit')
+    answers = RadioField('Label', default=0) #default value make sure that some answer will be chosen.
+

@@ -1,0 +1,11 @@
+{% extends "backbone.html" %}
+
+{% block content %}
+<h4>{{questionNumber}}</h4>
+    <h1>{{ data.value }}</h1>
+<form method="post">
+         <p>{{ form.answers() }}</p>
+     <!-- Submit -->
+        <p>{{ form.submit() }}</p>
+</form>
+{% endblock %}
