@@ -1,0 +1,12 @@
+<h1>Simple</h1>
+<form action='/questionare' method='POST'>
+    <ol>
+        {% for i in q %}
+            <li><u>{{i}}</u></li>
+            {% for j in o[i] %}
+                <input type='radio' value='{{j}}' name='{{i}}' />{{j}}
+            {% endfor %}
+        {% endfor %}
+    </ol>
+    <input type="submit" value="next" />
+</form>

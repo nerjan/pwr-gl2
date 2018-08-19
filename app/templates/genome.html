@@ -1,0 +1,62 @@
+{% extends "backbone.html" %}
+
+{% block content %}
+  {% if reports %}
+
+  	<div class="row justify-content-center">
+	<div class="col-sm-12">
+	<canvas id="GLChart"></canvas>
+	</div>
+	</div>
+
+	<script>
+	  var FS = 12;
+	  Chart.defaults.global.defaultFontSize = FS;
+	  var ctx = document.getElementById('GLChart').getContext('2d');
+      var chart = new Chart(ctx, {
+	    type: 'radar',
+		data: {
+          labels: {{ chart_data.labels|safe }},
+		  datasets: [
+		    {% for ds in chart_data.datasets %}
+			{ label: {{ ds.label|tojson|safe }},
+		      borderColor: 'rgb(255, 50, 100)',
+			  backgroundColor: 'rgba(255, 50, 100, 0.2)',
+			  data: {{ ds.data|safe }}},
+		    {% endfor %}
+		  ]},
+	    options: {
+		  layout: {
+		    padding: { left: 0, right: 0, top: 10, bottom: 10 }
+		  },
+		  scale: {
+		    ticks: { min: 0.0, max: 5.0, stepSize: 1.0 },
+		    pointLabels: { fontSize: FS },
+		  }
+		}
+	  });
+	</script>
+
+	<div class="row justify-content-md-center">
+    <table class="table">
+      <thead>
+        <tr><th>Trait</th><th>Value</th>
+      </thead>
+      <tbody>
+        {% for report in reports %}
+          <tr>
+            <td>{{ report.description }}</td>
+            <td>{{ report.score }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+	</div>
+
+    <a href="{{ authorize_url }}">Connect with your
+			Genomelink account</a> to refresh data.
+  {% else %}
+    No reports to show. <a href="{{ authorize_url }}">Connect with your
+			Genomelink account</a>.
+  {% endif %}
+{% endblock %}
