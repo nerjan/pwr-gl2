@@ -1,20 +1,20 @@
-- !Question
+- !question
   question: Am the life of the party.
   trait: extraversion
   impact: positive
-- !Question
+- !question
   question: Feel little concern for others.
   trait: agreeableness
   impact: negative
-- !Question
+- !question
   question: Am always prepared.
   trait: conscientiousness
   impact: positive
-- !Question
+- !question
   question: Get stressed out easily.
   trait: neuroticism
   impact: positive
-- !Question
+- !question
   question: Have a rich vocabulary.
   trait: openness
   impact: positive
