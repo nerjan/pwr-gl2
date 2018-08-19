@@ -148,15 +148,26 @@ def questionare():
                         user_id=current_user.get_id())
         db.session.add(answer)
         db.session.commit()
-        form = QuestionareForm(formdata=None)
-    my_answers = Answer.query.filter_by(author=current_user)
-    answered_ids = [ ans.question_id for ans in my_answers ]
-    questions_to_answer = Question.query.filter(~Question.id.in_(answered_ids))
-    questions_left = questions_to_answer.count()
+        # Make sure that no answer is selected
+        form.answers.data = -1
+    if form.show_all:
+        # Showing all questions in a circular fashion
+        if form.id.data:
+            next_id = int(form.id.data) + 1
+            question = Question.query.get(next_id)
+        else:
+            question = Question.query.first()
+        questions_left = Question.query.count()
+    else:
+        # Showing only unanswered quesitons, so take the next one
+        my_answers = Answer.query.filter_by(author=current_user)
+        answered_ids = [ ans.question_id for ans in my_answers ]
+        questions_to_answer = Question.query.filter(~Question.id.in_(answered_ids))
+        questions_left = questions_to_answer.count()
+        question = questions_to_answer.first()
     if not questions_left:
         flash("Great, you have answered to all questions. Your answers were saved.")
         return render_template('index.html')
-    question = questions_to_answer.first()
 
     answers = []
     for choice in range(len(question.choices)):

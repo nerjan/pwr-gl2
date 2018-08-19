@@ -6,17 +6,24 @@
 
   <form method="post">
     {{ form.id(value=data.id) }}
-	<fieldset class="form-group">
-      <legend>Question {{ data.id }}/{{ data.count }}:
-			  {{ data.question }}</legend>
-	 {% for field in form.answers %}
-	   <div class="form-check">
-         {{ field(class_='form-check-input') }}
-	     {{ field.label(class_='form-check-label') }}
-       </div>
-	 {% endfor %}
-	 <button type="submit" class="btn btn-primary"
-             name="{{ form.submit.name }}"
-			 id="{{ form.submit.id }}">{{ form.submit.label.text }}</button>
+	<fieldset class="card form-group">
+      <h5 class="card-title">Question {{ data.id }}/{{ data.count }}:
+			  {{ data.question }}</h5>
+	  <div class="card-body">
+      {% for field in form.answers %}
+        <div class="form-check">
+          {{ field(class_='form-check-input') }}
+	      {{ field.label(class_='form-check-label') }}
+        </div>
+      {% endfor %}
+	</div>
+	</fieldset>
+	<div class="form-group form-check">
+	{{ form.show_all(class_='form-check-input') }}
+	{{ form.show_all.label(class_='form-check-label') }}
+	</div>
+	<button type="submit" class="btn btn-primary"
+            name="{{ form.submit.name }}"
+            id="{{ form.submit.id }}">{{ form.submit.label.text }}</button>
   </form>
 {% endblock %}
