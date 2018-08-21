@@ -192,7 +192,7 @@ def callback():
 @register_menu(main, '.register', 'Registration', order=6,
                visible_when=lambda: not current_user.is_authenticated)
 def register():
-    form = RegistrationForm()
+    form = RegistrationForm(request.form)
     if form.validate_on_submit():
         username = form.username.data
         email = form.email.data
