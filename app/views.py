@@ -194,8 +194,6 @@ def callback():
 def register():
     form = RegistrationForm()
     if form.validate_on_submit():
-        flash("wtf")
-
         username = form.username.data
         email = form.email.data
         password = form.password.data
@@ -214,15 +212,10 @@ def register():
             flash("You registered succesfully!", "info")
             db.session.close()
             token = generate_confirmation_token(email)
-            flash(token)
-
             confirm_url = url_for('main.confirm_email', token=token, _external=True)
-            flash("1")
-            # html = render_template('activate.html', confirm_url=confirm_url)
-            flash("2")
+            html = render_template('activate.html', confirm_url=confirm_url)
             subject = "Please confirm your email"
-            flash("fuck you")
-            send_email(str(email), subject, render_template('activate.html', confirm_url=confirm_url))
+            send_email(str(email), subject, html)
 
             return redirect(url_for('main.login'))
     else:
