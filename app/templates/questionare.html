@@ -2,12 +2,15 @@
 
 {% block content %}
   <h1>Self-assessment questionare</h1>
+  <br />
+
   <h4>{{ data.id }}: {{ data.value }}</h4>
   <form method="post">
      {{ form.id(value=data.id) }}
+    <br />
 	 <p>
 	 {% for field in form.answers %}
-	   {{ field }}{{ field.label }}<br />
+	   {{ field }}&nbsp;&nbsp;&nbsp;&nbsp;{{ field.label }}<br />
 	 {% endfor %}
 	 </p>
      <!-- Submit -->

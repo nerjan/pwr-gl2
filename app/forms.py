@@ -21,7 +21,8 @@ class RegistrationForm(FlaskForm):
                           message="Email has to be between 6 and 50 characters")
     ])
     password = PasswordField('Password', [
-        validators.Required(message="You must provide a password."),
+        validators.Required( message="You must provide a password."),
+        validators.Length(min=5, max=50),
         validators.EqualTo('confirm', message='Passwords must match.')
     ])
     confirm = PasswordField('Repeat Password')

@@ -7,7 +7,8 @@ from flask_login import login_user, logout_user, current_user, login_required
 from .extensions import db, login_manager
 from .models import User, GLTrait, Question, Answer
 from .forms import LoginForm, RegistrationForm, QuestionareForm
-
+from .token import generate_confirmation_token, confirm_token
+from .email import send_email
 
 main = Blueprint('main', __name__)
 
@@ -191,9 +192,10 @@ def callback():
 @register_menu(main, '.register', 'Registration', order=6,
                visible_when=lambda: not current_user.is_authenticated)
 def register():
-    form = RegistrationForm(request.form)
-
+    form = RegistrationForm()
     if form.validate_on_submit():
+        flash("wtf")
+
         username = form.username.data
         email = form.email.data
         password = form.password.data
@@ -206,10 +208,22 @@ def register():
             flash("That email is already used.", "warning")
             return render_template('register.html', form=form)
         else:
-            db.session.add(User(username=username, email=email, password=password))
+            user = User(username=username, email=email, password=password)
+            db.session.add(user)
             db.session.commit()
             flash("You registered succesfully!", "info")
             db.session.close()
+            token = generate_confirmation_token(email)
+            flash(token)
+
+            confirm_url = url_for('main.confirm_email', token=token, _external=True)
+            flash("1")
+            # html = render_template('activate.html', confirm_url=confirm_url)
+            flash("2")
+            subject = "Please confirm your email"
+            flash("fuck you")
+            send_email(str(email), subject, render_template('activate.html', confirm_url=confirm_url))
+
             return redirect(url_for('main.login'))
     else:
         flash_errors(form)
@@ -221,3 +235,20 @@ def flash_errors(form):
     for field, errors in form.errors.items():
         for error in errors:
             flash("%s" % (error))
+
+
+@main.route('/confirm/<token>')
+def confirm_email(token):
+    try:
+        email = confirm_token(token)
+    except:
+        flash('The confirmation link is invalid or has expired.', 'danger')
+    user = User.query.filter_by(email=email).first_or_404()
+    if user.confirmed:
+        flash('Account already confirmed. Please login.', 'success')
+    else:
+        user.confirmed = True
+        db.session.add(user)
+        db.session.commit()
+        flash('You have confirmed your account. Thanks!', 'success')
+    return redirect(url_for('main.index'))
