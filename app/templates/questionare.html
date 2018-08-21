@@ -1,19 +1,30 @@
+
 {% extends "backbone.html" %}
 
 {% block content %}
-  <h1>Self-assessment questionare</h1>
-  <br />
 
-  <h4>{{ data.id }}: {{ data.value }}</h4>
+  <h1>Self-assessment questionare</h1>
+
   <form method="post">
-     {{ form.id(value=data.id) }}
-    <br />
-	 <p>
-	 {% for field in form.answers %}
-	   {{ field }}&nbsp;&nbsp;&nbsp;&nbsp;{{ field.label }}<br />
-	 {% endfor %}
-	 </p>
-     <!-- Submit -->
-     <p>{{ form.submit() }}</p>
+    {{ form.id(value=data.id) }}
+	<fieldset class="card form-group">
+      <h5 class="card-title">Question {{ data.id }}/{{ data.count }}:
+			  {{ data.question }}</h5>
+	  <div class="card-body">
+      {% for field in form.answers %}
+        <div class="form-check">
+          {{ field(class_='form-check-input') }}
+	      {{ field.label(class_='form-check-label') }}
+        </div>
+      {% endfor %}
+	</div>
+	</fieldset>
+	<div class="form-group form-check">
+	{{ form.show_all(class_='form-check-input') }}
+	{{ form.show_all.label(class_='form-check-label') }}
+	</div>
+	<button type="submit" class="btn btn-primary"
+            name="{{ form.submit.name }}"
+            id="{{ form.submit.id }}">{{ form.submit.label.text }}</button>
   </form>
 {% endblock %}

@@ -36,3 +36,8 @@ class QuestionareForm(FlaskForm):
     id = HiddenField("Question ID")
     answers = RadioField('Label', default=0) #default value make sure that some answer will be chosen.
     submit = SubmitField('Submit')
+class ForgottenPasswordForm(FlaskForm):
+    email = StringField('Email Address')
+    submit = SubmitField('Remind password!')
+    forgottenPassoword = SubmitField('I forget password')
+

@@ -6,10 +6,10 @@ import os
 from flask_login import login_user, logout_user, current_user, login_required
 from .extensions import db, login_manager
 from .models import User, GLTrait, Question, Answer
-from .forms import LoginForm, RegistrationForm, QuestionareForm
+from .forms import LoginForm, RegistrationForm, QuestionareForm, ForgottenPasswordForm
 from .token import generate_confirmation_token, confirm_token
 from .email import send_email
-
+from strgen import StringGenerator
 main = Blueprint('main', __name__)
 
 handled_traits = ('agreeableness', 'conscientiousness', 'extraversion',
@@ -29,15 +29,36 @@ def load_user(id):
     stored in the session'''
     return db.session.query(User).get(int(id))
 
+@main.route("/forgotten_password", methods=['GET', 'POST'])
+def forgotten_password():
+    forgottenForm = ForgottenPasswordForm()
+    if forgottenForm.submit.data:
+        email = forgottenForm.email.data
+        #if email is in database then send remind password email
+        user = db.session.query(User).filter_by(
+                          email=email).first()
+        if user:
+            #generate random password
+            password = StringGenerator('[\l\d]{4:18}&[\d]&[\p]').render()
+            user.set_password(password)
+            db.session.commit()
+            html = render_template('remind.html', password=password, html = url_for('main.login', _external=True))
+            send_email(email, "Pwr-gl2 reind password", html)
+        flash("We send reminding email.")
+        return redirect(url_for('main.index'))
+    return render_template('forgotten_password.html', title='Remind passowrd', form=forgottenForm)
 
 @main.route("/login", methods=['GET', 'POST'])
 @register_menu(main, '.login', 'Sign in', order=4,
                visible_when=lambda: not current_user.is_authenticated)
 def login():
     form = LoginForm()
+    forgottenForm = ForgottenPasswordForm()
     if current_user.is_authenticated:
         flash("You are already logged in", 'warning')
         return redirect(url_for('main.index'))
+    if forgottenForm.forgottenPassoword.data:
+        return redirect(url_for('main.forgotten_password'))
     if form.validate_on_submit():
         # Check if username in database; get first first record only,
         # since username is unique
@@ -45,17 +66,21 @@ def login():
                 username=form.username.data).first()
         if user and user.check_password(form.password.data):
             # authentication successful, proceed to login
-            flash('Logged in successfully as {}'.format(form.username.data),
-                  'message')
-            login_user(user, remember=form.remember_me.data)
-            user.authenticated = True
-            db.session.commit()
-            return render_template('index.html')
+            if user.confirmed:
+                flash('Logged in successfully as {}'.format(form.username.data),
+                      'message')
+                login_user(user, remember=form.remember_me.data)
+                user.authenticated = True
+                db.session.commit()
+                return render_template('index.html')
+            else:
+                flash("You have to confirm your email!!")
+                return render_template('index.html')
         else:
             flash("Wrong password or username", 'warning')
             return redirect(url_for('main.login'))
     return render_template('login.html', title='Sign In',
-                           form=form)
+                           form=form, forgottenForm=forgottenForm)
 
 
 @main.route("/logout")
