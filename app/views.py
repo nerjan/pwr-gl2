@@ -211,10 +211,12 @@ def register():
             db.session.commit()
             flash("You registered succesfully!", "info")
             db.session.close()
+            #create a confirmation link
             token = generate_confirmation_token(email)
             confirm_url = url_for('main.confirm_email', token=token, _external=True)
             html = render_template('activate.html', confirm_url=confirm_url)
             subject = "Please confirm your email"
+            #send confirmation email
             send_email(str(email), subject, html)
 
             return redirect(url_for('main.login'))
