@@ -48,7 +48,10 @@ mail_settings = {
     "MAIL_USE_TLS": False,
     "MAIL_USE_SSL": True,
     "MAIL_USERNAME": 'pwrgl2confirm',
-    "MAIL_PASSWORD": 'pwrgl2password'
+    "MAIL_PASSWORD": 'pwrgl2password',
+    "SECRET_KEY": 'my_precious',
+    "SECURITY_PASSWORD_SALT": 'my_precious_two',
+    "MAIL_DEFAULT_SENDER": 'pwrgl2confirm@gmail.com'
 }
 app.config.update(mail_settings)
 
