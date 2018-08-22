@@ -113,6 +113,7 @@ class Answer(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     question_id = db.Column(db.Integer, db.ForeignKey('question.id'))
     score = db.Column(db.Integer, db.ForeignKey('choice.score'))  #  It is better, because we anyway need only score
+    answer = db.Column(db.Integer)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     question = db.relationship("Question", back_populates="answers")
     author = db.relationship("User", back_populates="answers")
