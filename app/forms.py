@@ -35,7 +35,7 @@ class RegistrationForm(FlaskForm):
 class QuestionareForm(FlaskForm):
     id = HiddenField("Question ID")
     show_all = BooleanField("Show answered questions too", default=True)
-    answers = RadioField('Label', default=0) #default value make sure that some answer will be chosen.
+    answers = RadioField('Label')
     submit = SubmitField('Submit')
 
 class ForgottenPasswordForm(FlaskForm):

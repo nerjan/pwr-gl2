@@ -1,6 +1,6 @@
 from flask_testing import TestCase
 from app import create_app, db, yaml
-from app.models import User, Question, GLTrait
+from app.models import User, Question, GLTrait, Friends
 
 
 class ModelTestCase(TestCase):
@@ -25,15 +25,21 @@ class TestUser(ModelTestCase):
 
     USER1 = {'username': 'mike',
              'email': 'mike@dot.com',
-             'password': 'mike123'}
+             'password': 'mike123',
+             'name': 'Mike',
+             'surname': 'Smith'}
 
     USER2 = {'username': 'john',
              'email': 'john@dot.com',
-             'password': 'john123'}
+             'password': 'john123',
+             'name': 'John',
+             'surname': 'Lemon'}
 
     USER3 = {'username': 'bob',
              'email': 'bob@dot.com',
-             'password': 'bob123'}
+             'password': 'bob123',
+             'name': 'Bob',
+             'surname': 'Harley'}
 
     def test_user_add(self):
 
@@ -110,7 +116,7 @@ class TestGLTrait(ModelTestCase):
 
     def test_add_trait_for_user(self):
 
-        mike = User(username='mike', password='123', email='mike@there.net')
+        mike = User(username='mike', password='123', email='mike@there.net', name='Mike', surname='Smith')
         db.session.add(mike)
 
         trait = 'openness'
@@ -128,3 +134,19 @@ class TestGLTrait(ModelTestCase):
         self.assertEqual(tr2.trait, trait)
         self.assertEqual(tr2.description, description)
         self.assertEqual(tr2.t_score, t_score)
+
+
+class TestFriends(ModelTestCase):
+    
+    def test_add_friend(self):
+        
+        mike = User(username='mike', password='123', email='mike@there.net', name='Mike', surname='Smith')
+        db.session.add(mike)
+
+        john = User(username='john123', password='123', email='j@there.net', name='John', surname='Lemon')
+        db.session.add(john)
+        
+        friends = Friends(mike, john)
+
+        db.session.add(friends)
+        db.session.commit()
