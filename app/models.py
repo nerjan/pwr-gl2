@@ -10,16 +10,21 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(256), nullable=False)
     authenticated = db.Column(db.Boolean, default=False)
+    name = db.Column(db.String(120),  nullable=True)
+    surname = db.Column(db.String(120),  nullable=True)
     confirmed = db.Column(db.Boolean, nullable=False, default=False) # to confirm email
+
 
     gltrait = db.relationship("GLTrait", back_populates='user')
     answers = db.relationship("Answer", back_populates='author')
     self_assesment_traits = db.relationship("SelfAssesmentTraits", back_populates="user")
 
-    def __init__(self, username, email, password):
+    def __init__(self, username, email, password, name, surname):
         self.username = username
         self.email = email
         self.set_password(password)
+        self.name = name
+        self.surname = surname
 
     def __repr__(self):
         form = "User(id = {}, username = {})"
@@ -49,7 +54,7 @@ class User(UserMixin, db.Model):
 
     def check_password(self, password):
         return check_password_hash(self.password, password)
-
+    
 
 class GLTrait(db.Model):
     '''Local storage for personality-related traits obtained from
@@ -112,6 +117,7 @@ class Answer(db.Model):
     author = db.relationship("User", back_populates="answers")
     choice = db.relationship("Choice", back_populates="answers")
 
+    
 class SelfAssesmentTraits(db.Model):
     '''Table for storing self assesment traits'''
 
@@ -124,3 +130,19 @@ class SelfAssesmentTraits(db.Model):
 
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     user = db.relationship("User", back_populates="self_assesment_traits")
+
+
+class Friends(db.Model):
+    '''Associative table to store friends of user'''
+
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    friend_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+
+    user = db.relationship("User", foreign_keys=[user_id], uselist=False)
+    friend = db.relationship("User", foreign_keys=[friend_id], uselist=False)
+
+    def __init__(self, user, friend):
+        
+        self.user_id = user.id
+        self.friend_id = friend.id
