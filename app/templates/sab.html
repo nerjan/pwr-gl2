@@ -21,7 +21,7 @@
             border-radius: 50px;
             box-shadow: none;
             padding: 5px;
-            margin-bottom: 30px;
+            margin-bottom: 50px;
             overflow: visible;
         }
 
@@ -45,8 +45,10 @@
             text-transform: uppercase;
             margin: 0;
             position: absolute;
-            top: 15px;
-            left: -225px;
+            top: -20px;
+            left: 50%;
+            transform: translate(-50%, -50%);
+
         }
 
         .progress .progress-value
@@ -77,38 +79,44 @@
 </style>
 
 <br><br><br><br>
-
+<h3 style="color: white">{{text}}</h3> <br><br><br>
     <div class="container" >
         <div class="row">
             <div class="col-md-6">
                 <div class="progress">
+                    <h3 class="progress-title">{{trait[0]}}</h3>
+
                     <div class="progress-bar" style="background: #e95095; width: {{answers[0]}}%; height: 50px;"}>
-                        <h3 class="progress-title">{{trait[0]}}</h3>
                         <div class="progress-value">{{answers[0]}}%</div>
                     </div>
                 </div>
-                <div class="progress">
+
+
+                 <div class="progress">
+                                            <h3 class="progress-title" style="top: 95px">{{trait[1]}}</h3>
                     <div class="progress-bar" style="background: #ffcc00; width: {{answers[1]}}%; height: 50px;"}>
-                        <h3 class="progress-title">{{trait[1]}}<h3>
-                        <div class="progress-value">{{answers[1]}}%</div>
+                        <div class="progress-value orange" style="color: #ffcc00">{{answers[1]}}%</div>
                     </div>
                 </div>
+
+
+
                 <div class="progress">
+                                            <h3 class="progress-title" style="top: 205px">{{trait[2]}}</h3>
                     <div class="progress-bar" style="background: orange; width: {{answers[2]}}%; height: 50px;"}>
-                        <h3 class="progress-title">{{trait[2]}}</h3>
-                        <div class="progress-value">{{answers[2]}}%</div>
+                        <div class="progress-value orange" style="color: orange">{{answers[2]}}%</div>
                     </div>
                 </div>
                 <div class="progress">
+                                            <h3 class="progress-title" style="top: 310px">{{trait[3]}}</h3>
                     <div class="progress-bar" style="background: deepskyblue; width: {{answers[3]}}%; height: 50px;"}>
-                        <h3 class="progress-title">{{trait[3]}}</h3>
-                        <div class="progress-value">{{answers[3]}}%</div>
+                        <div class="progress-value blue" style="color: deepskyblue">{{answers[3]}}%</div>
                     </div>
                 </div>
                 <div class="progress">
+                                            <h3 class="progress-title" style="top:420px">{{trait[4]}}</h3>
                     <div class="progress-bar" style="background: green; width: {{answers[4]}}%; height: 50px;"}>
-                        <h3 class="progress-title">{{trait[4]}}</h3>
-                        <div class="progress-value">{{answers[4]}}%</div>
+                        <div class="progress-value green" style="color: green">{{answers[4]}}%</div>
                     </div>
                 </div>
             </div>
