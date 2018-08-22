@@ -237,6 +237,8 @@ def register():
     form = RegistrationForm(request.form)
     if form.validate_on_submit():
         username = form.username.data
+        name = form.name.data
+        surname = form.surname.data
         email = form.email.data
         password = form.password.data
         #if there is no users with this username
@@ -248,7 +250,7 @@ def register():
             flash("That email is already used.", "warning")
             return render_template('register.html', form=form)
         else:
-            user = User(username=username, email=email, password=password)
+            user = User(username=username, email=email, password=password, name=name, surname=surname)
             db.session.add(user)
             db.session.commit()
             flash("You registered succesfully!", "info")
@@ -289,3 +291,14 @@ def confirm_email(token):
         db.session.commit()
         flash('You have confirmed your account. Thanks!', 'success')
     return redirect(url_for('main.index'))
+@main.route("/userprofile", methods=['GET', 'POST'])
+@login_required
+@register_menu(main, '.userprofile', 'Your profile', order=7)
+def userprofile():
+    '''userprofile'''
+    user_id = int(session['user_id'])
+    user = db.session.query(User).filter(User.user_id == user_id).one()
+    
+    
+    return render_template('userprofile.html', user=user)
+
