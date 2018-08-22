@@ -5,13 +5,16 @@ import genomelink
 import os
 from flask_login import login_user, logout_user, current_user, login_required
 from .extensions import db, login_manager
-from .models import User, GLTrait, Question, Answer
-from .forms import LoginForm, RegistrationForm, QuestionareForm, ForgottenPasswordForm
+from .models import User, GLTrait, Question, Answer, SelfAssesmentTraits, Choice
+from .forms import LoginForm, RegistrationForm, QuestionareForm, ForgottenPasswordForm, SelfAssesmentBarsForm
 from .token import generate_confirmation_token, confirm_token
 from .email import send_email
+from random import randint
 from strgen import StringGenerator
-main = Blueprint('main', __name__)
 
+
+
+main = Blueprint('main', __name__)
 handled_traits = ('agreeableness', 'conscientiousness', 'extraversion',
                   'neuroticism', 'openness')
 
@@ -19,8 +22,13 @@ handled_traits = ('agreeableness', 'conscientiousness', 'extraversion',
 @main.route("/")
 @register_menu(main, '.home', 'Home', order=0)
 def index():
+    #some quotes to make it more interesting
+    f=open("app/templates/quotes.txt")
+    lines = f.readlines()
+
     '''Display main view of the app'''
-    return render_template('index.html')
+    return render_template('index.html', quote=lines[randint(0, len(lines)-1)])
+
 
 
 @login_manager.user_loader
@@ -170,7 +178,7 @@ def questionare():
     form = QuestionareForm()
     if form.is_submitted():
         answer = Answer(question_id=form.id.data,
-                        answer=int(form.answers.data)+1,
+                        answer=int(form.answers.data) + 1,
                         user_id=current_user.get_id())
         db.session.add(answer)
         db.session.commit()
@@ -187,7 +195,7 @@ def questionare():
     else:
         # Showing only unanswered quesitons, so take the next one
         my_answers = Answer.query.filter_by(author=current_user)
-        answered_ids = [ ans.question_id for ans in my_answers ]
+        answered_ids = [ans.question_id for ans in my_answers]
         questions_to_answer = Question.query.filter(~Question.id.in_(answered_ids))
         questions_left = questions_to_answer.count()
         question = questions_to_answer.first()
@@ -211,8 +219,88 @@ def questionare():
 @register_menu(main, '.selfassessment', 'Self-assessment results', order=3)
 def selfassessment():
     '''Show self-assessment results'''
-    return render_template('index.html')
+    global handled_traits
+    text="What your personality text shows you are."
+    answers = [mean_user_score(),0,0,0,0]
+    return render_template('sab.html', answers=answers, trait=handled_traits, text=text)
 
+def mean_user_score():
+    score =0
+    global handled_traits
+    user_answers=db.session.query(Answer).filter_by(user_id=current_user.id)                            #all user answers (with question_id and score for HIS answer)
+    for answer in user_answers:                                                                         #take 1 answer
+        question_weight = db.session.query(Question).filter_by(id=answer.question_id).first().weight   # weight of question that $answer is answer
+        answer_score = answer.score                                                                 # How "good" is his answer, how many score has
+        score += question_weight*answer_score                                                           # add real value of answer to score
+    return int(score/max_traits_score()*100)
+
+def max_traits_score():
+    all_questions = db.session.query(Question)                                      #take all questions
+    score=0
+    for question in all_questions:
+        z= db.session.query(Choice).filter_by(trait_id=question.id)                    #take one of them
+
+        max_score = max(z[0].score,z[1].score,z[2].score) # take the biggest value of available choice score
+        weight = question.weight                                                    #take question weight
+        score += max_score*weight                                                   #add to max_score
+    return score                                                                    #return one trait max score
+
+
+x=0
+ans=[0,0,0,0,0]
+@main.route("/selfassessmentbars", methods=['GET', 'POST'])
+@login_required
+@register_menu(main, '.selfassessmentbars', 'Self-assessment-bars', order=7)
+def selfassessmentbars():
+    global handled_traits
+    #this 2 global are bad, but it is working, so lets left it here
+    global x
+    global ans
+    traits = handled_traits #take trait tuple
+    form= SelfAssesmentBarsForm()
+
+    #if user dont answer to all traits
+    if x < len(traits):
+        #take next trait
+        trait=traits[x]
+        if form.validate_on_submit():
+            ans[x]=int(form.answers.data)*20 #to make it from 20% to 100%
+            x += 1
+        return render_template('selfassesmentbar.html', form=form, trait=trait) # go next trait quiz
+    user_traits= db.session.query(SelfAssesmentTraits).filter_by(user_id=current_user.id).first()
+    if user_traits: #if user already answered to questions change his answer to new one
+        user_traits.agreeableness=ans[0]
+        user_traits.conscientiousness=ans[1]
+        user_traits.extraversion =ans[2]
+        user_traits.neuroticism=ans[3]
+        user_traits.openness=ans[4]
+    else: #if not, add him to database
+        sat= SelfAssesmentTraits(agreeableness=ans[0], conscientiousness=ans[1], extraversion =ans[2],
+                                 neuroticism=ans[3], openness=ans[4], user_id =current_user.id)
+        db.session.add(sat)
+    db.session.commit()
+    x=0
+    return redirect(url_for('main.selfassesmentbarsresults'))
+
+
+
+@main.route("/selfassesmentbarsresults", methods=['GET', 'POST'])
+@login_required
+@register_menu(main, '.selfassessmentbarsresults', 'Self-assessment-bars results', order=8)
+def selfassesmentbarsresults():
+    global handled_traits
+    user_traits= db.session.query(SelfAssesmentTraits).filter_by(user_id=current_user.id).first()
+    if not user_traits:
+        flash("There is no results yet! Make an assesment.", "info")
+        return redirect(url_for('main.selfassessmentbars'))
+    answers=[0, 0, 0, 0, 0]
+    answers[0]= user_traits.agreeableness
+    answers[1] =user_traits.conscientiousness
+    answers[2] =user_traits.extraversion
+    answers[3] =user_traits.neuroticism
+    answers[4] =user_traits.openness
+    text="How do you think about yourself."
+    return render_template('sab.html', answers=answers, trait=handled_traits, text=text)
 
 @main.route("/callback")
 def callback():

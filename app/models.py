@@ -17,6 +17,7 @@ class User(UserMixin, db.Model):
 
     gltrait = db.relationship("GLTrait", back_populates='user')
     answers = db.relationship("Answer", back_populates='author')
+    self_assesment_traits = db.relationship("SelfAssesmentTraits", back_populates="user")
 
     def __init__(self, username, email, password, name, surname):
         self.username = username
@@ -97,7 +98,7 @@ class Choice(db.Model):
     score = db.Column(db.Integer)
     trait_id = db.Column(db.Integer, db.ForeignKey('question.id'))
     question = db.relationship("Question", back_populates="choices")
-
+    answers = db.relationship("Answer", back_populates="choice")
 
 def Choice_constructor(loader, node):
     values = loader.construct_mapping(node, deep=True)
@@ -109,10 +110,26 @@ class Answer(db.Model):
     Includes self-assessment and replies from other users.'''
     id = db.Column(db.Integer, primary_key=True)
     question_id = db.Column(db.Integer, db.ForeignKey('question.id'))
-    answer = db.Column(db.Integer)  # eg. 1-5
+    score = db.Column(db.Integer, db.ForeignKey('choice.score'))  #  It is better, because we anyway need only score
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     question = db.relationship("Question", back_populates="answers")
     author = db.relationship("User", back_populates="answers")
+    choice = db.relationship("Choice", back_populates="answers")
+
+    
+class SelfAssesmentTraits(db.Model):
+    '''Table for storing self assesment traits'''
+
+    id = db.Column(db.Integer, primary_key=True)
+    agreeableness = db.Column(db.Integer)
+    conscientiousness = db.Column(db.Integer)
+    extraversion = db.Column(db.Integer)
+    neuroticism = db.Column(db.Integer)
+    openness = db.Column(db.Integer)
+
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    user = db.relationship("User", back_populates="self_assesment_traits")
+
 
 class Friends(db.Model):
     '''Associative table to store friends of user'''
@@ -127,8 +144,4 @@ class Friends(db.Model):
     def __init__(self, user, friend):
         
         self.user_id = user.id
-        self.friend_id = friend.id 
-
-
-
-
+        self.friend_id = friend.id
