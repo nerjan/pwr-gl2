@@ -1,3 +1,4 @@
+
 {% extends "backbone.html" %}
 
 {% block content %}
@@ -9,22 +10,22 @@
         <!-- Form to put Username -->
         <p>
             {{ form.username.label }}<br>
-            {{ form.username(size=32) }}
+            {{ form.username(size=50, placeholder="What would you like to be called?") }}
         </p>
         <!-- Form to put email -->
         <p>
             {{ form.email.label }}<br>
-            {{ form.email(size=32) }}
+            {{ form.email(size=50, placeholder="What is your email?") }}
         </p>
         <!-- Form to put Password, entered characters are hidden -->
         <p>
             {{ form.password.label }}<br>
-            {{ form.password(size=32) }}
+            {{ form.password(size=50,placeholder="Your password should have 5 to 50 characters.") }}
         </p>
         <!-- Form to put confirm password -->
         <p>
             {{ form.confirm.label }}<br>
-            {{ form.confirm(size=32) }}
+            {{ form.confirm(size=50, placeholder="Confirm password") }}
         </p>
         <!-- Form to accept Terms of Service etc.-->
         <p>
@@ -32,6 +33,8 @@
             {{ form.accept_tos.label }}
         </p>
         <!-- Submit -->
-        <p>{{ form.submit() }}</p>
+        <p>{{ form.submit(class="btn btn-success active") }}</p>
     </form>
 {% endblock %}
+
+

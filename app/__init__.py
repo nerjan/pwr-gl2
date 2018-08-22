@@ -6,7 +6,7 @@ import os
 from app.views import main
 from app.extensions import db, login_manager, yaml
 from app.models import Question_constructor, Choice_constructor
-
+from flask_mail import Mail
 
 app_dir = os.getcwd()
 
@@ -41,6 +41,22 @@ def create_app(config=Config):
 
 
 app = create_app()
+
+mail_settings = {
+    "MAIL_SERVER": 'smtp.gmail.com',
+    "MAIL_PORT": 465,
+    "MAIL_USE_TLS": False,
+    "MAIL_USE_SSL": True,
+    "MAIL_USERNAME": 'pwrgl2confirm',
+    "MAIL_PASSWORD": 'pwrgl2password',
+    "SECRET_KEY": 'my_precious',
+    "SECURITY_PASSWORD_SALT": 'my_precious_two',
+    "MAIL_DEFAULT_SENDER": 'pwrgl2confirm@gmail.com'
+}
+app.config.update(mail_settings)
+
+
+mail = Mail(app)
 migrate = Migrate(app, db)
 
 yaml.add_constructor('!question', Question_constructor)

@@ -10,10 +10,10 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(256), nullable=False)
     authenticated = db.Column(db.Boolean, default=False)
-    name = db.Column(db.String(120),  nullable=False)
-    surname = db.Column(db.String(120),  nullable=False)
+    name = db.Column(db.String(120),  nullable=True)
+    surname = db.Column(db.String(120),  nullable=True)
     confirmed = db.Column(db.Boolean, nullable=False, default=False) # to confirm email
-     
+
 
     gltrait = db.relationship("GLTrait", back_populates='user')
     answers = db.relationship("Answer", back_populates='author')

@@ -6,9 +6,10 @@ import os
 from flask_login import login_user, logout_user, current_user, login_required
 from .extensions import db, login_manager
 from .models import User, GLTrait, Question, Answer
-from .forms import LoginForm, RegistrationForm, QuestionareForm
-
-
+from .forms import LoginForm, RegistrationForm, QuestionareForm, ForgottenPasswordForm
+from .token import generate_confirmation_token, confirm_token
+from .email import send_email
+from strgen import StringGenerator
 main = Blueprint('main', __name__)
 
 handled_traits = ('agreeableness', 'conscientiousness', 'extraversion',
@@ -28,15 +29,36 @@ def load_user(id):
     stored in the session'''
     return db.session.query(User).get(int(id))
 
+@main.route("/forgotten_password", methods=['GET', 'POST'])
+def forgotten_password():
+    forgottenForm = ForgottenPasswordForm()
+    if forgottenForm.submit.data:
+        email = forgottenForm.email.data
+        #if email is in database then send remind password email
+        user = db.session.query(User).filter_by(
+                          email=email).first()
+        if user:
+            #generate random password
+            password = StringGenerator('[\l\d]{4:18}&[\d]&[\p]').render()
+            user.set_password(password)
+            db.session.commit()
+            html = render_template('remind.html', password=password, html = url_for('main.login', _external=True))
+            send_email(email, "Pwr-gl2 reind password", html)
+        flash("We send reminding email.")
+        return redirect(url_for('main.index'))
+    return render_template('forgotten_password.html', title='Remind passowrd', form=forgottenForm)
 
 @main.route("/login", methods=['GET', 'POST'])
 @register_menu(main, '.login', 'Sign in', order=4,
                visible_when=lambda: not current_user.is_authenticated)
 def login():
     form = LoginForm()
+    forgottenForm = ForgottenPasswordForm()
     if current_user.is_authenticated:
         flash("You are already logged in", 'warning')
         return redirect(url_for('main.index'))
+    if forgottenForm.forgottenPassoword.data:
+        return redirect(url_for('main.forgotten_password'))
     if form.validate_on_submit():
         # Check if username in database; get first first record only,
         # since username is unique
@@ -44,17 +66,21 @@ def login():
                 username=form.username.data).first()
         if user and user.check_password(form.password.data):
             # authentication successful, proceed to login
-            flash('Logged in successfully as {}'.format(form.username.data),
-                  'message')
-            login_user(user, remember=form.remember_me.data)
-            user.authenticated = True
-            db.session.commit()
-            return render_template('index.html')
+            if user.confirmed:
+                flash('Logged in successfully as {}'.format(form.username.data),
+                      'message')
+                login_user(user, remember=form.remember_me.data)
+                user.authenticated = True
+                db.session.commit()
+                return render_template('index.html')
+            else:
+                flash("You have to confirm your email!!")
+                return render_template('index.html')
         else:
             flash("Wrong password or username", 'warning')
             return redirect(url_for('main.login'))
     return render_template('login.html', title='Sign In',
-                           form=form)
+                           form=form, forgottenForm=forgottenForm)
 
 
 @main.route("/logout")
@@ -148,19 +174,36 @@ def questionare():
                         user_id=current_user.get_id())
         db.session.add(answer)
         db.session.commit()
-    my_answers = Answer.query.filter_by(author=current_user)
-    answered_ids = [ ans.question_id for ans in my_answers ]
-    questions_to_answer = Question.query.filter(~Question.id.in_(answered_ids))
-    if not questions_to_answer.count():
+        # Make sure that no answer is selected
+        form.answers.data = -1
+    if form.show_all:
+        # Showing all questions in a circular fashion
+        if form.id.data:
+            next_id = int(form.id.data) + 1
+            question = Question.query.get(next_id)
+        else:
+            question = Question.query.first()
+        questions_left = Question.query.count()
+    else:
+        # Showing only unanswered quesitons, so take the next one
+        my_answers = Answer.query.filter_by(author=current_user)
+        answered_ids = [ ans.question_id for ans in my_answers ]
+        questions_to_answer = Question.query.filter(~Question.id.in_(answered_ids))
+        questions_left = questions_to_answer.count()
+        question = questions_to_answer.first()
+    if not questions_left:
         flash("Great, you have answered to all questions. Your answers were saved.")
         return render_template('index.html')
-    question = questions_to_answer.first()
 
     answers = []
     for choice in range(len(question.choices)):
         answers.append((choice, question.choices[choice].value))
     form.answers.choices = answers
-    return render_template('questionare.html', data=question, form=form)
+    data = {
+        'question': question.value,
+        'id': question.id,
+        'count': questions_left}
+    return render_template('questionare.html', data=data, form=form)
 
 
 @main.route("/selfassessment")
@@ -192,7 +235,6 @@ def callback():
                visible_when=lambda: not current_user.is_authenticated)
 def register():
     form = RegistrationForm(request.form)
-
     if form.validate_on_submit():
         username = form.username.data
         email = form.email.data
@@ -206,10 +248,19 @@ def register():
             flash("That email is already used.", "warning")
             return render_template('register.html', form=form)
         else:
-            db.session.add(User(username=username, email=email, password=password))
+            user = User(username=username, email=email, password=password)
+            db.session.add(user)
             db.session.commit()
             flash("You registered succesfully!", "info")
             db.session.close()
+            #create a confirmation link
+            token = generate_confirmation_token(email)
+            confirm_url = url_for('main.confirm_email', token=token, _external=True)
+            html = render_template('activate.html', confirm_url=confirm_url)
+            subject = "Please confirm your email"
+            #send confirmation email
+            send_email(str(email), subject, html)
+
             return redirect(url_for('main.login'))
     else:
         flash_errors(form)
@@ -221,3 +272,20 @@ def flash_errors(form):
     for field, errors in form.errors.items():
         for error in errors:
             flash("%s" % (error))
+
+
+@main.route('/confirm/<token>')
+def confirm_email(token):
+    try:
+        email = confirm_token(token)
+    except:
+        flash('The confirmation link is invalid or has expired.', 'danger')
+    user = User.query.filter_by(email=email).first_or_404()
+    if user.confirmed:
+        flash('Account already confirmed. Please login.', 'success')
+    else:
+        user.confirmed = True
+        db.session.add(user)
+        db.session.commit()
+        flash('You have confirmed your account. Thanks!', 'success')
+    return redirect(url_for('main.index'))

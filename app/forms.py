@@ -21,7 +21,8 @@ class RegistrationForm(FlaskForm):
                           message="Email has to be between 6 and 50 characters")
     ])
     password = PasswordField('Password', [
-        validators.Required(message="You must provide a password."),
+        validators.Required( message="You must provide a password."),
+        validators.Length(min=5, max=50),
         validators.EqualTo('confirm', message='Passwords must match.')
     ])
     confirm = PasswordField('Repeat Password')
@@ -33,5 +34,11 @@ class RegistrationForm(FlaskForm):
 
 class QuestionareForm(FlaskForm):
     id = HiddenField("Question ID")
-    answers = RadioField('Label', default=0) #default value make sure that some answer will be chosen.
+    show_all = BooleanField("Show answered questions too", default=True)
+    answers = RadioField('Label')
     submit = SubmitField('Submit')
+class ForgottenPasswordForm(FlaskForm):
+    email = StringField('Email Address')
+    submit = SubmitField('Remind password!')
+    forgottenPassoword = SubmitField('I forget password')
+
