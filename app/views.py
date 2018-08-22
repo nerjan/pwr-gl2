@@ -1,13 +1,8 @@
-from flask import render_template, request, Blueprint
-from flask import redirect, url_for, flash, session
-from flask_menu import register_menu
-import genomelink
-import os
-from flask_login import login_user, logout_user, current_user, login_required
-from .extensions import db, login_manager
-from .models import User, GLTrait, Question, Answer, Friends
+from .models import User, GLTrait, Question, Answer, \
+                    Friends, SelfAssesmentTraits
 from .forms import LoginForm, RegistrationForm, QuestionareForm, \
-                   ForgottenPasswordForm, SearchForm, FriendRequest
+                   ForgottenPasswordForm, SelfAssesmentBarsForm, \
+                   SearchForm, FriendRequest
 from .token import generate_confirmation_token, confirm_token
 from .email import send_email
 from strgen import StringGenerator
@@ -176,7 +171,7 @@ def questionare():
     form = QuestionareForm()
     if form.is_submitted():
         answer = Answer(question_id=form.id.data,
-                        answer=int(form.answers.data)+1,
+                        answer=int(form.answers.data) + 1,
                         user_id=current_user.get_id())
         db.session.add(answer)
         db.session.commit()
@@ -193,7 +188,7 @@ def questionare():
     else:
         # Showing only unanswered quesitons, so take the next one
         my_answers = Answer.query.filter_by(author=current_user)
-        answered_ids = [ ans.question_id for ans in my_answers ]
+        answered_ids = [ans.question_id for ans in my_answers]
         questions_to_answer = Question.query.filter(~Question.id.in_(answered_ids))
         questions_left = questions_to_answer.count()
         question = questions_to_answer.first()
@@ -219,6 +214,42 @@ def questionare():
 def selfassessment():
     '''Show self-assessment results'''
     return render_template('index.html')
+
+x=0
+odp=[0,0,0,0,0]
+@main.route("/selfassessmentbars", methods=['GET', 'POST'])
+@login_required
+@register_menu(main, '.selfassessmentbars', 'Self-assessment-bars results', order=10)
+def selfassessmentbars():
+    global handled_traits
+    #this 2 global are bad, but it is working, so lets left it here
+    global x
+    global odp
+    traits = handled_traits #take trait tuple
+    form= SelfAssesmentBarsForm()
+
+    #if user dont answer to all traits
+    if x < len(traits):
+        #take next trait
+        trait=traits[x]
+        if form.validate_on_submit():
+            odp[x]=int(form.answers.data)*20 #to make it from 20% to 100%
+            x += 1
+        return render_template('selfassesmentbar.html', form=form, trait=trait) # go next trait quiz
+    user_traits= db.session.query(SelfAssesmentTraits).filter_by(user_id=current_user.id).first()
+    if user_traits: #if user already answered to questions change his answer to new one
+        user_traits.agreeableness=odp[0]
+        user_traits.conscientiousness=odp[1]
+        user_traits.extraversion =odp[2]
+        user_traits.neuroticism=odp[3]
+        user_traits.openness=odp[4]
+    else: #if not, add him to database
+        sat= SelfAssesmentTraits(agreeableness=odp[0], conscientiousness=odp[1], extraversion =odp[2],
+                                 neuroticism=odp[3], openness=odp[4], user_id =current_user.id)
+        db.session.add(sat)
+    db.session.commit()
+    x=0
+    return render_template('sab.html', answers= odp, trait=traits)
 
 
 @main.route("/callback")
