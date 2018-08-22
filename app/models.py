@@ -14,6 +14,7 @@ class User(UserMixin, db.Model):
 
     gltrait = db.relationship("GLTrait", back_populates='user')
     answers = db.relationship("Answer", back_populates='author')
+    self_assesment_traits = db.relationship("SelfAssesmentTraits", back_populates="user")
 
     def __init__(self, username, email, password):
         self.username = username
@@ -108,3 +109,16 @@ class Answer(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     question = db.relationship("Question", back_populates="answers")
     author = db.relationship("User", back_populates="answers")
+
+class SelfAssesmentTraits(db.Model):
+    '''Table for storing self assesment traits'''
+
+    id = db.Column(db.Integer, primary_key=True)
+    agreeableness = db.Column(db.Integer)
+    conscientiousness = db.Column(db.Integer)
+    extraversion = db.Column(db.Integer)
+    neuroticism = db.Column(db.Integer)
+    openness = db.Column(db.Integer)
+
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    user = db.relationship("User", back_populates="self_assesment_traits")

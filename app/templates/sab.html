@@ -1,0 +1,117 @@
+{% extends "backbone.html" %}
+
+{% block content %}
+<style>
+
+        body
+        {
+            display:block;
+            background-size: cover;
+            background-color: black;
+        }
+
+        .container h3
+        {
+            font-weight: bold;
+        }
+        .progress
+        {
+            background: white;
+            height: 60px;
+            border-radius: 50px;
+            box-shadow: none;
+            padding: 5px;
+            margin-bottom: 30px;
+            overflow: visible;
+        }
+
+
+        .progress .progress-bar
+        {
+            box-shadow: none;
+            position: relative;
+            bottom: 0px;
+            border-radius: 50px;
+            animation: animate-positive 4s
+
+        }
+
+        .progress .progress-title
+        {
+            font-size: 20px;
+            font-weight: 700;
+            font-family: "Andale Mono", monospace;
+            color: white;
+            text-transform: uppercase;
+            margin: 0;
+            position: absolute;
+            top: 15px;
+            left: -225px;
+        }
+
+        .progress .progress-value
+        {
+            width: 55px;
+            height: 33px;
+            line-height: 30px;
+            background: #f5f5f5;
+            border-radius: 50px;
+            box-shadow: 1px 1px 1px rgba(0,0,0,0.2);
+            font-weight: bold;
+            font-size: 14px;
+            color: #e95095;
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            text-align: center;
+        }
+
+
+        @keyframes animate-positive
+        {
+            0%
+            {
+                width: 0;
+            }
+        }
+</style>
+
+<br><br><br><br>
+
+    <div class="container" >
+        <div class="row">
+            <div class="col-md-6">
+                <div class="progress">
+                    <div class="progress-bar" style="background: #e95095; width: {{answers[0]}}%; height: 50px;"}>
+                        <h3 class="progress-title">{{trait[0]}}</h3>
+                        <div class="progress-value">{{answers[0]}}%</div>
+                    </div>
+                </div>
+                <div class="progress">
+                    <div class="progress-bar" style="background: #ffcc00; width: {{answers[1]}}%; height: 50px;"}>
+                        <h3 class="progress-title">{{trait[1]}}<h3>
+                        <div class="progress-value">{{answers[1]}}%</div>
+                    </div>
+                </div>
+                <div class="progress">
+                    <div class="progress-bar" style="background: orange; width: {{answers[2]}}%; height: 50px;"}>
+                        <h3 class="progress-title">{{trait[2]}}</h3>
+                        <div class="progress-value">{{answers[2]}}%</div>
+                    </div>
+                </div>
+                <div class="progress">
+                    <div class="progress-bar" style="background: deepskyblue; width: {{answers[3]}}%; height: 50px;"}>
+                        <h3 class="progress-title">{{trait[3]}}</h3>
+                        <div class="progress-value">{{answers[3]}}%</div>
+                    </div>
+                </div>
+                <div class="progress">
+                    <div class="progress-bar" style="background: green; width: {{answers[4]}}%; height: 50px;"}>
+                        <h3 class="progress-title">{{trait[4]}}</h3>
+                        <div class="progress-value">{{answers[4]}}%</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
