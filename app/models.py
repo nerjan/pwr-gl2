@@ -1,4 +1,4 @@
-from extensions import db
+from .extensions import db
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -12,16 +12,18 @@ class User(UserMixin, db.Model):
     authenticated = db.Column(db.Boolean, default=False)
     name = db.Column(db.String(120),  nullable=False)
     surname = db.Column(db.String(120),  nullable=False)
-    avatar = db.Column(db.String(256))
+    confirmed = db.Column(db.Boolean, nullable=False, default=False) # to confirm email
+     
 
     gltrait = db.relationship("GLTrait", back_populates='user')
     answers = db.relationship("Answer", back_populates='author')
-    friends = db.relationship("User", secondary="friends", back_populates='friends') 
 
-    def __init__(self, username, email, password):
+    def __init__(self, username, email, password, name, surname):
         self.username = username
         self.email = email
         self.set_password(password)
+        self.name = name
+        self.surname = surname
 
     def __repr__(self):
         form = "User(id = {}, username = {})"
@@ -51,7 +53,7 @@ class User(UserMixin, db.Model):
 
     def check_password(self, password):
         return check_password_hash(self.password, password)
-
+    
 
 class GLTrait(db.Model):
     '''Local storage for personality-related traits obtained from
@@ -118,6 +120,15 @@ class Friends(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     friend_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+
+    user = db.relationship("User", foreign_keys=[user_id], uselist=False)
+    friend = db.relationship("User", foreign_keys=[friend_id], uselist=False)
+
+    def __init__(self, user, friend):
+        
+        self.user_id = user.id
+        self.friend_id = friend.id 
+
 
 
 
