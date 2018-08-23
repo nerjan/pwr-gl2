@@ -1,12 +1,17 @@
+import configparser
+import os
+
 from flask import Flask
 from flask_menu import Menu
 from flask_migrate import Migrate
-import configparser
-import os
+from flask_mail import Mail
+
 from app.views import main
 from app.extensions import db, login_manager, yaml
-from app.models import Question_constructor, Choice_constructor
-from flask_mail import Mail
+from app.models import Question_constructor, Choice_constructor, \
+                       User, Question
+
+
 
 app_dir = os.getcwd()
 
