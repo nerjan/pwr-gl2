@@ -300,7 +300,7 @@ def callback():
         return redirect(url_for('main.index'))
 
     session['gl_oauth_token'] = token
-    return redirect(url_for('main.genome'))
+    return redirect(url_for('main.results_radar'))
 
 @login_manager.user_loader
 def load_user(id):
