@@ -96,7 +96,8 @@ def logout():
 
 @main.route("/genome")
 @login_required
-@register_menu(main, '.genome', 'Genomic insight', order=1)
+@register_menu(main, '.genome', 'Genomic insight', order=1,
+               visible_when=lambda: current_user.is_authenticated)
 def genome():
     '''Display genomic insight based on GenomeLink API'''
 
@@ -163,7 +164,8 @@ def genome():
 
 @main.route("/questionare", methods=['GET', 'POST'])
 @login_required
-@register_menu(main, '.questionare', 'Self-assessment questionare', order=2)
+@register_menu(main, '.questionare', 'Self-assessment questionare', order=2,
+               visible_when=lambda: current_user.is_authenticated)
 def questionare():
     '''Show self-assessment questionare'''
 
@@ -208,7 +210,8 @@ def questionare():
 
 @main.route("/selfassessment")
 @login_required
-@register_menu(main, '.selfassessment', 'Self-assessment results', order=3)
+@register_menu(main, '.selfassessment', 'Self-assessment results', order=3,
+               visible_when=lambda: current_user.is_authenticated)
 def selfassessment():
     '''Show self-assessment results'''
     return render_template('index.html')
@@ -291,14 +294,12 @@ def confirm_email(token):
         db.session.commit()
         flash('You have confirmed your account. Thanks!', 'success')
     return redirect(url_for('main.index'))
+
+
 @main.route("/userprofile", methods=['GET', 'POST'])
 @login_required
-@register_menu(main, '.userprofile', 'Your profile', order=7)
+@register_menu(main, '.userprofile', 'Your profile', order=7,
+               visible_when=lambda: current_user.is_authenticated)
 def userprofile():
     '''userprofile'''
-    user_id = int(session['user_id'])
-    user = db.session.query(User).filter(User.user_id == user_id).one()
-    
-    
-    return render_template('userprofile.html', user=user)
-
+    return render_template('userprofile.html', user=current_user)
