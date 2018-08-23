@@ -183,34 +183,44 @@ def genome():
                visible_when=lambda: current_user.is_authenticated)
 def questionare():
     '''Show self-assessment questionare'''
-
     form = QuestionareForm()
     if form.is_submitted():
-        answer = Answer(question_id=form.id.data,
-                        answer=int(form.answers.data) + 1,
-                        user_id=current_user.get_id())
-        db.session.add(answer)
+        anser_in_database =db.session.query(Answer).filter_by(user_id=current_user.id, question_id=form.id.data).first()
+        if anser_in_database:
+            anser_in_database.answer=int(form.answers.data) + 1
+            anser_in_database.score=db.session.query(Choice).filter_by(trait_id=form.id.data)[int(form.answers.data)].score
+        else:
+            answer = Answer(question_id=form.id.data,
+                            answer=int(form.answers.data) + 1,
+                            user_id=current_user.get_id(),
+                            score=db.session.query(Choice).filter_by(trait_id=form.id.data)[int(form.answers.data)].score)   #take choices to question of id =form.id.data and from there only particular choice and score of this choice
+            db.session.add(answer)
         db.session.commit()
         # Make sure that no answer is selected
-        form.answers.data = -1
-    if form.show_all:
+        # form.answers.data = -1 #if we want to have no error, better be selected something
+    if form.show_all.data: #there was form.show_all which basicly means nothing for "if"
         # Showing all questions in a circular fashion
         if form.id.data:
             next_id = int(form.id.data) + 1
             question = Question.query.get(next_id)
         else:
             question = Question.query.first()
-        questions_left = Question.query.count()
+        questions_left = 10 # It just has to be
+        try:
+            questions_left = Question.query.count() - int(form.id.data)   # it wasnt changing, it was always "17" so it didnt count
+        except TypeError:
+            pass
     else:
         # Showing only unanswered quesitons, so take the next one
         my_answers = Answer.query.filter_by(author=current_user)
-        answered_ids = [ans.question_id for ans in my_answers]
+        answered_ids = [ans.question_id for ans in my_answers]                      #list of question ids which was ansered
         questions_to_answer = Question.query.filter(~Question.id.in_(answered_ids))
         questions_left = questions_to_answer.count()
+        flash(questions_left)
         question = questions_to_answer.first()
     if not questions_left:
         flash("Great, you have answered to all questions. Your answers were saved.")
-        return render_template('index.html')
+        return redirect(url_for('main.index'))
 
     answers = []
     for choice in range(len(question.choices)):
@@ -219,7 +229,7 @@ def questionare():
     data = {
         'question': question.value,
         'id': question.id,
-        'count': questions_left}
+        'count': Question.query.count()}
     return render_template('questionare.html', data=data, form=form)
 
 
@@ -230,7 +240,7 @@ def questionare():
 def selfassessment():
     '''Show self-assessment results'''
     global handled_traits
-    text="What your personality text shows you are."
+    text="What your personality test shows you are."
     answers = [mean_user_score(),0,0,0,0]
     return render_template('sab.html', answers=answers, trait=handled_traits, text=text)
 
@@ -250,7 +260,7 @@ def max_traits_score():
     for question in all_questions:
         z= db.session.query(Choice).filter_by(trait_id=question.id)                    #take one of them
 
-        max_score = max(z[0].score,z[1].score,z[2].score) # take the biggest value of available choice score
+        max_score = max(z[0].score,z[1].score,z[2].score) # take the biggest value of available choice score   #MAKE MAX FROM ALL
         weight = question.weight                                                    #take question weight
         score += max_score*weight                                                   #add to max_score
     return score                                                                    #return one trait max score
@@ -391,6 +401,7 @@ def confirm_email(token):
     return redirect(url_for('main.index'))
 
 
+<<<<<<< HEAD
 @main.route("/userprofile", methods=['GET', 'POST'])
 @login_required
 @register_menu(main, '.userprofile', 'Your profile', order = 7,
@@ -419,7 +430,7 @@ def userprofile():
     friends=[db.session.query(User).filter_by(
                           id=friend.friend_id).first() for friend in idfriends]
     return render_template('userprofile.html', user = user, form = form)
-    
+
 @main.route("/search", methods=['GET', 'POST'])
 @login_required
 def search():

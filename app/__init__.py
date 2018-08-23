@@ -55,8 +55,6 @@ def create_app(config=Config):
 
 app = create_app()
 
-mail_settings = {
-}
 app.config.update(mail_settings)
 
 migrate = Migrate(app, db)
