@@ -2,14 +2,20 @@
 {% extends "backbone.html" %}
 
 {% block content %}
-
+<br><br>
   <h1>Self-assessment questionare</h1>
 
   <form method="post">
+  	<b>
     {{ form.id(value=data.id) }}
-	<fieldset class="card form-group">
-      <h5 class="card-title">Question {{ data.id }}/{{ data.count }}:
-			  {{ data.question }}</h5>
+	<fieldset class="card form-group" style="border-width: medium;
+    padding-top: 0.75em;
+    padding-bottom: 0.75em;
+    padding-left: 0.75em;
+    padding-right: 0.75em;">
+      <h4 class="card-title">Question {{ data.id }}/{{ data.count }}:
+			  {{ data.question }}
+  	</b></h4>
 	  <div class="card-body">
       {% for field in form.answers %}
         <div class="form-check">
@@ -17,13 +23,13 @@
 	      {{ field.label(class_='form-check-label') }}
         </div>
       {% endfor %}
-	</div>
+	  </div>
 	</fieldset>
 	<div class="form-group form-check">
 	{{ form.show_all(class_='form-check-input') }}
 	{{ form.show_all.label(class_='form-check-label') }}
 	</div>
-	<button type="submit" class="btn btn-primary"
+	<button type="submit" class="btn btn-success"
             name="{{ form.submit.name }}"
             id="{{ form.submit.id }}">{{ form.submit.label.text }}</button>
   </form>

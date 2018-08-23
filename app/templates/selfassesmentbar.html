@@ -5,14 +5,16 @@
     <h1>
         How do you fill with this traits?
     </h1>
-
+    <h4><b>{{ trait.capitalize() }}:</b></h4>
     <form action="" method="post" novalidate>
-        {{ form.hidden_tag() }} <!-- Show text, like "Username" -->
-        <!-- Like "Agreeableness" with first upercase -->
-        <p>
-            <h4><b>{{ trait.capitalize() }}:</b></h4><br>
-            {{ form.answers() }}
-        </p>
+        <div class="card-body">
+        {% for field in form.answers %}
+            <div class="form-check">
+                {{ field(class_='form-check-input') }}
+                {{ field.label(class_='form-check-label') }}
+            </div>
+        {% endfor %}
+	    </div>
         <!-- Submit -->
         <p>{{ form.submit(class="btn btn-success") }}</p>
     </form>
