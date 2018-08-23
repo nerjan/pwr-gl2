@@ -10,8 +10,8 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(256), nullable=False)
     authenticated = db.Column(db.Boolean, default=False)
-    name = db.Column(db.String(120),  nullable=True)
-    surname = db.Column(db.String(120),  nullable=True)
+    name = db.Column(db.String(120),  nullable=True, default="noname")
+    surname = db.Column(db.String(120),  nullable=True, default="nosurname")
     confirmed = db.Column(db.Boolean, nullable=False, default=False) # to confirm email
 
 
@@ -111,6 +111,7 @@ class Answer(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     question_id = db.Column(db.Integer, db.ForeignKey('question.id'))
     score = db.Column(db.Integer, db.ForeignKey('choice.score'))  #  It is better, because we anyway need only score
+    answer = db.Column(db.Integer)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     question = db.relationship("Question", back_populates="answers")
     author = db.relationship("User", back_populates="answers")

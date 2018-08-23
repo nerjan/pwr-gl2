@@ -16,12 +16,26 @@
       var chart = new Chart(ctx, {
 	    type: 'radar',
 		data: {
-          labels: {{ chart_data.labels|safe }},
+          labels: {{ chart_data_test.labels|safe }},
 		  datasets: [
-		    {% for ds in chart_data.datasets %}
+		    {% for ds in chart_data_test.datasets %}
 			{ label: {{ ds.label|tojson|safe }},
 		      borderColor: 'rgb(255, 50, 100)',
 			  backgroundColor: 'rgba(255, 50, 100, 0.2)',
+			  data: {{ ds.data|safe }}},
+		    {% endfor %}
+
+		    {% for ds in chart_data_genome.datasets %}
+			{ label: {{ ds.label|tojson|safe }},
+		      borderColor: 'rgb(124,252,0)',
+			  backgroundColor: 'rgba(124,252,0, 0.2)',
+			  data: {{ ds.data|safe }}},
+		    {% endfor %}
+
+            {% for ds in chart_data_self.datasets %}
+			{ label: {{ ds.label|tojson|safe }},
+		      borderColor: 'rgb(0,191,255)',
+			  backgroundColor: 'rgba(0,191,255, 0.2)',
 			  data: {{ ds.data|safe }}},
 		    {% endfor %}
 		  ]},
@@ -40,13 +54,15 @@
 	<div class="row justify-content-md-center">
     <table class="table">
       <thead>
-        <tr><th>Trait</th><th>Value</th>
+      <tr><th>Trait</th><th>Genome</th><th>Selfassesment</th><th>Test</th></tr>
       </thead>
       <tbody>
-        {% for report in reports %}
+        {% for i in range(how_hany_trais) %}
           <tr>
-            <td>{{ report.description }}</td>
-            <td>{{ report.score }}</td>
+            <td>{{ reports[i].description }}</td>
+            <td>{{ reports[i].score }}</td>
+            <td>{{ selfassesment[i] }}</td>
+            <td>{{ test_restul[i] }}</td>
           </tr>
         {% endfor %}
       </tbody>
