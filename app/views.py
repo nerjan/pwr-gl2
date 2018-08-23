@@ -17,7 +17,6 @@ from strgen import StringGenerator
 main = Blueprint('main', __name__)
 handled_traits = ('agreeableness', 'conscientiousness', 'extraversion',
                   'neuroticism', 'openness')
-
 @main.route("/")
 @register_menu(main, '.home', 'Home', order=0)
 def index():
@@ -82,7 +81,7 @@ def questionare():
     return render_template('questionare.html', data=data, form=form)
 
 x=0
-ans=[0,0,0,0,0]
+ans=[0 for x in handled_traits]
 @main.route("/selfassessmenttraits", methods=['GET', 'POST'])
 @login_required
 @register_menu(main, '.selfassessmenttraits', 'Self-assessment traits', order=2)
@@ -130,20 +129,24 @@ def selfassessmenttestresult():
     return render_template('sab.html', answers=mean_user_scores_percentage(), trait=handled_traits, text=text)
 
 def mean_user_score(trait):
+    '''Calculate user score for particular trait
+    and then make mean value with respect to max_trait_score'''
     score =0
     user_answers=db.session.query(Answer).filter_by(user_id=current_user.id)                            #all user answers (with question_id and score for HIS answer)
     for answer in user_answers:                                                                         #take 1 answer
         question=db.session.query(Question).filter_by(id=answer.question_id).first()
         if question.trait == trait:
-            question_weight = question.weight   # weight of question that $answer is answer
+            question_weight = question.weight                                                           # weight of question that $answer is answer
             answer_score = answer.score                                                                 # How "good" is his answer, how many score has
             score += question_weight*answer_score                                                           # add real value of answer to score
     try:
         return int(score / max_trait_score(trait) * 100)  # in percentage
     except ZeroDivisionError:
-        return 0
+        return 0 # if user didnt answer to any question then 0 to make it possible to show results without error
+
 
 def max_trait_score(trait):
+    '''Calculate max possible score from test questions for trait'''
     all_questions = db.session.query(Question).filter_by(trait=trait)                                      #take all questions
     score=0
     for question in all_questions:
@@ -163,6 +166,7 @@ def mean_user_scores():
 @login_required
 @register_menu(main, '.selfassessmentresults', 'Self-assessment results', order=4)
 def selfassesmentresults():
+    '''Shows result for self-assesment, NOT for test'''
     text="How do you think about yourself."
     return render_template('sab.html', answers=selfassesmenttraitsresults(), trait=handled_traits, text=text)
 
@@ -170,7 +174,8 @@ def selfassesmentresults():
 # @login_required
 # @register_menu(main, '.selfassessmentbarsresults', 'Self-assessment-bars results', order=8)
 def selfassesmenttraitsresults():
-    global handled_traits
+    '''take users answers for sels-assesment, NOT for test.
+    It will be used in selfassesmentresults abowe'''
     user_traits= db.session.query(SelfAssesmentTraits).filter_by(user_id=current_user.id).first()
     answers=[0, 0, 0, 0, 0] #to make sure there are some answers
     # if not user_traits:
@@ -188,6 +193,9 @@ def selfassesmenttraitsresults():
 @login_required
 @register_menu(main, '.results', 'Results', order=5)
 def results_radar():                                        #mozna dodac ze jesli genome puste to zapelnij czyms
+    '''Take all results and store it in radar.
+    I use previous script and didnt hange it,
+    so thats why there is chart_datas in this way'''
     genome_results = genome()
     chart_data_test = {
         'labels': [r for r in handled_traits],
@@ -195,7 +203,7 @@ def results_radar():                                        #mozna dodac ze jesl
             {'label': 'Personal test results',
              'data':  mean_user_scores()}
                  ]}
-    selfassesment =[int(x*5/100) for x in selfassesmenttraitsresults()]
+    selfassesment =[int(x*5/100) for x in selfassesmenttraitsresults()] #this *5/100 is complicated... but it works...
     chart_data_self={
         'labels': [r for r in handled_traits],
         'datasets': [
@@ -217,8 +225,9 @@ def results_radar():                                        #mozna dodac ze jesl
 # @login_required
 # @register_menu(main, '.genome', 'Genomic insight', order=1)
 def genome():
-    '''Display genomic insight based on GenomeLink API'''
-
+    '''Based on GenomeLink API take all neeccessary data to
+    pass it to result_radar function'''
+    #probably some problems with logging in but idk, its hard to check
     scope = ['report:{}'.format(t) for t in handled_traits]
     authorize_url = genomelink.OAuth.authorize_url(scope=scope)
 
@@ -382,7 +391,7 @@ def register():
             flash("That email is already used.", "warning")
             return render_template('register.html', form=form)
         else:
-            user = User(username=username, email=email, password=password, name=username, surname="")
+            user = User(username=username, email=email, password=password, name=username, surname="")                   # wrong usenrame and surnames, has to be done somewhere
             db.session.add(user)
             db.session.commit()
             flash("You registered succesfully!", "info")
