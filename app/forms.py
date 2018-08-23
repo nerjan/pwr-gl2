@@ -6,6 +6,8 @@ from wtforms import StringField, PasswordField, BooleanField, \
 class LoginForm(FlaskForm):
     '''Form that allows to login.'''
     username = StringField('Username')
+    name = StringField('Name')
+    surname = StringField('Last name')
     password = PasswordField('Password')
     remember_me = BooleanField('Remember Me')
     submit = SubmitField('Sign In')
@@ -15,6 +17,14 @@ class RegistrationForm(FlaskForm):
     username = StringField('Username', [
         validators.Length(min=4, max=20,
                           message="Username has to be between 4 and 20 characters")
+    ])
+    name = StringField('Name', [
+        validators.Length(min=4, max=20,
+                      message="Name has to be between 4 and 20 characters")
+    ])
+    surname = StringField('Last name', [
+        validators.Length(min=4, max=20,
+                          message="Last name has to be between 4 and 20 characters")
     ])
     email = StringField('Email Address', [
         validators.Length(min=6, max=50,
