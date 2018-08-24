@@ -5,11 +5,12 @@ import genomelink
 import os
 from flask_login import login_user, logout_user, current_user, login_required
 from .extensions import db, login_manager
-from .models import User, GLTrait, Question, Answer
-from .forms import LoginForm, RegistrationForm, QuestionareForm, ForgottenPasswordForm
+from .models import User, GLTrait, Question, Answer, Friends
+from .forms import LoginForm, RegistrationForm, QuestionareForm, ForgottenPasswordForm, SearchForm, FriendRequest
 from .token import generate_confirmation_token, confirm_token
 from .email import send_email
 from strgen import StringGenerator
+from sqlalchemy import or_, and_
 main = Blueprint('main', __name__)
 
 handled_traits = ('agreeableness', 'conscientiousness', 'extraversion',
@@ -240,8 +241,8 @@ def register():
     form = RegistrationForm(request.form)
     if form.validate_on_submit():
         username = form.username.data
-        name = form.name.data
-        surname = form.surname.data
+        name = form.name.data.title()
+        surname = form.surname.data.title()
         email = form.email.data
         password = form.password.data
         #if there is no users with this username
@@ -298,8 +299,59 @@ def confirm_email(token):
 
 @main.route("/userprofile", methods=['GET', 'POST'])
 @login_required
-@register_menu(main, '.userprofile', 'Your profile', order=7,
-               visible_when=lambda: current_user.is_authenticated)
+@register_menu(main, '.userprofile', 'Your profile', order = 7,
+               visible_when = lambda: current_user.is_authenticated)
 def userprofile():
     '''userprofile'''
-    return render_template('userprofile.html', user=current_user)
+    form = SearchForm(request.form)
+    #Search friend on submit
+    if form.validate_on_submit():
+        searchfriend = form.searchfriend.data.split(' ')
+        if len(searchfriend) == 0:
+            flash('You have to write name or/and surname', 'warning')
+        elif len(searchfriend) == 1:
+            messages = searchfriend[0] + ' 0'
+        else:
+            messages = searchfriend[0] + ' ' + searchfriend[1]
+        session['messages'] = messages
+        return redirect(url_for('main.search', messages = messages))
+        #fsearch = search(db.session.query(User), searchfriend)
+    #current user name and surname
+    user = db.session.query(User).filter_by(
+                          id=current_user.id).first()
+    #looking for friend IDs
+    idfriends = db.session.query(Friends).with_entities(Friends.friend_id).filter_by(user_id=current_user.id).all()
+    #Looking fo friends, addin no friends if possible
+    friends=[db.session.query(User).filter_by(
+                          id=friend.friend_id).first() for friend in idfriends]
+    return render_template('userprofile.html', user = user, form = form)
+    
+@main.route("/search", methods=['GET', 'POST'])
+@login_required
+def search():
+    '''searchresults'''
+    user_id = current_user.id
+    form = FriendRequest()
+    messages = session['messages'].split(' ')
+    results = User.query.with_entities(User.surname, User.name, User.id).filter(or_(
+                                       User.name == messages[0].strip().lower().title(), 
+                                       User.surname == messages[1].strip().lower().title())).all()
+    #Adding friends to DB
+    if form.is_submitted():
+        friend_id = request.form['submit']
+        is_friend = db.session.query(Friends).filter(Friends.user_id == user_id,
+                                                 Friends.friend_id == friend_id)
+        flash('Adding friend')
+        #Does not work properly
+        if user_id == friend_id:
+            flash('You can not add yourself')
+        elif is_friend:
+            flash('You are friends already')
+        else:
+            flash('You added new friend')
+            connection = Friend(user_id=user_id,
+                                      friend_id=friend_id,
+                                          status="Requested")
+            db.session.add(connection)
+            db.session.commit()
+    return render_template('search.html', results = results, form = form, user_id = user_id)

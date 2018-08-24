@@ -1,0 +1,21 @@
+{% extends "backbone.html" %}
+
+{% block content %}
+ <div class="col-xs-12 col-md-6">
+          <h1>{{ user.name }} {{ user.surname }}</h1>
+ </div>
+   <form action="" method="post" novalidate>
+        {{ form.hidden_tag() }} <!-- Show text, like "Search" -->
+        <!-- Form for search -->
+        <p>
+            {{ form.searchfriend.label }}<br>
+            {{ form.searchfriend(size=50, placeholder="Look for new friends!") }}
+        </p>
+   </form>
+{% for friend in friends %}
+        <form method="post">
+	        <fieldset class="card form-group">
+            <h5 class="card-title">Become friend with {{ friend.name }} {{ friend.surname }}</h5>
+	    </fieldset>
+{% endfor %}
+{% endblock %}
