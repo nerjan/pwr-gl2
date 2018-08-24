@@ -46,3 +46,7 @@ geckodriver 0.21. Test can be run automatically:
 ```
 python -m unittest
 ```
+Or using pytest (requires installation of pytest):
+```
+pytest tests
+```

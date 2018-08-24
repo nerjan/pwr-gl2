@@ -6,7 +6,8 @@ import os
 from flask_login import login_user, logout_user, current_user, login_required
 from .extensions import db, login_manager
 from .models import User, GLTrait, Question, Answer, Friends
-from .forms import LoginForm, RegistrationForm, QuestionareForm, ForgottenPasswordForm, SearchForm, FriendRequest
+from .forms import LoginForm, RegistrationForm, QuestionareForm, \
+                   ForgottenPasswordForm, SearchForm, FriendRequest
 from .token import generate_confirmation_token, confirm_token
 from .email import send_email
 from strgen import StringGenerator
@@ -30,6 +31,7 @@ def load_user(id):
     stored in the session'''
     return db.session.query(User).get(int(id))
 
+
 @main.route("/forgotten_password", methods=['GET', 'POST'])
 def forgotten_password():
     forgottenForm = ForgottenPasswordForm()
@@ -48,6 +50,7 @@ def forgotten_password():
         flash("We send reminding email.")
         return redirect(url_for('main.index'))
     return render_template('forgotten_password.html', title='Remind passowrd', form=forgottenForm)
+
 
 @main.route("/login", methods=['GET', 'POST'])
 @register_menu(main, '.login', 'Sign in', order=4,
@@ -234,7 +237,7 @@ def callback():
     return redirect(url_for('main.genome'))
 
 
-@main.route('/register/', methods=["GET", "POST"])
+@main.route('/register', methods=["GET", "POST"])
 @register_menu(main, '.register', 'Registration', order=6,
                visible_when=lambda: not current_user.is_authenticated)
 def register():
