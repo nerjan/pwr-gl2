@@ -15,8 +15,8 @@ from app.models import Question_constructor, Choice_constructor, \
 
 app_dir = os.getcwd()
 
-
-UPLOAD_FOLDER = os.path.dirname('static/users_pictures')
+#path to users_pictures folder
+UPLOAD_FOLDER = 'app/static/users_pictures'
 
 def prepare_env():
     config = configparser.ConfigParser()
