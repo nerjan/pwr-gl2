@@ -1,0 +1,106 @@
+{% extends "backbone.html" %}
+
+{% block content %}
+<style>
+
+.user_card {
+  box-shadow: 4px 4px 8px 4px rgba(0, 0, 0, 0.2);
+  max-width: 300px;
+  position: absolute;
+  margin: auto;
+  text-align: center;
+  top: 150px;
+  left: 250px;
+}
+
+.user_title {
+  color: grey;
+  font-size: 18px;
+}
+
+button {
+  border: none;
+  outline: 0;
+  display: inline-block;
+  padding: 8px;
+  color: white;
+  background-color: rgba(0, 0, 0, 0.6);
+  text-align: center;
+  cursor: pointer;
+  width: 100%;
+  font-size: 16px;
+}
+
+button:hover, a:hover {
+  opacity: 0.7;
+}
+
+.user_container {
+    position: relative;
+
+}
+
+.user_image {
+  opacity: 1;
+  display: block;
+  width: 100%;
+  height: auto;
+  transition: .5s ease;
+  backface-visibility: hidden;
+}
+
+.user_middle {
+  transition: .5s ease;
+  opacity: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%)
+}
+
+.user_container:hover .user_image {
+  opacity: 0.3;
+}
+
+.user_container:hover .user_middle {
+  opacity: 1;
+}
+
+.user_text {
+  color: white;
+  font-size: 16px;
+  padding: 8px 16px;
+}
+
+.just_a_box{
+  background: black;
+  width: 100%;
+  height: 60px;
+  position: relative;
+  top: 16px;
+}
+</style>
+
+
+
+<br>
+
+<div class="user_card">
+  <h2 style="text-align:center; position: relative; top: -40px">User Profile Card</h2>
+  <div class="user_container">
+  <img src="static/users_pictures/{{user.username}}.jpg" alt=" " style="width:100%" class="user_image" >
+  <div class="user_middle">
+    <form action="upload_image">
+      <button type="submit" value="Upload image">change photo</button></form>
+  </div>
+  </div>
+  <br>
+  <h3>{{user.name}} {{user.surname}}</h3>
+  <p class="title">Username: <b>{{user.username}}</b></p>
+  <p>Email: {{user.email}}</p>
+
+ <p><div class="just_a_box"> &nbsp</div></p>
+</div>
+
+{% endblock %}

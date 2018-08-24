@@ -8,11 +8,7 @@
   <form method="post">
 	  <!--what is it for?-->
     {{ form.id(value=data.id) }}
-	<fieldset class="card form-group" style="border-width: medium;
-    padding-top: 0.75em;
-    padding-bottom: 0.75em;
-    padding-left: 0.75em;
-    padding-right: 0.75em;">
+	<fieldset class="card form-group" style="border-width: medium; border-color: white">
      <h4 class="card-title"><b> Question {{ data.id }}/{{ data.count }}:
 			  {{ data.question }}</b>
 	</h4>
@@ -26,10 +22,12 @@
 	  </div>
 	</fieldset>
 	<div class="form-group form-check">
+	&nbsp;&nbsp;
 	{{ form.show_all(class_='form-check-input') }}
 	{{ form.show_all.label(class_='form-check-label') }}
 	</div>
-	<button type="submit" class="btn btn-success"
+	&nbsp;&nbsp;
+  	<button type="submit" class="btn btn-success"
             name="{{ form.submit.name }}"
             id="{{ form.submit.id }}">{{ form.submit.label.text }}</button>
   </form>

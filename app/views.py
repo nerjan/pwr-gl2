@@ -12,6 +12,7 @@ from .email import send_email
 from random import randint
 from strgen import StringGenerator
 from .helper import flash_errors, genome, selfassesmenttraitsresults, mean_user_scores, mean_user_scores_percentage
+import app
 
 
 main = Blueprint('main', __name__)
@@ -32,10 +33,8 @@ def index():
 def choose_trait_test():
     colors = ["#e95095", "#ffcc00", "orange", "deepskyblue", "green"]
     b_colors = ["#e95095", "#ffcc00", "orange", "deepskyblue", "green"]
-    # colors = "black"
     form = ChooseTraitTestForm()
     if form.is_submitted():
-        # flash(request.form['submit'])
         return redirect(url_for("main.questionare", trait=request.form['submit']))
     return render_template("choose_trait_test.html", handled_traits=handled_traits, form=form, colors=colors[::-1], b_colors=b_colors[::-1])
 
@@ -305,6 +304,8 @@ def register():
     form = RegistrationForm(request.form)
     if form.validate_on_submit():
         username = form.username.data
+        name = form.name.data
+        surname = form.surname.data
         email = form.email.data
         password = form.password.data
         #if there is no users with this username
@@ -316,7 +317,7 @@ def register():
             flash("That email is already used.", "warning")
             return render_template('register.html', form=form)
         else:
-            user = User(username=username, email=email, password=password, name=username, surname="")                   # wrong usenrame and surnames, has to be done somewhere
+            user = User(username=username, email=email, password=password, name=name, surname=surname)
             db.session.add(user)
             db.session.commit()
             flash("You registered succesfully!", "info")
@@ -352,3 +353,27 @@ def confirm_email(token):
     return redirect(url_for('main.index'))
 
 
+@main.route("/userprofile", methods=['GET', 'POST'])
+@login_required
+@register_menu(main, '.userprofile', 'Your profile', order=7,
+               visible_when=lambda: current_user.is_authenticated)
+def userprofile():
+    '''userprofile'''
+    return render_template('userprofile.html', user=current_user)
+
+
+
+@login_required
+@main.route('/upload_image', methods=['GET', 'POST'])
+def upload_file():
+    try:                                #go 1st to this upload, then do the rest of the code
+        file=request.files['image']
+    except KeyError:
+        return render_template("upload_image.html")
+    flash(app.app.config['UPLOAD_FOLDER'])
+    file.filename = current_user.username+".jpg"    #rename to username.jpg -important for the rest functions
+    f = os.path.join(app.app.config['UPLOAD_FOLDER'], file.filename)
+
+    # add your custom code to check that the uploaded file is a valid image and not a malicious file (out-of-scope for this post)
+    file.save(f)
+    return render_template('index.html')

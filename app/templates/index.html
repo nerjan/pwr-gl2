@@ -2,7 +2,7 @@
 
 {% block content %}
     {% if current_user.is_authenticated %}
-        <h1>Hi, {{ current_user.username }}!</h1>
+        <h1>Hi, {{ current_user.username }}! </h1>
         <p>{{quote}}</p>
     {% endif %}
 {% endblock %}
