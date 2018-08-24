@@ -3,19 +3,19 @@
 
 {% block content %}
 <br><br>
-  <h1>Self-assessment questionare</h1>
+  <h1>Personality test</h1>
 
   <form method="post">
-  	<b>
+	  <!--what is it for?-->
     {{ form.id(value=data.id) }}
 	<fieldset class="card form-group" style="border-width: medium;
     padding-top: 0.75em;
     padding-bottom: 0.75em;
     padding-left: 0.75em;
     padding-right: 0.75em;">
-      <h4 class="card-title">Question {{ data.id }}/{{ data.count }}:
-			  {{ data.question }}
-  	</b></h4>
+     <h4 class="card-title"><b> Question {{ data.id }}/{{ data.count }}:
+			  {{ data.question }}</b>
+	</h4>
 	  <div class="card-body">
       {% for field in form.answers %}
         <div class="form-check">

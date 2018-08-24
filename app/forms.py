@@ -36,7 +36,7 @@ class QuestionareForm(FlaskForm):
     id = HiddenField("Question ID")
     show_all = BooleanField("Show answered questions too", default=True)
     answers = RadioField('Label', default=0)
-    submit = SubmitField('Submit')
+    submit = SubmitField('Send answer')
 
 class ForgottenPasswordForm(FlaskForm):
     email = StringField('Email Address')
@@ -45,5 +45,9 @@ class ForgottenPasswordForm(FlaskForm):
 
 class SelfAssesmentBarsForm(FlaskForm):
     #possible answers for users fell about his traits
-    answers = RadioField('Label', default=1, choices=[("1","definetly not!"), ("2","quite not"), ("3", "idk"), ("4","quite yes"), ("5","definetly yes!")])
+    answers = RadioField('Label', default=1, choices=[("1","Not strong."), ("2","Weak."), ("3", "Neutral."), ("4","Strong."), ("5","Very strong.")])
+    submit = SubmitField('Send answer')
+
+class ChooseTraitTestForm(FlaskForm):
+    '''Form to make submit buttons'''
     submit = SubmitField('Send answer')

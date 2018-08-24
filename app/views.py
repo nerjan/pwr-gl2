@@ -4,36 +4,53 @@ from flask_menu import register_menu
 import genomelink
 import os
 from flask_login import login_user, logout_user, current_user, login_required
-from .extensions import db, login_manager
-from .models import User, GLTrait, Question, Answer, SelfAssesmentTraits, Choice
-from .forms import LoginForm, RegistrationForm, QuestionareForm, ForgottenPasswordForm, SelfAssesmentBarsForm
+from .extensions import db, login_manager, handled_traits
+from .models import User, Question, Answer, SelfAssesmentTraits, Choice
+from .forms import LoginForm, RegistrationForm, QuestionareForm, ForgottenPasswordForm, SelfAssesmentBarsForm, ChooseTraitTestForm
 from .token import generate_confirmation_token, confirm_token
 from .email import send_email
 from random import randint
 from strgen import StringGenerator
-
+from .helper import flash_errors, genome, selfassesmenttraitsresults, mean_user_scores, mean_user_scores_percentage
 
 
 main = Blueprint('main', __name__)
-handled_traits = ('agreeableness', 'conscientiousness', 'extraversion',
-                  'neuroticism', 'openness')
+
 @main.route("/")
 @register_menu(main, '.home', 'Home', order=0)
 def index():
     #some quotes to make it more interesting
     f=open("app/templates/quotes.txt")
     lines = f.readlines()
-
     '''Display main view of the app'''
     return render_template('index.html', quote=lines[randint(0, len(lines)-1)])
 
+@main.route("/choose_trait_test", methods=['GET', 'POST'])
+@login_required
+@register_menu(main, '.choose_trait_test', 'Personality test', order=1,
+               visible_when=lambda: current_user.is_authenticated)
+def choose_trait_test():
+    colors = ["#e95095", "#ffcc00", "orange", "deepskyblue", "green"]
+    b_colors = ["#e95095", "#ffcc00", "orange", "deepskyblue", "green"]
+    # colors = "black"
+    form = ChooseTraitTestForm()
+    if form.is_submitted():
+        # flash(request.form['submit'])
+        return redirect(url_for("main.questionare", trait=request.form['submit']))
+    return render_template("choose_trait_test.html", handled_traits=handled_traits, form=form, colors=colors[::-1], b_colors=b_colors[::-1])
+
+
 @main.route("/questionare", methods=['GET', 'POST'])
 @login_required
-@register_menu(main, '.questionare', 'Personality test', order=1)
+# @register_menu(main, '.questionare', 'Personality test', order=1)
 def questionare():
     '''Show self-assessment questionare'''
+    # next_id = 0
+    trait = request.args['trait']        #take trait from choose_trait_test button that was clicked
     form = QuestionareForm()
+    #adding answet to db
     if form.is_submitted():
+        #If in db is answer for this question update it in not just add.
         anser_in_database =db.session.query(Answer).filter_by(user_id=current_user.id, question_id=form.id.data).first()
         if anser_in_database:
             anser_in_database.answer=int(form.answers.data) + 1
@@ -45,30 +62,48 @@ def questionare():
                             score=db.session.query(Choice).filter_by(trait_id=form.id.data)[int(form.answers.data)].score)   #take choices to question of id =form.id.data and from there only particular choice and score of this choice
             db.session.add(answer)
         db.session.commit()
-        # Make sure that no answer is selected
-        # form.answers.data = -1 #if we want to have no error, better be selected something
-    if form.show_all.data: #there was form.show_all which basicly means nothing for "if"
+
+    trait_questions = db.session.query(Question).filter_by(trait=trait) #list of db records of questions from THIS TRAIT only
+    '''WHEN ALL TRAITS WILL BE AVAILABLE WE CAN DELETE THIS'''
+    if not trait_questions.count():
+        flash("There is no question for this trait", "info")
+        return redirect(url_for('main.index'))
+
+    number_of_questions = trait_questions.count() #idk if it is important
+    first_id = trait_questions.first().id #id of 1st question in this trait, start from here
+
+    if form.show_all.data: #if checkbox is checked (default) - answer to all questions
         # Showing all questions in a circular fashion
         if form.id.data:
-            next_id = int(form.id.data) + 1
-            question = Question.query.get(next_id)
-        else:
-            question = Question.query.first()
-        questions_left = 10 # It just has to be
-        try:
-            questions_left = Question.query.count() - int(form.id.data)   # it wasnt changing, it was always "17" so it didnt count
-        except TypeError:
-            pass
+            next_id = 1 + int(form.id.data)
+            question =Question.query.get(next_id)
+            form.id.data = next_id
+        else: #if this is 1st question
+            next_id = first_id
+            form.id.data = next_id
+            question = Question.query.get(first_id)
+        try:# if there is no more questions in trait_questions, finish
+            x= trait_questions.filter_by(id=next_id).first().id
+        except AttributeError:
+            return redirect(url_for("main.index"))
     else:
         # Showing only unanswered quesitons, so take the next one
         my_answers = Answer.query.filter_by(author=current_user)
-        answered_ids = [ans.question_id for ans in my_answers]                      #list of question ids which was ansered
-        questions_to_answer = Question.query.filter(~Question.id.in_(answered_ids))
-        questions_left = questions_to_answer.count()
+        answered_ids=[]
+        if answered_ids==[]:
+            for ans in my_answers:
+                if db.session.query(Question).filter_by(id=ans.question_id).first().trait == trait:
+                    answered_ids.append(ans.question_id) #list of question ids which was ansered for this trait
+        '''if error do this:'''
+        #if answered_ids ==[]:
+            # return redirect(url_for("main.index"))
+
+        # answered_ids = [ans.question_id for ans in my_answers]                      #list of question ids which was ansered
+        questions_to_answer = Question.query.filter(~Question.id.in_(answered_ids)).filter_by(trait=trait)   #search all non answered questions for this traid
         question = questions_to_answer.first()
-    if not questions_left:
-        flash("Great, you have answered to all questions. Your answers were saved.")
-        return redirect(url_for('main.index'))
+        if not question:
+            flash("You already answered to all questions")
+            return redirect(url_for("main.index"))
 
     answers = []
     for choice in range(len(question.choices)):
@@ -77,16 +112,16 @@ def questionare():
     data = {
         'question': question.value,
         'id': question.id,
-        'count': Question.query.count()}
+        'count': number_of_questions}
     return render_template('questionare.html', data=data, form=form)
 
 x=0
 ans=[0 for x in handled_traits]
 @main.route("/selfassessmenttraits", methods=['GET', 'POST'])
 @login_required
-@register_menu(main, '.selfassessmenttraits', 'Self-assessment traits', order=2)
+@register_menu(main, '.selfassessmenttraits', 'Self-assessment', order=2,
+               visible_when=lambda: current_user.is_authenticated)
 def selfassessmenttraits():
-    global handled_traits
     #this 2 global are bad, but it is working, so lets left it here
     global x
     global ans
@@ -122,76 +157,31 @@ def selfassessmenttraits():
 
 @main.route("/selfassessmenttest")
 @login_required
-@register_menu(main, '.selfassessmenttest', 'Personality test results', order=3)
-def selfassessmenttestresult():
+@register_menu(main, '.selfassessmenttest', 'Personality test results', order=3,
+               visible_when=lambda: current_user.is_authenticated)
+def selfassessment_testresult():
     '''Show self-assessment results'''
-    text="What your personality test shows you are."
+    text="What your personality test tells about you."
     return render_template('sab.html', answers=mean_user_scores_percentage(), trait=handled_traits, text=text)
 
-def mean_user_score(trait):
-    '''Calculate user score for particular trait
-    and then make mean value with respect to max_trait_score'''
-    score =0
-    user_answers=db.session.query(Answer).filter_by(user_id=current_user.id)                            #all user answers (with question_id and score for HIS answer)
-    for answer in user_answers:                                                                         #take 1 answer
-        question=db.session.query(Question).filter_by(id=answer.question_id).first()
-        if question.trait == trait:
-            question_weight = question.weight                                                           # weight of question that $answer is answer
-            answer_score = answer.score                                                                 # How "good" is his answer, how many score has
-            score += question_weight*answer_score                                                           # add real value of answer to score
-    try:
-        return int(score / max_trait_score(trait) * 100)  # in percentage
-    except ZeroDivisionError:
-        return 0 # if user didnt answer to any question then 0 to make it possible to show results without error
 
 
-def max_trait_score(trait):
-    '''Calculate max possible score from test questions for trait'''
-    all_questions = db.session.query(Question).filter_by(trait=trait)                                      #take all questions
-    score=0
-    for question in all_questions:
-        quest= db.session.query(Choice).filter_by(trait_id=question.id)                    #take one of them
-        max_score = max(x.score for x in quest) # take the biggest value of available choice score   #MAKE MAX FROM ALL
-        weight = question.weight                                                    #take question weight
-        score += max_score*weight                                                   #add to max_score
-    return score                                                                    #return one trait max score
-
-def mean_user_scores_percentage():
-    return [mean_user_score(x) for x in handled_traits] #in percentage
-
-def mean_user_scores():
-    return [int(x/100*5) for x in mean_user_scores_percentage()]                                             #for 5 step scale !!!!!!!!!
 
 @main.route("/selfassesmentresult", methods=['GET', 'POST'])
 @login_required
-@register_menu(main, '.selfassessmentresults', 'Self-assessment results', order=4)
+@register_menu(main, '.selfassessmentresults', 'Self-assessment results', order=4,
+               visible_when=lambda: current_user.is_authenticated)
 def selfassesmentresults():
     '''Shows result for self-assesment, NOT for test'''
     text="How do you think about yourself."
     return render_template('sab.html', answers=selfassesmenttraitsresults(), trait=handled_traits, text=text)
 
-# @main.route("/selfassesmenttraitsresults", methods=['GET', 'POST'])
-# @login_required
-# @register_menu(main, '.selfassessmentbarsresults', 'Self-assessment-bars results', order=8)
-def selfassesmenttraitsresults():
-    '''take users answers for sels-assesment, NOT for test.
-    It will be used in selfassesmentresults abowe'''
-    user_traits= db.session.query(SelfAssesmentTraits).filter_by(user_id=current_user.id).first()
-    answers=[0, 0, 0, 0, 0] #to make sure there are some answers
-    # if not user_traits:
-        # flash("There is no results yet! Make an assesment.", "info")
-        # return redirect(url_for('main.selfassessmenttraits'))
-    if user_traits:
-        answers[0]= user_traits.agreeableness
-        answers[1] =user_traits.conscientiousness
-        answers[2] =user_traits.extraversion
-        answers[3] =user_traits.neuroticism
-        answers[4] =user_traits.openness
-    return answers
+
 
 @main.route("/results")
 @login_required
-@register_menu(main, '.results', 'Results', order=5)
+@register_menu(main, '.results', 'Results', order=5,
+               visible_when=lambda: current_user.is_authenticated)
 def results_radar():                                        #mozna dodac ze jesli genome puste to zapelnij czyms
     '''Take all results and store it in radar.
     I use previous script and didnt hange it,
@@ -200,14 +190,14 @@ def results_radar():                                        #mozna dodac ze jesl
     chart_data_test = {
         'labels': [r for r in handled_traits],
         'datasets': [
-            {'label': 'Personal test results',
+            {'label': 'Personal test',
              'data':  mean_user_scores()}
                  ]}
     selfassesment =[int(x*5/100) for x in selfassesmenttraitsresults()] #this *5/100 is complicated... but it works...
     chart_data_self={
         'labels': [r for r in handled_traits],
         'datasets': [
-            {'label': 'Personal assesment',
+            {'label': 'Self-assesment',
              'data': selfassesment }
                  ]}
     how_hany_trais = len(handled_traits)
@@ -221,71 +211,6 @@ def results_radar():                                        #mozna dodac ze jesl
                            selfassesment=selfassesment,
                            how_hany_trais=how_hany_trais)
 
-# @main.route("/genome")
-# @login_required
-# @register_menu(main, '.genome', 'Genomic insight', order=1)
-def genome():
-    '''Based on GenomeLink API take all neeccessary data to
-    pass it to result_radar function'''
-    #probably some problems with logging in but idk, its hard to check
-    scope = ['report:{}'.format(t) for t in handled_traits]
-    authorize_url = genomelink.OAuth.authorize_url(scope=scope)
-
-    user_id = int(session['user_id'])
-    user = User.query.filter_by(id=user_id).first()
-    if not user:
-        return
-
-    # Retrieve reports for current user from the DB
-    report_objects = {}
-    db_traits = GLTrait.query.filter_by(user=user)
-    for name in handled_traits:
-        record = db_traits.filter_by(trait=name).first()
-        if record:
-            report_objects[name] = record
-
-    if session.get('gl_oauth_token'):
-
-        # Reports were fetched from Genomelink API
-        for name in handled_traits:
-            fetched = genomelink.Report.fetch(
-                                name=name,
-                                population='european',
-                                token=session['gl_oauth_token'])
-            description = fetched.phenotype['display_name']
-            score = fetched.summary['score']
-
-            if name in report_objects:
-                # Replace record if exists
-                report_objects[name].description = description
-                report_objects[name].t_score = score
-            else:
-                # No such record, then add to the DB
-                tr = GLTrait(trait=name,
-                             description=description,
-                             t_score=score,
-                             user=user)
-                report_objects[name] = tr
-                db.session.add(tr)
-        db.session.commit()
-
-        # Clear token, so that refresh is skipped on reload
-        session.pop('gl_oauth_token', None)
-
-    reports = []
-    for name in handled_traits:
-        if name in report_objects:
-            reports.append(report_objects[name].serialize())
-    chart_data = {
-        'labels': [r['description'] for r in reports],
-        'datasets': [
-            {'label': 'Genomelink data',
-             'data': [r['score'] for r in reports]}
-        ]}
-    return (reports, chart_data, authorize_url)
-    # return render_template('genome.html', reports=reports,
-    #                        chart_data=chart_data,
-    #                        authorize_url=authorize_url)
 
 @main.route("/callback")
 def callback():
@@ -300,7 +225,7 @@ def callback():
         return redirect(url_for('main.index'))
 
     session['gl_oauth_token'] = token
-    return redirect(url_for('main.genome'))
+    return redirect(url_for('main.results_radar'))
 
 @login_manager.user_loader
 def load_user(id):
@@ -408,13 +333,6 @@ def register():
     else:
         flash_errors(form)
         return render_template("register.html", form=form)
-
-
-def flash_errors(form):
-    """Flashes form errors"""
-    for field, errors in form.errors.items():
-        for error in errors:
-            flash("%s" % (error))
 
 
 @main.route('/confirm/<token>')
