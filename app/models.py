@@ -101,6 +101,7 @@ class Choice(db.Model):
     question = db.relationship("Question", back_populates="choices")
     answers = db.relationship("Answer", back_populates="choice")
 
+
 def Choice_constructor(loader, node):
     values = loader.construct_mapping(node, deep=True)
     return Choice(**values)

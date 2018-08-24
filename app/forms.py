@@ -39,7 +39,7 @@ class RegistrationForm(FlaskForm):
                           message="Email has to be between 6 and 50 characters")
     ])
     password = PasswordField('Password', [
-        validators.Required( message="You must provide a password."),
+        validators.Required(message="You must provide a password."),
         validators.Length(min=5, max=50),
         validators.EqualTo('confirm', message='Passwords must match.')
     ])
@@ -75,7 +75,15 @@ class FriendRequest(FlaskForm):
     submit = SubmitField('Add')
 
 
+
 class SelfAssesmentBarsForm(FlaskForm):
-    #possible answers for users fell about his traits
-    answers = RadioField('Label', default=1, choices=[("1","definetly not!"), ("2","quite not"), ("3", "idk"), ("4","quite yes"), ("5","definetly yes!")])
+    """Possible answers for users feel about his traits"""
+
+    answers = RadioField('Label',
+                         default=1,
+                         choices=[("1", "definetly not!"),
+                                  ("2", "quite not"),
+                                  ("3", "idk"),
+                                  ("4", "quite yes"),
+                                  ("5", "definetly yes!")])
     submit = SubmitField('Send answer')

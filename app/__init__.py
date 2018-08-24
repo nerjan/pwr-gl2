@@ -16,7 +16,6 @@ app_dir = path.abspath(__file__)
 app_dir = path.dirname(app_dir)
 app_dir = path.split(app_dir)[0]
 
-
 class MetaConfig(type):
 
     def __init__(cls, name, bases, dct):
