@@ -5,18 +5,21 @@ from wtforms import StringField, PasswordField, BooleanField, \
 
 class LoginForm(FlaskForm):
     '''Form that allows to login.'''
+
     username = StringField('Username')
     name = StringField('Name')
     surname = StringField('Last name')
     password = PasswordField('Password')
     remember_me = BooleanField('Remember Me')
     submit = SubmitField('Sign In')
-    
+
+
 class SearchForm(FlaskForm):
     searchfriend = StringField('Search for your friend', [
         validators.Length(min=4, max=50,
                           message="Search request has to be between 4 and 50 characters")
     ])
+
 
 class RegistrationForm(FlaskForm):
     username = StringField('Username', [
@@ -47,18 +50,19 @@ class RegistrationForm(FlaskForm):
     submit = SubmitField('Register')
 
 
+class ForgottenPasswordForm(FlaskForm):
+    email = StringField('Email Address')
+    submit = SubmitField('Remind password!')
+    forgottenPassoword = SubmitField('I forgot password')
+
+
 class QuestionareForm(FlaskForm):
     id = HiddenField("Question ID")
     show_all = BooleanField("Show answered questions too", default=True)
     answers = RadioField('Label')
     submit = SubmitField('Submit')
 
+
 class FriendRequest(FlaskForm):
     id = HiddenField("User ID")
     submit = SubmitField('Add')
-    
-class ForgottenPasswordForm(FlaskForm):
-    email = StringField('Email Address')
-    submit = SubmitField('Remind password!')
-    forgottenPassoword = SubmitField('I forget password')
-

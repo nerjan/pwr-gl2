@@ -5,6 +5,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 class User(UserMixin, db.Model):
     '''Table for storing registered users'''
+
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(20), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
@@ -12,8 +13,7 @@ class User(UserMixin, db.Model):
     authenticated = db.Column(db.Boolean, default=False)
     name = db.Column(db.String(120),  nullable=True)
     surname = db.Column(db.String(120),  nullable=True)
-    confirmed = db.Column(db.Boolean, nullable=False, default=False) # to confirm email
-
+    confirmed = db.Column(db.Boolean, nullable=False, default=False)  # to confirm email
 
     gltrait = db.relationship("GLTrait", back_populates='user')
     answers = db.relationship("Answer", back_populates='author')
@@ -53,11 +53,12 @@ class User(UserMixin, db.Model):
 
     def check_password(self, password):
         return check_password_hash(self.password, password)
-    
+
 
 class GLTrait(db.Model):
     '''Local storage for personality-related traits obtained from
     Genomelink API'''
+
     id = db.Column(db.Integer, primary_key=True)
     trait = db.Column(db.String(50), nullable=False)
     description = db.Column(db.String(200))
@@ -107,12 +108,14 @@ def Choice_constructor(loader, node):
 class Answer(db.Model):
     '''Table for storing user's answers to the questions.
     Includes self-assessment and replies from other users.'''
+
     id = db.Column(db.Integer, primary_key=True)
     question_id = db.Column(db.Integer, db.ForeignKey('question.id'))
     answer = db.Column(db.Integer)  # eg. 1-5
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     question = db.relationship("Question", back_populates="answers")
     author = db.relationship("User", back_populates="answers")
+
 
 class Friends(db.Model):
     '''Associative table to store friends of user'''
@@ -125,10 +128,6 @@ class Friends(db.Model):
     friend = db.relationship("User", foreign_keys=[friend_id], uselist=False)
 
     def __init__(self, user, friend):
-        
+
         self.user_id = user.id
-        self.friend_id = friend.id 
-
-
-
-
+        self.friend_id = friend.id
