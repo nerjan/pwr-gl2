@@ -54,8 +54,6 @@ def create_app(config=Config):
 
 app = create_app()
 
-app.config.update(mail_settings)
-
 migrate = Migrate(app, db)
 
 yaml.add_constructor('!question', Question_constructor)

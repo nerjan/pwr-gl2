@@ -149,17 +149,3 @@ class Friends(db.Model):
 
         self.user_id = user.id
         self.friend_id = friend.id
-
-
-class SelfAssesmentTraits(db.Model):
-    '''Table for storing self assesment traits'''
-
-    id = db.Column(db.Integer, primary_key=True)
-    agreeableness = db.Column(db.Integer)
-    conscientiousness = db.Column(db.Integer)
-    extraversion = db.Column(db.Integer)
-    neuroticism = db.Column(db.Integer)
-    openness = db.Column(db.Integer)
-
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    user = db.relationship("User", back_populates="self_assesment_traits")
