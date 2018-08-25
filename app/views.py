@@ -5,7 +5,7 @@ import genomelink
 import os
 from flask_login import login_user, logout_user, current_user, login_required
 from .extensions import db, login_manager, handled_traits
-from .models import User, Question, Answer, SelfAssesmentTraits, Choice, Friends, FriendAssesment
+from .models import User, Question, Answer, SelfAssesmentTraits, Choice, Friends, FriendAssesment, FriendAnswer
 from .forms import LoginForm, RegistrationForm, QuestionareForm, ForgottenPasswordForm, SelfAssesmentBarsForm, ChooseTraitTestForm, SearchForm, FriendRequest
 from .token import generate_confirmation_token, confirm_token
 from .email import send_email
@@ -155,35 +155,35 @@ def selfassessmenttraits():
     x=0
     return redirect(url_for('main.selfassesmentresults'))
 
-@main.route("/selfassessmenttest")
-@login_required
-@register_menu(main, '.selfassessmenttest', 'Personality test results', order=3,
-               visible_when=lambda: current_user.is_authenticated)
-def selfassessment_testresult():
-    '''Show self-assessment results'''
-    text="What your personality test tells about you."
-    return render_template('sab.html', answers=mean_user_scores_percentage(), trait=handled_traits, text=text)
-
-
-
-
-@main.route("/selfassesmentresult", methods=['GET', 'POST'])
-@login_required
-@register_menu(main, '.selfassessmentresults', 'Self-assessment results', order=4,
-               visible_when=lambda: current_user.is_authenticated)
-def selfassesmentresults():
-    '''Shows result for self-assesment, NOT for test'''
-    text="How do you think about yourself."
-    return render_template('sab.html', answers=selfassesmenttraitsresults(), trait=handled_traits, text=text)
-
-@main.route("/friendassesmentresult", methods=['GET', 'POST'])
-@login_required
-@register_menu(main, '.friendassessmentresults', 'Friend-assessment results', order=14,
-               visible_when=lambda: current_user.is_authenticated)
-def friendassesmentresults():
-    '''Shows result for self-assesment, NOT for test'''
-    text="How other thinks about yourself."
-    return render_template('sab.html', answers=friend_assesment_result(), trait=handled_traits, text=text)
+# @main.route("/selfassessmenttest")
+# @login_required
+# @register_menu(main, '.selfassessmenttest', 'Personality test results', order=3,
+#                visible_when=lambda: current_user.is_authenticated)
+# def selfassessment_testresult():
+#     '''Show self-assessment results'''
+#     text="What your personality test tells about you."
+#     return render_template('sab.html', answers=mean_user_scores_percentage(), trait=handled_traits, text=text)
+#
+#
+#
+#
+# @main.route("/selfassesmentresult", methods=['GET', 'POST'])
+# @login_required
+# @register_menu(main, '.selfassessmentresults', 'Self-assessment results', order=4,
+#                visible_when=lambda: current_user.is_authenticated)
+# def selfassesmentresults():
+#     '''Shows result for self-assesment, NOT for test'''
+#     text="How do you think about yourself."
+#     return render_template('sab.html', answers=selfassesmenttraitsresults(), trait=handled_traits, text=text)
+#
+# @main.route("/friendassesmentresult", methods=['GET', 'POST'])
+# @login_required
+# @register_menu(main, '.friendassessmentresults', 'Friend-assessment results', order=14,
+#                visible_when=lambda: current_user.is_authenticated)
+# def friendassesmentresults():
+#     '''Shows result for self-assesment, NOT for test'''
+#     text="How other thinks about yourself."
+#     return render_template('sab.html', answers=friend_assesment_result(), trait=handled_traits, text=text)
 
 @main.route("/results")
 @login_required
@@ -194,6 +194,7 @@ def results_radar():                                        #mozna dodac ze jesl
     I use previous script and didnt hange it,
     so thats why there is chart_datas in this way'''
     genome_results = genome()
+    #charts are used to make radar rest is to make table
     chart_data_test = {
         'labels': [r for r in handled_traits],
         'datasets': [
@@ -207,11 +208,20 @@ def results_radar():                                        #mozna dodac ze jesl
             {'label': 'Self-assesment',
              'data': selfassesment }
                  ]}
+    friendassesment = [int(x*5/100) for x in friend_assesment_result()]
+    chart_data_friends={
+        'labels': [r for r in handled_traits],
+        'datasets': [
+            {'label': 'Friend-assesment',
+             'data': friendassesment}
+                 ]}
     how_hany_trais = len(handled_traits)
     return render_template('genome.html',
                            chart_data_test=chart_data_test,
                            chart_data_genome = genome_results[1],
                            chart_data_self = chart_data_self,
+                           chart_data_friends=chart_data_friends,
+                           friendassesment=friendassesment,
                            reports = genome_results[0],
                            authorize_url=genome_results[2],
                            test_restul= mean_user_scores(),
@@ -222,10 +232,11 @@ def results_radar():                                        #mozna dodac ze jesl
 @login_required
 @register_menu(main, '.results_bars', 'Results bars', order=6)
 def results_bars():
-    rangee=[0,1,2]
-    text=["Self-assesment results", "Test results", "Genomelink data"]
-    answers=[selfassesmenttraitsresults(), mean_user_scores_percentage(),  [int(x*100/5) for x in genome()[1].get("datasets")[0].get("data")]]
-    return render_template('all_in_one_results_bar.html', trait=handled_traits, answers=answers, text=text, range=rangee)
+    rangee=[0,1]
+    range2=[2,3]
+    text=["Test results", "Genomelink data","Self-assesment results",  "Friends assesment"]
+    answers=[ mean_user_scores_percentage(), [int(x*100/5) for x in genome()[1].get("datasets")[0].get("data")], selfassesmenttraitsresults(),  friend_assesment_result()]
+    return render_template('all_in_one_results_bar.html', trait=handled_traits, answers=answers, text=text, range=rangee, range2=range2)
 
 @main.route("/callback")
 def callback():
@@ -387,7 +398,6 @@ def upload_file():
         file=request.files['image']
     except KeyError:
         return render_template("upload_image.html")
-    flash(app.app.config['UPLOAD_FOLDER'])
     file.filename = current_user.username+".jpg"    #rename to username.jpg -important for the rest functions
     f = os.path.join(app.app.config['UPLOAD_FOLDER'], file.filename)
     file.save(f)
@@ -431,7 +441,6 @@ def search():
         User.surname == messages[1].strip().lower().title())).all()
     current_user_friends = [x.friend_id for x in Friends.query.filter_by(user_id=current_user.id).all()]
     results = [x for x in results if not x[2] in current_user_friends] #add only firends which are not in your friends already
-    flash(results)
     if len(results)==0:
         text = "No new friends with this data :)"
 
@@ -514,3 +523,98 @@ def friendasessment():
     x=0
     flash("You made an assesment of your friend.")
     return redirect(url_for('main.user_friends'))
+
+
+
+
+
+
+
+#
+# @main.route("/friend_choose_trait_test", methods=['GET', 'POST'])
+# @login_required
+# @register_menu(main, '.friend_choose_trait_test', 'Friend Personality test', order=11,
+#                visible_when=lambda: current_user.is_authenticated)
+# def choose_trait_test():
+#     colors = ["#e95095", "#ffcc00", "orange", "deepskyblue", "green"]
+#     b_colors = ["#e95095", "#ffcc00", "orange", "deepskyblue", "green"]
+#     form = ChooseTraitTestForm()
+#     if form.is_submitted():
+#         return redirect(url_for("main.questionare_friend", trait=request.form['submit']))
+#     return render_template("choose_trait_test.html", handled_traits=handled_traits, form=form, colors=colors[::-1], b_colors=b_colors[::-1])
+#
+
+#
+# @main.route("/questionare_friend", methods=['GET', 'POST'])
+# @login_required
+# def questionare_friend():
+#     '''Show self-assessment questionare'''
+#     # next_id = 0
+#     trait = request.args['trait']        #take trait from choose_trait_test button that was clicked
+#     form = QuestionareForm()
+#     #adding answet to db
+#     if form.is_submitted():
+#         #If in db is answer for this question update it in not just add.
+#         anser_in_database =db.session.query(FriendAnswer).filter_by(user_id=current_user.id, question_id=form.id.data).first()
+#         if anser_in_database:
+#             anser_in_database.answer=int(form.answers.data) + 1
+#             anser_in_database.score=db.session.query(Choice).filter_by(trait_id=form.id.data)[int(form.answers.data)].score
+#         else:
+#             answer = Answer(question_id=form.id.data,
+#                             answer=int(form.answers.data) + 1,
+#                             user_id=current_user.get_id(),
+#                             score=db.session.query(Choice).filter_by(trait_id=form.id.data)[int(form.answers.data)].score)   #take choices to question of id =form.id.data and from there only particular choice and score of this choice
+#             db.session.add(answer)
+#         db.session.commit()
+#
+#     trait_questions = db.session.query(Question).filter_by(trait=trait) #list of db records of questions from THIS TRAIT only
+#     '''WHEN ALL TRAITS WILL BE AVAILABLE WE CAN DELETE THIS'''
+#     if not trait_questions.count():
+#         flash("There is no question for this trait", "info")
+#         return redirect(url_for('main.index'))
+#
+#     number_of_questions = trait_questions.count() #idk if it is important
+#     first_id = trait_questions.first().id #id of 1st question in this trait, start from here
+#
+#     if form.show_all.data: #if checkbox is checked (default) - answer to all questions
+#         # Showing all questions in a circular fashion
+#         if form.id.data:
+#             next_id = 1 + int(form.id.data)
+#             question =Question.query.get(next_id)
+#             form.id.data = next_id
+#         else: #if this is 1st question
+#             next_id = first_id
+#             form.id.data = next_id
+#             question = Question.query.get(first_id)
+#         try:# if there is no more questions in trait_questions, finish
+#             x= trait_questions.filter_by(id=next_id).first().id
+#         except AttributeError:
+#             return redirect(url_for("main.index"))
+#     else:
+#         # Showing only unanswered quesitons, so take the next one
+#         my_answers = Answer.query.filter_by(author=current_user)
+#         answered_ids=[]
+#         if answered_ids==[]:
+#             for ans in my_answers:
+#                 if db.session.query(Question).filter_by(id=ans.question_id).first().trait == trait:
+#                     answered_ids.append(ans.question_id) #list of question ids which was ansered for this trait
+#         '''if error do this:'''
+#         #if answered_ids ==[]:
+#             # return redirect(url_for("main.index"))
+#
+#         # answered_ids = [ans.question_id for ans in my_answers]                      #list of question ids which was ansered
+#         questions_to_answer = Question.query.filter(~Question.id.in_(answered_ids)).filter_by(trait=trait)   #search all non answered questions for this traid
+#         question = questions_to_answer.first()
+#         if not question:
+#             flash("You already answered to all questions")
+#             return redirect(url_for("main.index"))
+#
+#     answers = []
+#     for choice in range(len(question.choices)):
+#         answers.append((choice, question.choices[choice].value))
+#     form.answers.choices = answers
+#     data = {
+#         'question': question.value,
+#         'id': question.id,
+#         'count': number_of_questions}
+#     return render_template('questionare.html', data=data, form=form)

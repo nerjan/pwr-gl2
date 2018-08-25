@@ -138,7 +138,6 @@ def friend_assesment_result():
     '''count mean value of all friends assesment'''
     user = FriendAssesment.query.filter_by(user_id=current_user.id)
     user=[x for x in user]  #list of friends assesments
-    # return redirect(url_for("main.index"))
     user_agreeableness= 0
     user_conscientiousness =0
     user_extraversion =0
@@ -151,6 +150,8 @@ def friend_assesment_result():
         user_neuroticism += x.neuroticism
         user_openness += x.openness
     value=len(user)
-    return [int(user_agreeableness/value), int(user_conscientiousness/value),  int(user_extraversion/value), int(user_neuroticism/value), int(user_openness/value)]
+    if value==0: value=1
+    return [int(user_agreeableness/value), int(user_conscientiousness/value),int(user_extraversion/value), int(user_neuroticism/value), int(user_openness/value)]
+
 
 

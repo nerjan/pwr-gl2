@@ -79,7 +79,6 @@ tr {
     }
 </style>
 
-
 <br>
 <h1 style="text-align:center">Your friends</h1>
 <br><br><br><br>
@@ -89,41 +88,33 @@ tr {
 <table>
     <tr>
 {% for result in results if not result.id == user_id %}
-            {% set counter=loop.index %}
+{% set counter=loop.index %}
 <!--Make 3 friends in a row-->
-        {% if counter%3==0 %}
-            <tr>
-
-        {% endif %}
+    {% if counter%3==0 %}
+        <tr>
+    {% endif %}
     <td style="padding: 0px 30px 0px">
-        <form method="post" >
-<div class="user_card">
-  <h2 style="text-align:center; position: relative; top: -40px">User Profile Card</h2>
-  <div class="user_container">
-  <img src="static/users_pictures/{{result.username}}.jpg" alt=" " style="width:100%" class="user_image" >
-  <div class="user_middle">
-    <form action="upload_image">
-  </div>
-  </div>
-  <br>
-  <h3>{{result.name}} {{result.surname}}</h3>
-  <p class="title">Username: <b>{{result.username}}</b></p>
-  <p>Email: {{result.email}}</p>
-<button type="submit" class="just_a_box"
-        name="submit"
-        value="{{ result.id }}">Make assessment</button>
-</div>
+    <form method="post" >
+        <div class="user_card">
+          <h2 style="text-align:center; position: relative; top: -40px">User Profile Card</h2>
+        <div class="user_container">
+        <img src="static/users_pictures/{{result.username}}.jpg" alt=" " style="width:100%" class="user_image" >
+        </div>
+        <br>
+        <h3>{{result.name}} {{result.surname}}</h3>
+        <p class="title">Username: <b>{{result.username}}</b></p>
+        <p>Email: {{result.email}}</p>
+        <button type="submit" class="just_a_box"
+            name="submit"
+            value="{{ result.id }}">Make assessment</button>
+        </div>
     </form>
     </td>
-{% if counter==3 %}
-    </td>
-    {% set counter=0 %}
-{% endif %}
+    {% if counter==3 %}
+        </td>
+        {% set counter=0 %}
+    {% endif %}
 {% endfor %}
     </tr>
-    </table>
-
-
-
-
+</table>
 {% endblock %}

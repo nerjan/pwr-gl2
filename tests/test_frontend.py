@@ -26,9 +26,9 @@ class TestServer(LiveServerTestCase):
         self.assertEqual(response.code, 200)
 
     def test_if_environment_set(self):
-        self.assertIn('GENOMELINK_CLIENT_ID', os.environ)
-        self.assertIn('GENOMELINK_CLIENT_SECRET', os.environ)
-        self.assertIn('GENOMELINK_CALLBACK_URL', os.environ)
+        self.assertIn('GENOMELINK_CLIENT_ID', app.config)
+        self.assertIn('GENOMELINK_CLIENT_SECRET', app.config)
+        self.assertIn('GENOMELINK_CALLBACK_URL', app.config)
 
     def test_has_bootstrap(self):
         options = Options()

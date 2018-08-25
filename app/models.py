@@ -19,6 +19,7 @@ class User(UserMixin, db.Model):
     answers = db.relationship("Answer", back_populates='author')
     self_assesment_traits = db.relationship("SelfAssesmentTraits", back_populates="user")
 
+
     def __init__(self, username, email, password, name, surname):
         self.username = username
         self.email = email
@@ -82,6 +83,7 @@ class Question(db.Model):
     impact = db.Column(db.String(20))
     choices = db.relationship("Choice", back_populates="question")
     answers = db.relationship("Answer", back_populates="question")
+    friend_answer= db.relationship("FriendAnswer", back_populates="question")
 
 
 def Question_constructor(loader, node):
@@ -99,7 +101,7 @@ class Choice(db.Model):
     trait_id = db.Column(db.Integer, db.ForeignKey('question.id'))
     question = db.relationship("Question", back_populates="choices")
     answers = db.relationship("Answer", back_populates="choice")
-
+    friend_answer  = db.relationship("FriendAnswer", back_populates="choice")
 def Choice_constructor(loader, node):
     values = loader.construct_mapping(node, deep=True)
     return Choice(**values)
@@ -154,3 +156,18 @@ class FriendAssesment(db.Model):
 
     user = db.relationship("User", foreign_keys=[user_id], uselist=False)
     friend = db.relationship("User", foreign_keys=[friend_id], uselist=False)
+
+
+class FriendAnswer(db.Model):
+
+    id = db.Column(db.Integer, primary_key=True)
+    question_id = db.Column(db.Integer, db.ForeignKey('question.id'))
+    score = db.Column(db.Integer, db.ForeignKey('choice.score'))  # It is better, because we anyway need only score
+    answer = db.Column(db.Integer)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    friend_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    question = db.relationship("Question", back_populates="friend_answer")
+    author = db.relationship("User", foreign_keys=[user_id], uselist=False)
+    friend = db.relationship("User", foreign_keys=[friend_id], uselist=False)                   #????will it work??????
+    choice = db.relationship("Choice", back_populates="friend_answer")
+

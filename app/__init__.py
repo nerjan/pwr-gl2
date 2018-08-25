@@ -27,6 +27,7 @@ def prepare_env():
         os.environ[key] = val
 
 
+
 class Config(object):
 
     SQLALCHEMY_DATABASE_URI = 'sqlite:///{}/app.db'.format(app_dir)
