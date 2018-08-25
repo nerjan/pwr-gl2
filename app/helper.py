@@ -2,8 +2,8 @@ from flask import flash, session
 import genomelink
 from flask_login import current_user
 from .extensions import db, handled_traits
-from .models import Choice
-from .models import User, GLTrait, Question, Answer, SelfAssesmentTraits
+from .models import User, GLTrait, Question, Answer, SelfAssesmentTraits, FriendAssesment, Choice
+from flask import redirect, url_for, flash, session
 
 def mean_user_score(trait):
     '''Calculate user score for particular trait
@@ -132,5 +132,25 @@ def flash_errors(form):
     for field, errors in form.errors.items():
         for error in errors:
             flash("%s" % (error))
+
+
+def friend_assesment_result():
+    '''count mean value of all friends assesment'''
+    user = FriendAssesment.query.filter_by(user_id=current_user.id)
+    user=[x for x in user]  #list of friends assesments
+    # return redirect(url_for("main.index"))
+    user_agreeableness= 0
+    user_conscientiousness =0
+    user_extraversion =0
+    user_neuroticism = 0
+    user_openness=0
+    for x in user:
+        user_agreeableness +=x.agreeableness
+        user_conscientiousness +=  x.conscientiousness
+        user_extraversion += x.extraversion
+        user_neuroticism += x.neuroticism
+        user_openness += x.openness
+    value=len(user)
+    return [int(user_agreeableness/value), int(user_conscientiousness/value),  int(user_extraversion/value), int(user_neuroticism/value), int(user_openness/value)]
 
 

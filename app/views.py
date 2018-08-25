@@ -11,7 +11,7 @@ from .token import generate_confirmation_token, confirm_token
 from .email import send_email
 from random import randint
 from strgen import StringGenerator
-from .helper import flash_errors, genome, selfassesmenttraitsresults, mean_user_scores, mean_user_scores_percentage
+from .helper import flash_errors, genome, selfassesmenttraitsresults, mean_user_scores, mean_user_scores_percentage, friend_assesment_result
 import app
 from sqlalchemy import or_, and_
 
@@ -176,7 +176,14 @@ def selfassesmentresults():
     text="How do you think about yourself."
     return render_template('sab.html', answers=selfassesmenttraitsresults(), trait=handled_traits, text=text)
 
-
+@main.route("/friendassesmentresult", methods=['GET', 'POST'])
+@login_required
+@register_menu(main, '.friendassessmentresults', 'Friend-assessment results', order=14,
+               visible_when=lambda: current_user.is_authenticated)
+def friendassesmentresults():
+    '''Shows result for self-assesment, NOT for test'''
+    text="How other thinks about yourself."
+    return render_template('sab.html', answers=friend_assesment_result(), trait=handled_traits, text=text)
 
 @main.route("/results")
 @login_required
