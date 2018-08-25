@@ -52,8 +52,14 @@ class ForgottenPasswordForm(FlaskForm):
     forgottenPassoword = SubmitField('I forget password')
 
 class SelfAssesmentBarsForm(FlaskForm):
-    #possible answers for users fell about his traits
-    answers = RadioField('Label', default=1, choices=[("1","Not strong."), ("2","Weak."), ("3", "Neutral."), ("4","Strong."), ("5","Very strong.")])
+    """Possible answers for users feel about his traits"""
+    answers = RadioField('Label',
+                         default=1,
+                         choices=[("1","Not strong."),
+                                  ("2","Weak."),
+                                  ("3", "Neutral."),
+                                  ("4","Strong."),
+                                  ("5","Very strong.")])
     submit = SubmitField('Send answer')
 
 class ChooseTraitTestForm(FlaskForm):
