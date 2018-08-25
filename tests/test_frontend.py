@@ -8,7 +8,7 @@ from selenium.webdriver.firefox.options import Options
 # Note that the version of the driver must be compatible
 # with the installed version of Firefox
 import os
-from app import create_app
+from app import create_app, app
 
 
 class TestServer(LiveServerTestCase):

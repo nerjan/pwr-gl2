@@ -5,6 +5,7 @@ from wtforms import StringField, PasswordField, BooleanField, \
 
 class LoginForm(FlaskForm):
     '''Form that allows to login.'''
+
     username = StringField('Username')
     password = PasswordField('Password')
     remember_me = BooleanField('Remember Me')
@@ -29,7 +30,7 @@ class RegistrationForm(FlaskForm):
                           message="Last name has to be between 4 and 20 characters")
     ])
     password = PasswordField('Password', [
-        validators.Required( message="You must provide a password."),
+        validators.Required(message="You must provide a password."),
         validators.Length(min=5, max=50),
         validators.EqualTo('confirm', message='Passwords must match.')
     ])
@@ -46,13 +47,16 @@ class QuestionareForm(FlaskForm):
     answers = RadioField('Label', default=0)
     submit = SubmitField('Send answer')
 
+
 class ForgottenPasswordForm(FlaskForm):
     email = StringField('Email Address')
     submit = SubmitField('Remind password!')
-    forgottenPassoword = SubmitField('I forget password')
+    forgottenPassoword = SubmitField('I forgot password')
+
 
 class SelfAssesmentBarsForm(FlaskForm):
     """Possible answers for users feel about his traits"""
+
     answers = RadioField('Label',
                          default=1,
                          choices=[("1","Not strong."),

@@ -5,6 +5,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 class User(UserMixin, db.Model):
     '''Table for storing registered users'''
+
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(20), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
@@ -13,7 +14,6 @@ class User(UserMixin, db.Model):
     name = db.Column(db.String(120),  nullable=True, default="noname")
     surname = db.Column(db.String(120),  nullable=True, default="nosurname")
     confirmed = db.Column(db.Boolean, nullable=False, default=False) # to confirm email
-
 
     gltrait = db.relationship("GLTrait", back_populates='user')
     answers = db.relationship("Answer", back_populates='author')
@@ -55,11 +55,12 @@ class User(UserMixin, db.Model):
 
     def check_password(self, password):
         return check_password_hash(self.password, password)
-    
+
 
 class GLTrait(db.Model):
     '''Local storage for personality-related traits obtained from
     Genomelink API'''
+
     id = db.Column(db.Integer, primary_key=True)
     trait = db.Column(db.String(50), nullable=False)
     description = db.Column(db.String(200))
@@ -102,6 +103,8 @@ class Choice(db.Model):
     question = db.relationship("Question", back_populates="choices")
     answers = db.relationship("Answer", back_populates="choice")
     friend_answer  = db.relationship("FriendAnswer", back_populates="choice")
+
+
 def Choice_constructor(loader, node):
     values = loader.construct_mapping(node, deep=True)
     return Choice(**values)
@@ -110,6 +113,7 @@ def Choice_constructor(loader, node):
 class Answer(db.Model):
     '''Table for storing user's answers to the questions.
     Includes self-assessment and replies from other users.'''
+
     id = db.Column(db.Integer, primary_key=True)
     question_id = db.Column(db.Integer, db.ForeignKey('question.id'))
     score = db.Column(db.Integer, db.ForeignKey('choice.score'))  #  It is better, because we anyway need only score
@@ -119,7 +123,7 @@ class Answer(db.Model):
     author = db.relationship("User", back_populates="answers")
     choice = db.relationship("Choice", back_populates="answers")
 
-    
+
 class SelfAssesmentTraits(db.Model):
     '''Table for storing self assesment traits'''
 
@@ -170,4 +174,3 @@ class FriendAnswer(db.Model):
     author = db.relationship("User", foreign_keys=[user_id], uselist=False)
     friend = db.relationship("User", foreign_keys=[friend_id], uselist=False)                   #????will it work??????
     choice = db.relationship("Choice", back_populates="friend_answer")
-
