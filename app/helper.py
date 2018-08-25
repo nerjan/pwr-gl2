@@ -4,6 +4,8 @@ from flask_login import current_user
 from .extensions import db, handled_traits
 from .models import User, GLTrait, Question, Answer, SelfAssesmentTraits, FriendAssesment, Choice
 from flask import redirect, url_for, flash, session
+from itertools import permutations
+from sqlalchemy import or_, and_
 
 def mean_user_score(trait):
     '''Calculate user score for particular trait
@@ -154,4 +156,11 @@ def friend_assesment_result():
     return [int(user_agreeableness/value), int(user_conscientiousness/value),int(user_extraversion/value), int(user_neuroticism/value), int(user_openness/value)]
 
 
-
+def make_filter(all_fields, values):
+    q_size = len(values)
+    assert q_size <= len(all_fields)
+    ors = []
+    for fields in permutations(all_fields, q_size):
+        pairs = zip(fields, values)
+        ors.append(and_(*(f == v for f,v in pairs)))
+    return or_(*ors)
