@@ -16,6 +16,10 @@ app_dir = path.abspath(__file__)
 app_dir = path.dirname(app_dir)
 app_dir = path.split(app_dir)[0]
 
+#path to users_pictures folder
+UPLOAD_FOLDER = 'app/static/users_pictures'
+
+
 class MetaConfig(type):
 
     def __init__(cls, name, bases, dct):
@@ -45,6 +49,7 @@ def create_app(config=Config):
     app.config.from_object(config)
     app.secret_key = os.urandom(24)
     app.register_blueprint(main)
+    app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
     Menu(app=app)
     db.init_app(app)
     login_manager.init_app(app)

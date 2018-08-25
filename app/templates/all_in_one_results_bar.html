@@ -1,0 +1,184 @@
+{% extends "backbone.html" %}
+
+{% block content %}
+<style>
+
+        body
+        {
+            display:block;
+            background-size: cover;
+            background-color: white;
+        }
+
+        .container h3
+        {
+            font-weight: bold;
+        }
+        .progress
+        {
+            background: rgba(0,0,0, 0.1);
+            height: 60px;
+            border-radius: 50px;
+            box-shadow: none;
+            padding: 5px;
+            margin-bottom: 50px;
+            overflow: visible;
+        }
+
+
+        .progress .progress-bar
+        {
+            box-shadow: none;
+            position: relative;
+            bottom: 0px;
+            border-radius: 50px;
+            animation: animate-positive 4s;
+
+        }
+
+        .progress .progress-title
+        {
+            font-size: 20px;
+            font-weight: 700;
+            font-family: "Andale Mono", monospace;
+
+            text-transform: uppercase;
+            margin: 0;
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translate(-50%, -50%);
+
+        }
+
+        .progress .progress-value
+        {
+            width: 55px;
+            height: 33px;
+            line-height: 30px;
+            background: #f5f5f5;
+            border-radius: 50px;
+            box-shadow: 1px 1px 1px rgba(0,0,0,0.2);
+            font-weight: bold;
+            font-size: 14px;
+            color: #e95095;
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            text-align: center;
+        }
+
+
+        @keyframes animate-positive
+        {
+            0%
+            {
+                width: 0;
+            }
+        }
+        td {
+            height: 50px;
+            width: 30%;
+            position: absolute;
+            left: 3%;
+        }
+</style>
+
+<br><br><br><br>
+<table>
+<tr style="height:700px">
+{% for i in range %}
+    <td style="position: absolute; left: {{i*600+100}}px; width: 40%">
+    <div class="container" >
+        <h3  style="color: black; text-align: left; position: relative; left: 2.5%; min-width:1000px">{{text[i]}}</h3> <br><br><br>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="progress" style="width:100%; min-width:300px; display: inline-block;">
+                    <h3 class="progress-title" style="color: #e95095; " >{{trait[0]}}</h3>
+                    <div class="progress-bar" style="background: #e95095; width: {{answers[i][0]}}%; height: 50px;">
+                        <div class="progress-value">{{answers[i][0]}}%</div>
+                    </div>
+                </div>
+                 <div class="progress" style="width:100%; min-width:300px; display: inline-block;">
+                    <h3 class="progress-title" style="top: 95px; color: #ffcc00">{{trait[1]}}</h3>
+                    <div class="progress-bar" style="background: #ffcc00; width: {{answers[i][1]}}%; height: 50px;">
+                        <div class="progress-value orange" style="color: #ffcc00">{{answers[i][1]}}%</div>
+                    </div>
+                </div>
+                <div class="progress" style="width:100%; min-width:300px; display: inline-block;">
+                    <h3 class="progress-title" style="top: 205px; color: orange">{{trait[2]}}</h3>
+                    <div class="progress-bar" style="background: orange; width: {{answers[i][2]}}%; height: 50px;">
+                        <div class="progress-value orange" style="color: orange">{{answers[i][2]}}%</div>
+                    </div>
+                </div>
+                <div class="progress" style="width:100%; min-width:300px; display: inline-block;">
+                    <h3 class="progress-title" style="top: 310px; color:deepskyblue">{{trait[3]}}</h3>
+                    <div class="progress-bar" style="background: deepskyblue; width: {{answers[i][3]}}%; height: 50px;">
+                        <div class="progress-value blue" style="color: deepskyblue">{{answers[i][3]}}%</div>
+                    </div>
+                </div>
+                <div class="progress" style="width:100%; min-width:300px; display: inline-block;">
+                    <h3 class="progress-title" style="top:420px; color: green">{{trait[4]}}</h3>
+                    <div class="progress-bar" style="background: green; width: {{answers[i][4]}}%; height: 50px;">
+                        <div class="progress-value green" style="color: green">{{answers[i][4]}}%</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </td>
+{% endfor %}
+    </tr>
+    <tr>
+        {% for i in range2 %}
+    <td style="position: absolute; left: {{(i-2)*600+100}}px; width: 40%">
+    <div class="container" >
+        <h3  style="color: black; text-align: left; position: relative; left: 2.5%; min-width:1000px">{{text[i]}}</h3> <br><br><br>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="progress" style="width:100%; min-width:300px; display: inline-block;">
+                    <h3 class="progress-title" style="color: #e95095; " >{{trait[0]}}</h3>
+                    <div class="progress-bar" style="background: #e95095; width: {{answers[i][0]}}%; height: 50px;">
+                        <div class="progress-value">{{answers[i][0]}}%</div>
+                    </div>
+                </div>
+                 <div class="progress" style="width:100%; min-width:300px; display: inline-block;">
+                    <h3 class="progress-title" style="top: 95px; color: #ffcc00">{{trait[1]}}</h3>
+                    <div class="progress-bar" style="background: #ffcc00; width: {{answers[i][1]}}%; height: 50px;">
+                        <div class="progress-value orange" style="color: #ffcc00">{{answers[i][1]}}%</div>
+                    </div>
+                </div>
+                <div class="progress" style="width:100%; min-width:300px; display: inline-block;">
+                    <h3 class="progress-title" style="top: 205px; color: orange">{{trait[2]}}</h3>
+                    <div class="progress-bar" style="background: orange; width: {{answers[i][2]}}%; height: 50px;">
+                        <div class="progress-value orange" style="color: orange">{{answers[i][2]}}%</div>
+                    </div>
+                </div>
+                <div class="progress" style="width:100%; min-width:300px; display: inline-block;">
+                    <h3 class="progress-title" style="top: 310px; color:deepskyblue">{{trait[3]}}</h3>
+                    <div class="progress-bar" style="background: deepskyblue; width: {{answers[i][3]}}%; height: 50px;">
+                        <div class="progress-value blue" style="color: deepskyblue">{{answers[i][3]}}%</div>
+                    </div>
+                </div>
+                <div class="progress" style="width:100%; min-width:300px; display: inline-block;">
+                    <h3 class="progress-title" style="top:420px; color: green">{{trait[4]}}</h3>
+                    <div class="progress-bar" style="background: green; width: {{answers[i][4]}}%; height: 50px;">
+                        <div class="progress-value green" style="color: green">{{answers[i][4]}}%</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </td>
+{% endfor %}
+    </tr>
+</table>
+<!--############################################################-->
+<table style="position: absolute; top: 1000px; left:-1200px">
+<tr>
+
+    </tr>
+</table>
+{% endblock %}
