@@ -38,6 +38,13 @@
 			  backgroundColor: 'rgba(0,191,255, 0.2)',
 			  data: {{ ds.data|safe }}},
 		    {% endfor %}
+
+		    {% for ds in chart_data_friends.datasets %}
+			{ label: {{ ds.label|tojson|safe }},
+		      borderColor: 'rgb(255,165,0)',
+			  backgroundColor: 'rgba(255,165,0, 0.2)',
+			  data: {{ ds.data|safe }}},
+		    {% endfor %}
 		  ]},
 	    options: {
 		  layout: {
@@ -54,7 +61,7 @@
 	<div class="row justify-content-md-center">
     <table class="table">
       <thead>
-      <tr><th>Trait</th><th>Genome</th><th>Selfassesment</th><th>Test</th></tr>
+      <tr><th>Trait</th><th>Genome</th><th>Selfassesment</th><th>Test</th><th>Friends</th></tr>
       </thead>
       <tbody>
         {% for i in range(how_hany_trais) %}
@@ -63,6 +70,7 @@
             <td>{{ reports[i].score }}</td>
             <td>{{ selfassesment[i] }}</td>
             <td>{{ test_restul[i] }}</td>
+            <td>{{ friendassesment[i] }}</td>
           </tr>
         {% endfor %}
       </tbody>

@@ -2,10 +2,13 @@
 
 {% block content %}
 <br><br>
-    <h1>
-        How do you fill with this traits?
-    </h1>
-    <h4><b>{{ trait.capitalize() }}:</b></h4>
+{% if visible %}
+    <p>How do you think {{user.name}} {{user.surname}} will answer?</p>
+{% endif %}
+    <h2>
+        Do you feel strong with this trait?
+    </h2>
+    <h4><b>{{ trait.capitalize() }}</b></h4>
     <form action="" method="post" novalidate>
         <div class="card-body">
         {% for field in form.answers %}

@@ -38,6 +38,14 @@ class RegistrationForm(FlaskForm):
         validators.Length(min=6, max=50,
                           message="Email has to be between 6 and 50 characters")
     ])
+    name = StringField('Name', [
+        validators.Length(min=4, max=20,
+                      message="Name has to be between 4 and 20 characters")
+    ])
+    surname = StringField('Last name', [
+        validators.Length(min=4, max=20,
+                          message="Last name has to be between 4 and 20 characters")
+    ])
     password = PasswordField('Password', [
         validators.Required(message="You must provide a password."),
         validators.Length(min=5, max=50),
@@ -54,7 +62,7 @@ class QuestionareForm(FlaskForm):
     id = HiddenField("Question ID")
     show_all = BooleanField("Show answered questions too", default=True)
     answers = RadioField('Label', default=0)
-    submit = SubmitField('Submit')
+    submit = SubmitField('Send answer')
 
 
 class ForgottenPasswordForm(FlaskForm):
@@ -81,9 +89,25 @@ class SelfAssesmentBarsForm(FlaskForm):
 
     answers = RadioField('Label',
                          default=1,
-                         choices=[("1", "definetly not!"),
-                                  ("2", "quite not"),
-                                  ("3", "idk"),
-                                  ("4", "quite yes"),
-                                  ("5", "definetly yes!")])
+                         choices=[("1","Not strong."),
+                                  ("2","Weak."),
+                                  ("3", "Neutral."),
+                                  ("4","Strong."),
+                                  ("5","Very strong.")])
     submit = SubmitField('Send answer')
+
+class ChooseTraitTestForm(FlaskForm):
+    '''Form to make submit buttons'''
+    submit = SubmitField('Send answer')
+
+class FriendRequest(FlaskForm):
+    id = HiddenField("User ID")
+    submit = SubmitField('Add')
+
+class SearchForm(FlaskForm):
+    searchfriend = StringField('Search for your friend', [
+        validators.Length(min=4, max=50,
+                          message="Search request has to be between 4 and 50 characters")
+    ])
+    # id = HiddenField("User ID")
+    submit = SubmitField('Add')
