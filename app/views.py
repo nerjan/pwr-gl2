@@ -5,14 +5,15 @@ import genomelink
 import os
 from flask_login import login_user, logout_user, current_user, login_required
 from .extensions import db, login_manager, handled_traits
-from .models import User, Question, Answer, SelfAssesmentTraits, Choice
-from .forms import LoginForm, RegistrationForm, QuestionareForm, ForgottenPasswordForm, SelfAssesmentBarsForm, ChooseTraitTestForm
+from .models import User, Question, Answer, SelfAssesmentTraits, Choice, Friends, FriendAssesment
+from .forms import LoginForm, RegistrationForm, QuestionareForm, ForgottenPasswordForm, SelfAssesmentBarsForm, ChooseTraitTestForm, SearchForm, FriendRequest
 from .token import generate_confirmation_token, confirm_token
 from .email import send_email
 from random import randint
 from strgen import StringGenerator
 from .helper import flash_errors, genome, selfassesmenttraitsresults, mean_user_scores, mean_user_scores_percentage
 import app
+from sqlalchemy import or_, and_
 
 
 main = Blueprint('main', __name__)
@@ -136,7 +137,7 @@ def selfassessmenttraits():
             # take next trait
         try:
             trait = traits[x]   #at the end, the index will be out of handled_traits tuple, so. Here it is neccessary to noc answer first question 2 times at the beggining.
-            return render_template('selfassesmentbar.html', form=form, trait=trait) # go next trait quiz
+            return render_template('selfassesmentbar.html', form=form, trait=trait, user=current_user, visible=False) # go next trait quiz
         except IndexError:
             pass
     user_traits= db.session.query(SelfAssesmentTraits).filter_by(user_id=current_user.id).first()
@@ -210,6 +211,14 @@ def results_radar():                                        #mozna dodac ze jesl
                            selfassesment=selfassesment,
                            how_hany_trais=how_hany_trais)
 
+@main.route("/results_bars")
+@login_required
+@register_menu(main, '.results_bars', 'Results bars', order=6)
+def results_bars():
+    rangee=[0,1,2]
+    text=["Self-assesment results", "Test results", "Genomelink data"]
+    answers=[selfassesmenttraitsresults(), mean_user_scores_percentage(),  [int(x*100/5) for x in genome()[1].get("datasets")[0].get("data")]]
+    return render_template('all_in_one_results_bar.html', trait=handled_traits, answers=answers, text=text, range=rangee)
 
 @main.route("/callback")
 def callback():
@@ -353,14 +362,15 @@ def confirm_email(token):
     return redirect(url_for('main.index'))
 
 
-@main.route("/userprofile", methods=['GET', 'POST'])
-@login_required
-@register_menu(main, '.userprofile', 'Your profile', order=7,
-               visible_when=lambda: current_user.is_authenticated)
-def userprofile():
-    '''userprofile'''
-    return render_template('userprofile.html', user=current_user)
-
+# @main.route("/userprofile", methods=['GET', 'POST'])
+# @login_required
+# @register_menu(main, '.userprofile', 'Your profile', order=7,
+#                visible_when=lambda: current_user.is_authenticated)
+# def userprofile():
+#     '''userprofile'''
+#
+#     return render_template('userprofile.html', user=current_user)
+#
 
 
 @login_required
@@ -373,7 +383,127 @@ def upload_file():
     flash(app.app.config['UPLOAD_FOLDER'])
     file.filename = current_user.username+".jpg"    #rename to username.jpg -important for the rest functions
     f = os.path.join(app.app.config['UPLOAD_FOLDER'], file.filename)
-
-    # add your custom code to check that the uploaded file is a valid image and not a malicious file (out-of-scope for this post)
     file.save(f)
     return render_template('index.html')
+
+
+
+########################################################################################################################
+@main.route("/userprofile", methods=['GET', 'POST'])
+@login_required
+@register_menu(main, '.userprofile', 'Your profile', order=7,
+               visible_when=lambda: current_user.is_authenticated)
+def userprofile():
+    '''userprofile'''
+    form = SearchForm(request.form)
+    # Search friend on submit
+    if form.validate_on_submit():
+        searchfriend = form.searchfriend.data.split(' ')
+        if len(searchfriend) == 0:
+            flash('You have to write name or/and surname', 'warning')
+        elif len(searchfriend) == 1:
+            messages = searchfriend[0] + ' 0'
+        else:
+            messages = searchfriend[0] + ' ' + searchfriend[1]
+        session['messages'] = messages
+        return redirect(url_for('main.search', messages=messages))
+
+    return render_template('userprofile.html', user=current_user, form=form)
+
+
+@main.route("/search", methods=['GET', 'POST'])
+@login_required
+def search():
+    '''searchresults'''
+    text ="" #text which will be displayed if no search results
+    user_id = current_user.id
+    form_request = FriendRequest()
+    messages = session['messages'].split(' ')
+    results = User.query.with_entities(User.surname, User.name, User.id, User.email, User.username).filter(or_(
+        User.name == messages[0].strip().lower().title(),
+        User.surname == messages[1].strip().lower().title())).all()
+    current_user_friends = [x.friend_id for x in Friends.query.filter_by(user_id=current_user.id).all()]
+    results = [x for x in results if not x[2] in current_user_friends] #add only firends which are not in your friends already
+    flash(results)
+    if len(results)==0:
+        text = "No new friends with this data :)"
+
+    # Adding friends to DB
+    if form_request.is_submitted():
+        friend_id = request.form['submit']
+        is_friend = db.session.query(Friends).filter_by(user_id= current_user.id).filter_by(friend_id=friend_id).first()
+        if user_id == friend_id:
+            flash('You can not add yourself')
+        elif is_friend:
+            flash('You are friends already')
+        else:
+            flash('You added new friend')
+            connection = Friends(user_id=int(user_id),
+                                friend_id=int(friend_id))
+            db.session.add(connection)
+            db.session.commit()
+    return render_template('search.html', results=results, form=form_request, user_id=user_id, user=current_user, text=text)
+
+
+@main.route("/user_friends", methods=['GET', 'POST'])
+@login_required
+@register_menu(main, '.user_friends', 'Your friends', order=8,
+               visible_when=lambda: current_user.is_authenticated)
+def user_friends():
+    form = FriendRequest()
+    if form.is_submitted():
+        session['id']=request.form['submit']    #send friend ID to fiendassesment to know which friend to assess
+        return redirect(url_for("main.friendasessment"))
+    text=""
+    user_friends= [User.query.filter_by(id=x.friend_id).first() for x in Friends.query.filter_by(user_id=current_user.id).all()]
+
+    if not user_friends:
+        text="There is no friends yet:< Try to find some!"
+    return render_template('user_friends.html', results=user_friends, user_id=current_user, text=text, form=form )
+
+
+
+
+x=0
+ans=[0 for x in handled_traits]
+@main.route("/friendasessment", methods=['GET', 'POST'])
+@login_required
+def friendasessment():
+
+    friend_id = session['id']
+    name = User.query.filter_by(id=friend_id).first() #name to diplay "How do u think user is
+    #this 2 global are bad, but it is working, so lets left it here
+    global x
+    global ans
+    traits = handled_traits #take trait tuple
+    form= SelfAssesmentBarsForm()
+
+    #if user dont answer to all traits
+    if x < len(traits):
+        trait = traits[x]
+        # if form.validate_on_submit():
+        if form.is_submitted():
+            ans[x]=int(form.answers.data)*20 #to make it from 20% to 100%
+            x+=1
+            # take next trait
+        try:
+            trait = traits[x]   #at the end, the index will be out of handled_traits tuple, so. Here it is neccessary to noc answer first question 2 times at the beggining.
+            return render_template('selfassesmentbar.html', form=form, trait=trait, user=name, visible=True) # go next trait quiz
+        except IndexError:
+            pass
+
+    friend_traits= db.session.query(FriendAssesment).filter_by(friend_id=current_user.id).filter_by(user_id=friend_id).first()
+    if friend_traits: #if user already answered to questions change his answer to new one
+        friend_traits.agreeableness=ans[0]
+        friend_traits.conscientiousness=ans[1]
+        friend_traits.extraversion =ans[2]
+        friend_traits.neuroticism=ans[3]
+        friend_traits.openness=ans[4]
+    else: #if not, add him to database
+        sat= FriendAssesment(agreeableness=ans[0], conscientiousness=ans[1], extraversion =ans[2],
+                                 neuroticism=ans[3], openness=ans[4], user_id =friend_id, friend_id=current_user.id)
+        db.session.add(sat)
+    db.session.commit()
+    x=0
+    flash("You made an assesment of your friend.")
+    return redirect(url_for('main.user_friends'))

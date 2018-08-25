@@ -27,6 +27,62 @@ def add_data():
                      surname='Smith')
     test_user.confirmed = True
     session.add(test_user)
+    test_user = User(username='test1',
+                     email='test1@example.com',
+                     password='test',
+                     name='John1',
+                     surname='Smith1')
+    test_user.confirmed = True
+    session.add(test_user)
+    test_user = User(username='test2',
+                     email='test2@example.com',
+                     password='test',
+                     name='John2',
+                     surname='Smith2')
+    test_user.confirmed = True
+    session.add(test_user)
+    test_user = User(username='test3',
+                     email='test3@example.com',
+                     password='test',
+                     name='John',
+                     surname='Smith')
+    test_user.confirmed = True
+    session.add(test_user)
+    test_user = User(username='test4',
+                     email='test4@example.com',
+                     password='test',
+                     name='John',
+                     surname='Smith2')
+    test_user.confirmed = True
+    session.add(test_user)
+    test_user = User(username='test5',
+                     email='test5@example.com',
+                     password='test',
+                     name='John',
+                     surname='Smith2')
+    test_user.confirmed = True
+    session.add(test_user)
+    test_user = User(username='test6',
+                     email='test6@example.com',
+                     password='test',
+                     name='John',
+                     surname='Smith2')
+    test_user.confirmed = True
+    session.add(test_user)
+    test_user = User(username='test7',
+                     email='test7@example.com',
+                     password='test',
+                     name='John',
+                     surname='Smith2')
+    test_user.confirmed = True
+    session.add(test_user)
+    test_user = User(username='test8',
+                     email='test8@example.com',
+                     password='test',
+                     name='John',
+                     surname='Smith2')
+    test_user.confirmed = True
+    session.add(test_user)
     with open(app_dir+"/openness.yml") as fp:
         questions = yaml.load(fp.read())
     session.add_all(questions)
@@ -68,6 +124,19 @@ def upgrade():
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('user_id', sa.Integer(), nullable=True),
     sa.Column('friend_id', sa.Integer(), nullable=True),
+    sa.ForeignKeyConstraint(['friend_id'], ['user.id'], ),
+    sa.ForeignKeyConstraint(['user_id'], ['user.id'], ),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_table('friend_assesment',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('user_id', sa.Integer(), nullable=True),
+    sa.Column('friend_id', sa.Integer(), nullable=True),
+    sa.Column('agreeableness', sa.Integer(), nullable=True),
+    sa.Column('conscientiousness', sa.Integer(), nullable=True),
+    sa.Column('extraversion', sa.Integer(), nullable=True),
+    sa.Column('neuroticism', sa.Integer(), nullable=True),
+    sa.Column('openness', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['friend_id'], ['user.id'], ),
     sa.ForeignKeyConstraint(['user_id'], ['user.id'], ),
     sa.PrimaryKeyConstraint('id')

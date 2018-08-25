@@ -2,6 +2,9 @@
 
 {% block content %}
 <br><br>
+{% if visible %}
+    <p>How do you think {{user.name}} {{user.surname}} will answer?</p>
+{% endif %}
     <h2>
         Do you feel strong with this trait?
     </h2>

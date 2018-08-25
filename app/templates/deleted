@@ -1,0 +1,34 @@
+
+
+<h1>Friend search results</h1>
+{% for result in results if not result.id == user_id %}
+        <form method="post">
+            {{ form.id(value=result.id) }}
+	        <fieldset class="card form-group">
+            <h5 class="card-title">Become friend with {{ result.name }} {{ result.surname }}</h5>
+	    </fieldset>
+	<button type="submit" class="btn btn-primary"
+            name="{{ form.submit.name }}"
+            value="{{ result.id }}">{{ form.submit.label.text }}</button>
+    </form>
+{% endfor %}
+
+
+<br>
+<div class="user_card">
+  <h2 style="text-align:center; position: relative; top: -40px">User Profile Card</h2>
+  <div class="user_container">
+  <img src="static/users_pictures/{{user.username}}.jpg" alt=" " style="width:100%" class="user_image" >
+  <div class="user_middle">
+    <form action="upload_image">
+      <button type="submit" value="Upload image">change photo</button></form>
+  </div>
+  </div>
+  <br>
+  <h3>{{user.name}} {{user.surname}}</h3>
+  <p class="title">Username: <b>{{user.username}}</b></p>
+  <p>Email: {{user.email}}</p>
+<button type="submit" class="just_a_box"
+        name="{{ form.submit.name }}"
+        value="{{ result.id }}">{{ form.submit.label.text }}</button>
+</div>

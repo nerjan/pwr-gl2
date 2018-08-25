@@ -59,3 +59,15 @@ class SelfAssesmentBarsForm(FlaskForm):
 class ChooseTraitTestForm(FlaskForm):
     '''Form to make submit buttons'''
     submit = SubmitField('Send answer')
+
+class FriendRequest(FlaskForm):
+    id = HiddenField("User ID")
+    submit = SubmitField('Add')
+
+class SearchForm(FlaskForm):
+    searchfriend = StringField('Search for your friend', [
+        validators.Length(min=4, max=50,
+                          message="Search request has to be between 4 and 50 characters")
+    ])
+    # id = HiddenField("User ID")
+    submit = SubmitField('Add')

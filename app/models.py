@@ -142,7 +142,15 @@ class Friends(db.Model):
     user = db.relationship("User", foreign_keys=[user_id], uselist=False)
     friend = db.relationship("User", foreign_keys=[friend_id], uselist=False)
 
-    def __init__(self, user, friend):
-        
-        self.user_id = user.id
-        self.friend_id = friend.id
+class FriendAssesment(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    friend_id = db.Column(db.Integer, db.ForeignKey('user.id')) #who judge
+    agreeableness = db.Column(db.Integer)
+    conscientiousness = db.Column(db.Integer)
+    extraversion = db.Column(db.Integer)
+    neuroticism = db.Column(db.Integer)
+    openness = db.Column(db.Integer)
+
+    user = db.relationship("User", foreign_keys=[user_id], uselist=False)
+    friend = db.relationship("User", foreign_keys=[friend_id], uselist=False)

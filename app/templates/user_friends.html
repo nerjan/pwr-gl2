@@ -1,17 +1,16 @@
 {% extends "backbone.html" %}
-
 {% block content %}
 <style>
-
-.user_card {
+    .user_card {
   box-shadow: 4px 4px 8px 4px rgba(0, 0, 0, 0.2);
   max-width: 300px;
   min-width: 300px;
-  position: absolute;
+  position: relative;
   margin: auto;
   text-align: center;
-  top: 200px;
-  left: 250px;
+  top: 0px;
+  left: 0px;
+  align: left;
 }
 
 .user_title {
@@ -60,13 +59,6 @@ button:hover, a:hover {
   -ms-transform: translate(-50%, -50%)
 }
 
-.user_container:hover .user_image {
-  opacity: 0.3;
-}
-
-.user_container:hover .user_middle {
-  opacity: 1;
-}
 
 .user_text {
   color: white;
@@ -82,37 +74,56 @@ button:hover, a:hover {
   top: 16px;
 }
 
+tr {
+    height: 550px;
+    }
 </style>
 
-<br>
 
+<br>
+<h1 style="text-align:center">Your friends</h1>
+<br><br><br><br>
+{%if text != ""%}
+<p style="text-align:center">{{text}}</p>
+{% endif %}
+<table>
+    <tr>
+{% for result in results if not result.id == user_id %}
+            {% set counter=loop.index %}
+<!--Make 3 friends in a row-->
+        {% if counter%3==0 %}
+            <tr>
+
+        {% endif %}
+    <td style="padding: 0px 30px 0px">
+        <form method="post" >
 <div class="user_card">
   <h2 style="text-align:center; position: relative; top: -40px">User Profile Card</h2>
   <div class="user_container">
-  <img src="static/users_pictures/{{user.username}}.jpg" alt=" " style="width:100%" class="user_image" >
+  <img src="static/users_pictures/{{result.username}}.jpg" alt=" " style="width:100%" class="user_image" >
   <div class="user_middle">
     <form action="upload_image">
-      <button type="submit" value="Upload image">change photo</button></form>
   </div>
   </div>
   <br>
-  <h3>{{user.name}} {{user.surname}}</h3>
-  <p class="title">Username: <b>{{user.username}}</b></p>
-  <p>Email: {{user.email}}</p>
-
- <p><div class="just_a_box"> &nbsp</div></p>
+  <h3>{{result.name}} {{result.surname}}</h3>
+  <p class="title">Username: <b>{{result.username}}</b></p>
+  <p>Email: {{result.email}}</p>
+<button type="submit" class="just_a_box"
+        name="submit"
+        value="{{ result.id }}">Make assessment</button>
 </div>
+    </form>
+    </td>
+{% if counter==3 %}
+    </td>
+    {% set counter=0 %}
+{% endif %}
+{% endfor %}
+    </tr>
+    </table>
 
 
-   <form action="" method="post" novalidate style="position: relative; left: 25%">
-        {{ form.hidden_tag() }} <!-- Show text, like "Search" -->
-        <!-- Form for search -->
-        <p >
-            {{ form.searchfriend.label }}<br>
-            {{ form.searchfriend(size=50, placeholder="Look for new friends!") }}
-        </p>
-       <p>{{form.submit()}}</p>
-   </form>
 
 
 {% endblock %}
