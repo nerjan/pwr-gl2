@@ -479,7 +479,7 @@ def user_friends():
     user_friends= [User.query.filter_by(id=x.friend_id).first() for x in Friends.query.filter_by(user_id=current_user.id).all()]
 
     if not user_friends:
-        text="There is no friends yet:< Try to find some!"
+        text="There are no friends yet:< Try to find some!"
     return render_template('user_friends.html', results=user_friends, user_id=current_user, text=text, form=form )
 
 
