@@ -22,10 +22,12 @@ First, make sure the database is built and perform migrations (if any):
 ```
 export FLASK_APP=app
 export FLASK_DEBUG=1
-flask db init
 flask db migrate
 flask db upgrade
 ```
+*IMPORTANT*: do not run `flask db init`. The `migrations` directory is now
+included in the repository and contains function that populates the database
+with question as well as a test user (username: test, password: test).
 
 Finally, run the app:
 
@@ -43,4 +45,8 @@ A working combination of those three is Firefox 60, Selenium 3.13 and
 geckodriver 0.21. Test can be run automatically:
 ```
 python -m unittest
+```
+Or using pytest (requires installation of pytest):
+```
+pytest tests
 ```

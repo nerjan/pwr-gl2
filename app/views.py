@@ -5,13 +5,17 @@ import genomelink
 import os
 from flask_login import login_user, logout_user, current_user, login_required
 from .extensions import db, login_manager, handled_traits
-from .models import User, Question, Answer, SelfAssesmentTraits, Choice, Friends, FriendAssesment, FriendAnswer
-from .forms import LoginForm, RegistrationForm, QuestionareForm, ForgottenPasswordForm, SelfAssesmentBarsForm, ChooseTraitTestForm, SearchForm, FriendRequest
+from .models import User, Question, Answer, SelfAssesmentTraits, \
+                    Choice, Friends, FriendAssesment, FriendAnswer
+from .forms import LoginForm, RegistrationForm, QuestionareForm, \
+                   ForgottenPasswordForm, SelfAssesmentBarsForm, \
+                   ChooseTraitTestForm, SearchForm, FriendRequest
 from .token import generate_confirmation_token, confirm_token
 from .email import send_email
 from random import randint
 from strgen import StringGenerator
-from .helper import flash_errors, genome, selfassesmenttraitsresults, mean_user_scores, mean_user_scores_percentage, friend_assesment_result
+from .helper import flash_errors, genome, selfassesmenttraitsresults, \
+                    mean_user_scores, mean_user_scores_percentage, friend_assesment_result
 import app
 from sqlalchemy import or_, and_
 
@@ -114,6 +118,7 @@ def questionare():
         'id': question.id,
         'count': number_of_questions}
     return render_template('questionare.html', data=data, form=form)
+
 
 x=0
 ans=[0 for x in handled_traits]
@@ -474,7 +479,7 @@ def user_friends():
     user_friends= [User.query.filter_by(id=x.friend_id).first() for x in Friends.query.filter_by(user_id=current_user.id).all()]
 
     if not user_friends:
-        text="There is no friends yet:< Try to find some!"
+        text="There are no friends yet:< Try to find some!"
     return render_template('user_friends.html', results=user_friends, user_id=current_user, text=text, form=form )
 
 

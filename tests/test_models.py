@@ -75,14 +75,30 @@ class TestUser(ModelTestCase):
 class TestQuestion(ModelTestCase):
 
     YAML = """
-- !Question
-  question: Lorem ipsum
-  trait: latin
-  impact: positive
-- !Question
-  question: Quick brown fox
-  trait: english
-  impact: negative
+- !question
+    value: Lorem ipsum
+    weight: 1
+    trait: latin
+    impact: positive
+    choices:
+        - !answer
+            value: yes
+            score: 1
+        - !answer
+            value: no
+            score: -1
+- !question
+    value: Quick brown fox
+    weight: 1
+    trait: english
+    impact: negative
+    choices:
+        - !answer
+            value: jumps
+            score: 1
+        - !answer
+            value: swimms
+            score: 2
 """
 
     def test_yaml_load(self):
@@ -90,7 +106,7 @@ class TestQuestion(ModelTestCase):
         quest = yaml.load(self.YAML)
 
         self.assertEqual(len(quest), 2)
-        self.assertEqual(quest[0].question, "Lorem ipsum")
+        self.assertEqual(quest[0].value, "Lorem ipsum")
         self.assertEqual(quest[0].trait, "latin")
         self.assertEqual(quest[0].impact, "positive")
 
@@ -100,14 +116,14 @@ class TestQuestion(ModelTestCase):
         trait = "conscientiousness"
         impact = "negative"
 
-        q1 = Question(question=question,
+        q1 = Question(value=question,
                       trait=trait,
                       impact=impact)
         db.session.add(q1)
         db.session.commit()
 
         q2 = Question.query.first()
-        self.assertEqual(q2.question, question)
+        self.assertEqual(q2.value, question)
         self.assertEqual(q2.trait, trait)
         self.assertEqual(q2.impact, impact)
 
