@@ -33,13 +33,6 @@ def index():
     return render_template('index.html', quote=lines[randint(0, len(lines)-1)])
 
 
-@login_manager.user_loader
-def load_user(id):
-    '''This callback is used to reload the user object from the user ID
-    stored in the session'''
-    return db.session.query(User).get(int(id))
-
-
 @main.route("/questionare", methods=['GET', 'POST'])
 @login_required
 @register_menu(main, '.questionare', 'Personality test', order=1,
@@ -134,6 +127,7 @@ def selfassessmenttraits():
     db.session.commit()
     x=0
     return redirect(url_for('main.selfassesmentresults'))
+
 
 @main.route("/selfassessmenttest")
 @login_required
@@ -317,6 +311,11 @@ def callback():
     session['gl_oauth_token'] = token
     return redirect(url_for('main.results_radar'))
 
+@login_manager.user_loader
+def load_user(id):
+    '''This callback is used to reload the user object from the user ID
+    stored in the session'''
+    return db.session.query(User).get(int(id))
 
 @main.route("/forgotten_password", methods=['GET', 'POST'])
 def forgotten_password():
@@ -383,7 +382,7 @@ def logout():
     return redirect(url_for('main.index'))
 
 
-@main.route('/register', methods=["GET", "POST"])
+@main.route('/register/', methods=["GET", "POST"])
 @register_menu(main, '.register', 'Registration', order=22,
                visible_when=lambda: not current_user.is_authenticated)
 def register():
@@ -474,6 +473,7 @@ def userprofile():
     friends=[db.session.query(User).filter_by(
                           id=friend.friend_id).first() for friend in idfriends]
     return render_template('userprofile.html', user = user, form = form)
+
 
 @main.route("/search", methods=['GET', 'POST'])
 @login_required
