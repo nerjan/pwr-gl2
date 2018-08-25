@@ -26,6 +26,8 @@ class MetaConfig(type):
             for key in config[section]:
                 val = config[section][key]
                 setattr(cls, key, val)
+                if section == 'genomelink':
+                    os.environ[key] = val
 
 
 class Config(metaclass=MetaConfig):
