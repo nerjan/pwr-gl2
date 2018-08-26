@@ -16,7 +16,7 @@ from random import randint
 from strgen import StringGenerator
 from .helper import flash_errors, genome, selfassesmenttraitsresults, \
                     mean_user_scores, mean_user_scores_percentage, \
-                    friend_assesment_result, make_filter
+                    friend_assesment_result, make_filter, friend_mean_user_scores
 import app
 
 
@@ -213,7 +213,7 @@ def results_radar():                                        #mozna dodac ze jesl
             {'label': 'Self-assesment',
              'data': selfassesment }
                  ]}
-    friendassesment = [int(x*5/100) for x in friend_assesment_result()]
+    friendassesment = friend_mean_user_scores()
     chart_data_friends={
         'labels': [r for r in handled_traits],
         'datasets': [
@@ -494,52 +494,52 @@ def user_friends():
     return render_template('user_friends.html', results=user_friends, user_id=current_user, text=text, form=form )
 
 
-
-
-x=0
-ans=[0 for x in handled_traits]
-@main.route("/friendasessment", methods=['GET', 'POST'])
-@login_required
-def friendasessment():
-    '''Friend assesment bars questionaire - from 1 to 5 how is he'''
-    friend_id = session['id']
-    name = User.query.filter_by(id=friend_id).first() #name to diplay "How do u think user is
-    #this 2 global are bad, but it is working, so lets left it here
-    global x
-    global ans
-    traits = handled_traits #take trait tuple
-    form= SelfAssesmentBarsForm()
-
-    #if user dont answer to all traits
-    if x < len(traits):
-        trait = traits[x]
-        # if form.validate_on_submit():
-        if form.is_submitted():
-            ans[x]=int(form.answers.data)*20 #to make it from 20% to 100%
-            x+=1
-            # take next trait
-        try:
-            trait = traits[x]   #at the end, the index will be out of handled_traits tuple, so. Here it is neccessary to noc answer first question 2 times at the beggining.
-            return render_template('selfassesmentbar.html', form=form, trait=trait, user=name, visible=True) # go next trait quiz
-        except IndexError:
-            pass
-
-    friend_traits= db.session.query(FriendAssesment).filter_by(friend_id=current_user.id).filter_by(user_id=friend_id).first()
-    if friend_traits: #if user already answered to questions change his answer to new one
-        friend_traits.agreeableness=ans[0]
-        friend_traits.conscientiousness=ans[1]
-        friend_traits.extraversion =ans[2]
-        friend_traits.neuroticism=ans[3]
-        friend_traits.openness=ans[4]
-    else: #if not, add him to database
-        sat= FriendAssesment(agreeableness=ans[0], conscientiousness=ans[1], extraversion =ans[2],
-                                 neuroticism=ans[3], openness=ans[4], user_id =friend_id, friend_id=current_user.id)
-        db.session.add(sat)
-    db.session.commit()
-    x=0
-    flash("You made an assesment of your friend.")
-    return redirect(url_for('main.user_friends'))
-
+'''We dont use it, but it works fine if we weill want to'''
+#
+# x=0
+# ans=[0 for x in handled_traits]
+# @main.route("/friendasessment", methods=['GET', 'POST'])
+# @login_required
+# def friendasessment():
+#     '''Friend assesment bars questionaire - from 1 to 5 how is he'''
+#     friend_id = session['id']
+#     name = User.query.filter_by(id=friend_id).first() #name to diplay "How do u think user is
+#     #this 2 global are bad, but it is working, so lets left it here
+#     global x
+#     global ans
+#     traits = handled_traits #take trait tuple
+#     form= SelfAssesmentBarsForm()
+#
+#     #if user dont answer to all traits
+#     if x < len(traits):
+#         trait = traits[x]
+#         # if form.validate_on_submit():
+#         if form.is_submitted():
+#             ans[x]=int(form.answers.data)*20 #to make it from 20% to 100%
+#             x+=1
+#             # take next trait
+#         try:
+#             trait = traits[x]   #at the end, the index will be out of handled_traits tuple, so. Here it is neccessary to noc answer first question 2 times at the beggining.
+#             return render_template('selfassesmentbar.html', form=form, trait=trait, user=name, visible=True) # go next trait quiz
+#         except IndexError:
+#             pass
+#
+#     friend_traits= db.session.query(FriendAssesment).filter_by(friend_id=current_user.id).filter_by(user_id=friend_id).first()
+#     if friend_traits: #if user already answered to questions change his answer to new one
+#         friend_traits.agreeableness=ans[0]
+#         friend_traits.conscientiousness=ans[1]
+#         friend_traits.extraversion =ans[2]
+#         friend_traits.neuroticism=ans[3]
+#         friend_traits.openness=ans[4]
+#     else: #if not, add him to database
+#         sat= FriendAssesment(agreeableness=ans[0], conscientiousness=ans[1], extraversion =ans[2],
+#                                  neuroticism=ans[3], openness=ans[4], user_id =friend_id, friend_id=current_user.id)
+#         db.session.add(sat)
+#     db.session.commit()
+#     x=0
+#     flash("You made an assesment of your friend.")
+#     return redirect(url_for('main.user_friends'))
+#
 
 
 
