@@ -4,6 +4,9 @@
 {% block content %}
 <br><br>
   <h1>Personality test</h1>
+{% if visible %}
+    <p>How do you think {{user.name}} {{user.surname}} will answer?</p>
+{% endif %}
 
   <form method="post">
 	  <!--what is it for?-->

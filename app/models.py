@@ -168,8 +168,8 @@ class FriendAnswer(db.Model):
     question_id = db.Column(db.Integer, db.ForeignKey('question.id'))
     score = db.Column(db.Integer, db.ForeignKey('choice.score'))  # It is better, because we anyway need only score
     answer = db.Column(db.Integer)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    friend_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))       #THis is our friend!!
+    friend_id = db.Column(db.Integer, db.ForeignKey('user.id'))     #this is Us when we answer to someones test
     question = db.relationship("Question", back_populates="friend_answer")
     author = db.relationship("User", foreign_keys=[user_id], uselist=False)
     friend = db.relationship("User", foreign_keys=[friend_id], uselist=False)                   #????will it work??????

@@ -158,7 +158,7 @@ def selfassessmenttraits():
         db.session.add(sat)
     db.session.commit()
     x=0
-    return redirect(url_for('main.selfassesmentresults'))
+    return redirect(url_for('main.results_bars'))
 
 # @main.route("/selfassessmenttest")
 # @login_required
@@ -410,7 +410,6 @@ def upload_file():
 
 
 
-########################################################################################################################
 @main.route("/userprofile", methods=['GET', 'POST'])
 @login_required
 @register_menu(main, '.userprofile', 'Your profile', order=7,
@@ -475,7 +474,7 @@ def user_friends():
     form = FriendRequest()
     if form.is_submitted():
         session['id']=request.form['submit']    #send friend ID to fiendassesment to know which friend to assess
-        return redirect(url_for("main.friendasessment"))
+        return redirect(url_for("main.friend_choose_trait_test")) #could be friendasessment and will be ok too!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     text=""
     user_friends= [User.query.filter_by(id=x.friend_id).first() for x in Friends.query.filter_by(user_id=current_user.id).all()]
 
@@ -491,7 +490,7 @@ ans=[0 for x in handled_traits]
 @main.route("/friendasessment", methods=['GET', 'POST'])
 @login_required
 def friendasessment():
-
+    '''Friend assesment bars questionaire - from 1 to 5 how is he'''
     friend_id = session['id']
     name = User.query.filter_by(id=friend_id).first() #name to diplay "How do u think user is
     #this 2 global are bad, but it is working, so lets left it here
@@ -536,91 +535,95 @@ def friendasessment():
 
 
 
-#
-# @main.route("/friend_choose_trait_test", methods=['GET', 'POST'])
-# @login_required
+
+@main.route("/friend_choose_trait_test", methods=['GET', 'POST'])
+@login_required
 # @register_menu(main, '.friend_choose_trait_test', 'Friend Personality test', order=11,
 #                visible_when=lambda: current_user.is_authenticated)
-# def choose_trait_test():
-#     colors = ["#e95095", "#ffcc00", "orange", "deepskyblue", "green"]
-#     b_colors = ["#e95095", "#ffcc00", "orange", "deepskyblue", "green"]
-#     form = ChooseTraitTestForm()
-#     if form.is_submitted():
-#         return redirect(url_for("main.questionare_friend", trait=request.form['submit']))
-#     return render_template("choose_trait_test.html", handled_traits=handled_traits, form=form, colors=colors[::-1], b_colors=b_colors[::-1])
-#
+def friend_choose_trait_test():
+    '''Choose trait in wchich user will answer to traits about his friends.'''
+    colors = ["#e95095", "#ffcc00", "orange", "deepskyblue", "green"]
+    b_colors = ["#e95095", "#ffcc00", "orange", "deepskyblue", "green"]
+    form = ChooseTraitTestForm()
+    if form.is_submitted():
+        return redirect(url_for("main.friend_questionare", trait=request.form['submit']))
+    return render_template("choose_trait_test.html", handled_traits=handled_traits, form=form, colors=colors[::-1], b_colors=b_colors[::-1])
 
-#
-# @main.route("/questionare_friend", methods=['GET', 'POST'])
-# @login_required
-# def questionare_friend():
-#     '''Show self-assessment questionare'''
-#     # next_id = 0
-#     trait = request.args['trait']        #take trait from choose_trait_test button that was clicked
-#     form = QuestionareForm()
-#     #adding answet to db
-#     if form.is_submitted():
-#         #If in db is answer for this question update it in not just add.
-#         anser_in_database =db.session.query(FriendAnswer).filter_by(user_id=current_user.id, question_id=form.id.data).first()
-#         if anser_in_database:
-#             anser_in_database.answer=int(form.answers.data) + 1
-#             anser_in_database.score=db.session.query(Choice).filter_by(trait_id=form.id.data)[int(form.answers.data)].score
-#         else:
-#             answer = Answer(question_id=form.id.data,
-#                             answer=int(form.answers.data) + 1,
-#                             user_id=current_user.get_id(),
-#                             score=db.session.query(Choice).filter_by(trait_id=form.id.data)[int(form.answers.data)].score)   #take choices to question of id =form.id.data and from there only particular choice and score of this choice
-#             db.session.add(answer)
-#         db.session.commit()
-#
-#     trait_questions = db.session.query(Question).filter_by(trait=trait) #list of db records of questions from THIS TRAIT only
-#     '''WHEN ALL TRAITS WILL BE AVAILABLE WE CAN DELETE THIS'''
-#     if not trait_questions.count():
-#         flash("There is no question for this trait", "info")
-#         return redirect(url_for('main.index'))
-#
-#     number_of_questions = trait_questions.count() #idk if it is important
-#     first_id = trait_questions.first().id #id of 1st question in this trait, start from here
-#
-#     if form.show_all.data: #if checkbox is checked (default) - answer to all questions
-#         # Showing all questions in a circular fashion
-#         if form.id.data:
-#             next_id = 1 + int(form.id.data)
-#             question =Question.query.get(next_id)
-#             form.id.data = next_id
-#         else: #if this is 1st question
-#             next_id = first_id
-#             form.id.data = next_id
-#             question = Question.query.get(first_id)
-#         try:# if there is no more questions in trait_questions, finish
-#             x= trait_questions.filter_by(id=next_id).first().id
-#         except AttributeError:
-#             return redirect(url_for("main.index"))
-#     else:
-#         # Showing only unanswered quesitons, so take the next one
-#         my_answers = Answer.query.filter_by(author=current_user)
-#         answered_ids=[]
-#         if answered_ids==[]:
-#             for ans in my_answers:
-#                 if db.session.query(Question).filter_by(id=ans.question_id).first().trait == trait:
-#                     answered_ids.append(ans.question_id) #list of question ids which was ansered for this trait
-#         '''if error do this:'''
-#         #if answered_ids ==[]:
-#             # return redirect(url_for("main.index"))
-#
-#         # answered_ids = [ans.question_id for ans in my_answers]                      #list of question ids which was ansered
-#         questions_to_answer = Question.query.filter(~Question.id.in_(answered_ids)).filter_by(trait=trait)   #search all non answered questions for this traid
-#         question = questions_to_answer.first()
-#         if not question:
-#             flash("You already answered to all questions")
-#             return redirect(url_for("main.index"))
-#
-#     answers = []
-#     for choice in range(len(question.choices)):
-#         answers.append((choice, question.choices[choice].value))
-#     form.answers.choices = answers
-#     data = {
-#         'question': question.value,
-#         'id': question.id,
-#         'count': number_of_questions}
-#     return render_template('questionare.html', data=data, form=form)
+
+
+@main.route("/friend_questionare", methods=['GET', 'POST'])
+@login_required
+def friend_questionare():
+    '''Show test where user can judge his friends'''
+    # next_id = 0
+    friend_id = session['id']
+    name = User.query.filter_by(id=friend_id).first() #name to diplay "How do u think user is
+    trait = request.args['trait']        #take trait from choose_trait_test button that was clicked
+    form = QuestionareForm()
+    #adding answet to db
+    if form.is_submitted():
+        #If in db is answer for this question update it in not just add.
+        anser_in_database =db.session.query(FriendAnswer).filter_by(user_id=friend_id, question_id=form.id.data, friend_id=current_user.id).first() #request of which friend !!!!!!!!!!!!!!!!!!!!!
+        if anser_in_database:
+            anser_in_database.answer=int(form.answers.data) + 1
+            anser_in_database.score=db.session.query(Choice).filter_by(trait_id=form.id.data)[int(form.answers.data)].score
+        else:
+            answer = FriendAnswer(question_id=form.id.data,
+                            answer=int(form.answers.data) + 1,
+                            user_id=friend_id,
+                            friend_id= current_user.id,
+                            score=db.session.query(Choice).filter_by(trait_id=form.id.data)[int(form.answers.data)].score)   #take choices to question of id =form.id.data and from there only particular choice and score of this choice
+            db.session.add(answer)
+        db.session.commit()
+
+    trait_questions = db.session.query(Question).filter_by(trait=trait) #list of db records of questions from THIS TRAIT only
+    '''WHEN ALL TRAITS WILL BE AVAILABLE WE CAN DELETE THIS'''
+    if not trait_questions.count():
+        flash("There is no question for this trait", "info")
+        return redirect(url_for('main.index'))
+
+    number_of_questions = trait_questions.count() #idk if it is important
+    first_id = trait_questions.first().id #id of 1st question in this trait, start from here
+
+    if form.show_all.data: #if checkbox is checked (default) - answer to all questions
+        # Showing all questions in a circular fashion
+        if form.id.data:
+            next_id = 1 + int(form.id.data)
+            question =Question.query.get(next_id)
+            form.id.data = next_id
+        else: #if this is 1st question
+            next_id = first_id
+            form.id.data = next_id
+            question = Question.query.get(first_id)
+        try:# if there is no more questions in trait_questions, finish
+            x= trait_questions.filter_by(id=next_id).first().id
+        except AttributeError:
+            return redirect(url_for("main.index"))
+    else:
+        # Showing only unanswered quesitons, so take the next one
+        my_answers = FriendAnswer.query.filter_by(friend_id=current_user.id, user_id=friend_id)
+        answered_ids=[]
+        if answered_ids==[]:
+            for ans in my_answers:
+                if db.session.query(Question).filter_by(id=ans.question_id).first().trait == trait:
+                    answered_ids.append(ans.question_id) #list of question ids which was ansered for this trait
+        '''if error do this:'''
+        #if answered_ids ==[]:
+            # return redirect(url_for("main.index"))
+
+        # answered_ids = [ans.question_id for ans in my_answers]                      #list of question ids which was ansered
+        questions_to_answer = Question.query.filter(~Question.id.in_(answered_ids)).filter_by(trait=trait)   #search all non answered questions for this traid
+        question = questions_to_answer.first()
+        if not question:
+            flash("You already answered to all questions")
+            return redirect(url_for("main.index"))
+
+    answers = []
+    for choice in range(len(question.choices)):
+        answers.append((choice, question.choices[choice].value))
+    form.answers.choices = answers
+    data = {
+        'question': question.value,
+        'id': question.id,
+        'count': number_of_questions}
+    return render_template('questionare.html', data=data, form=form, user=name, visible=True)
