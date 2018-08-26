@@ -4,7 +4,7 @@ from flask_menu import register_menu
 import genomelink
 import os
 from flask_login import login_user, logout_user, current_user, login_required
-from .extensions import db, login_manager, handled_traits
+from .extensions import db, login_manager, handled_traits, cache
 from .models import User, Question, Answer, SelfAssesmentTraits, \
                     Choice, Friends, FriendAssesment, FriendAnswer
 from .forms import LoginForm, RegistrationForm, QuestionareForm, \
@@ -235,7 +235,8 @@ def results_radar():                                        #mozna dodac ze jesl
 
 @main.route("/results_bars")
 @login_required
-@register_menu(main, '.results_bars', 'Results bars', order=6)
+@register_menu(main, '.results_bars', 'Results bars', order=6,
+               visible_when=lambda: current_user.is_authenticated)
 def results_bars():
     rangee=[0,1]
     range2=[2,3]
@@ -627,3 +628,9 @@ def friend_questionare():
         'id': question.id,
         'count': number_of_questions}
     return render_template('questionare.html', data=data, form=form, user=name, visible=True)
+
+
+@cache.cached(timeout=360000)
+@main.route('/tos')
+def tos():
+    return render_template('tos.html')

@@ -7,7 +7,7 @@ from flask_menu import Menu
 from flask_migrate import Migrate
 
 from app.views import main
-from app.extensions import db, login_manager, yaml, mail
+from app.extensions import db, login_manager, yaml, mail, cache
 from app.models import Question_constructor, Choice_constructor, \
                        User, Question
 
@@ -42,6 +42,7 @@ class Config(metaclass=MetaConfig):
     MAIL_PORT = 465
     MAIL_USE_TLS = False
     MAIL_USE_SSL = True
+    CACHE_TYPE = 'simple'
 
 
 def create_app(config=Config):
@@ -56,6 +57,7 @@ def create_app(config=Config):
     login_manager.login_view = "main.login"
     login_manager.login_message_category = "warning"
     mail.init_app(app)
+    cache.init_app(app)
     return app
 
 

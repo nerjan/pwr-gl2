@@ -40,7 +40,7 @@
         <!-- Form to accept Terms of Service etc.-->
         <p>
             {{form.accept_tos}}
-            {{ form.accept_tos.label }}
+			I accept the <a href="{{ url_for('main.tos') }}">Terms of Service and Privacy Note</a>
         </p>
         <!-- Submit -->
         <p>{{ form.submit(class="btn btn-success active") }}</p>

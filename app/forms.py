@@ -35,8 +35,7 @@ class RegistrationForm(FlaskForm):
         validators.EqualTo('confirm', message='Passwords must match.')
     ])
     confirm = PasswordField('Repeat Password')
-    accept_tos = BooleanField(
-        'I accept the Terms of Service and Privacy Notice',
+    accept_tos = BooleanField('I accept the Terms of Service and Privacy Notice',
         [validators.Required(message="You have to accept this terms to use this site!")])
     submit = SubmitField('Register')
 
