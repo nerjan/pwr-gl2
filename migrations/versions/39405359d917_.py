@@ -87,6 +87,10 @@ def add_data():
         questions = yaml.load(fp.read())
     session.add_all(questions)
     session.commit()
+    with open(app_dir+"/conscientiousness.yml") as fp:
+        questions = yaml.load(fp.read())
+    session.add_all(questions)
+    session.commit()
 
 
 def upgrade():

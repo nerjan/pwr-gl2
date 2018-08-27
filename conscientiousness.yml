@@ -12,7 +12,6 @@
         - !answer
             value: I will start working on it probably at the last moment.
             score: 0
-			
 - !question
     value: Where your belongings can be usually found?
     weight: 1
@@ -27,7 +26,6 @@
         - !answer
             value: I almost always forget to put them on place, they are all around.
             score: 0
-
 - !question
     value: You made a promise to appear on the meeting although there is nothing important going to be discussed. Moreover, you are tired after whole day and not feeling like going out. Will you appear anyway?
     weight: 2
@@ -42,7 +40,6 @@
         - !answer
             value: It's not an important meeting... Nothing will happen if I don't appear this time.
             score: 0
-			
 - !question
     value: You are going to have unexpected guests in an hour. Do you have to make a quick cleaning at your place?
     weight: 1
@@ -57,7 +54,7 @@
         - !answer
             value: Oh ****! Let's ask them to meet at another place. I won't clean it on time!
             score: 0
-			
+
 - !question
     value: You prepared a list of things to do for the coming week. Will you stick to the plan?
     weight: 2
@@ -130,7 +127,7 @@
         - !answer
             value: I don't really pay attention to details, I focus on the main informations.
             score: 0
-            
+
 - !question
     value: Do you spend your time wisely and responsible?
     weight: 1
@@ -160,7 +157,7 @@
         - !answer
             value: I am going. I've spent enough time on working and I can finish it on some other day.
             score: 0
-            
+
 - !question
     value: Your boss didn't set a meeting with you and unexpectedly wants to discuss progress on the project you are working on. How are you feeling?
     weight: 2
@@ -175,7 +172,7 @@
         - !answer
             value: I have to reschedule it, otherwise I won't have anything to show.
             score: 0
-            
+
 - !question
     value: There is a new rule at your workplace. Personally you don't agree with it and find it inconvenient. Will you abide that rule anyway?
     weight: 2
@@ -205,7 +202,7 @@
         - !answer
             value: I don't really write down important dates.
             score: 0
-            
+
 - !question
     value: Would you be recommended by your friends as an organiser for an upcoming social event?
     weight: 1
@@ -220,7 +217,7 @@
         - !answer
             value: Noo, it's definitelly not my thing.
             score: 0
-            
+
 - !question
     value: You are supposed to meet friends at 7. What time will you arrive?
     weight: 2

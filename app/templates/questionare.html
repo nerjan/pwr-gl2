@@ -12,7 +12,7 @@
 	  <!--what is it for?-->
     {{ form.id(value=data.id) }}
 	<fieldset class="card form-group" style="border-width: medium; border-color: white">
-     <h4 class="card-title"><b> Question {{ data.id }}/{{ data.count }}:
+     <h4 class="card-title"><b> Question {% if data.id > data.count %}{{ data.id-data.count-1 }}{% endif %} {% if data.id<= data.count%} {{data.id}}{% endif %}/{{ data.count }}:
 			  {{ data.question }}</b>
 	</h4>
 	  <div class="card-body">

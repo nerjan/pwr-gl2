@@ -649,7 +649,7 @@ def friend_questionare():
     data = {
         'question': question.value,
         'id': question.id,
-        'count': number_of_questions}
+        'count': (number_of_questions + first_id)}
     return render_template('questionare.html', data=data, form=form, user=name, visible=True)
 
 
