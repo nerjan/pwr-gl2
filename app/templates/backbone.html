@@ -3,18 +3,33 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+      <!--Fonts here:-->
+    <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet'>
+    <link href='https://fonts.googleapis.com/css?family=Montserrat+Alternates' rel='stylesheet'>
+    <link href='https://fonts.googleapis.com/css?family=Fira+Sans' rel='stylesheet'>
+      <!--End of fonts!-->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/css/bootstrap.min.css" integrity="sha384-Smlep5jCw/wG7hdkwQ/Z5nLIefveQRIY9nfy6xoR1uRYBtpZgI6339F5dgvm/e9B" crossorigin="anonymous">
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.min.js"></script>
+	<link rel="stylesheet" href="{{ url_for('static', filename='progressbar.css') }}">
   </head>
-  <body>
+  <body style="font-family: 'Montserrat'; font-weight: 400;">
+  <style>
+
+        h1, h2, h3
+        {
+            font-family: 'Montserrat';
+            font-weight: 900;
+        }
+
+   </style>
 
     {% with messages = get_flashed_messages(with_categories=true) %}
       {% if messages %}
         {% for category, message in messages %}
-          <div class="alert alert-{{ category }}" role="alert">
+          <div class="alert alert-{{ category }}" role="alert" style="background-color: white">
 			<button type="button" class="close" data-dismiss="alert" aria-label="Close">
 			  <span aria-hidden="true">&times;</span>
-			</button>
+			</button >
             {{ message }}
           </div>
         {% endfor %}

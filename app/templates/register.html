@@ -12,6 +12,11 @@
             {{ form.username.label }}<br>
             {{ form.username(size=50, placeholder="What would you like to be called?") }}
         </p>
+        <!-- Form to put email -->
+        <p>
+            {{ form.email.label }}<br>
+            {{ form.email(size=50, placeholder="What is your email?") }}
+        </p>
         <!-- Form to put Name -->
         <p>
             {{ form.name.label }}<br>
@@ -21,11 +26,6 @@
         <p>
             {{ form.surname.label }}<br>
             {{ form.surname(size=50, placeholder="What is your last name?") }}
-        </p>
-        <!-- Form to put email -->
-        <p>
-            {{ form.email.label }}<br>
-            {{ form.email(size=50, placeholder="What is your email?") }}
         </p>
         <!-- Form to put Password, entered characters are hidden -->
         <p>
@@ -40,7 +40,7 @@
         <!-- Form to accept Terms of Service etc.-->
         <p>
             {{form.accept_tos}}
-            {{ form.accept_tos.label }}
+			I accept the <a href="{{ url_for('main.tos') }}">Terms of Service and Privacy Note</a>
         </p>
         <!-- Submit -->
         <p>{{ form.submit(class="btn btn-success active") }}</p>

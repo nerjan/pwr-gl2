@@ -1,4 +1,3 @@
-
 from itsdangerous import URLSafeTimedSerializer
 import app
 
@@ -16,6 +15,7 @@ def confirm_token(token, expiration=86000):
             salt=app.app.config.get("SECURITY_PASSWORD_SALT"),
             max_age=expiration
         )
-    except:
+    except Exception:
         return False
+
     return email

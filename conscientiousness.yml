@@ -1,0 +1,234 @@
+- !question
+    value: You just got a task from your boss. Deadline is in a week. When will you start working on it?
+    weight: 2
+    trait: conscientiousness 
+    choices:
+        - !answer
+            value: I'm starting right away! I prefer to have it done as soon as possible.
+            score: 3
+        - !answer
+            value: I will start soon, to finish it still without stressing out about the time.
+            score: 2
+        - !answer
+            value: I will start working on it probably at the last moment.
+            score: 0
+- !question
+    value: Where your belongings can be usually found?
+    weight: 1
+    trait: conscientiousness 
+    choices:
+        - !answer
+            value: They are always where they are supposed to be - I always put them on place.
+            score: 2
+        - !answer
+            value: I sometimes forget to put them on place.
+            score: 1
+        - !answer
+            value: I almost always forget to put them on place, they are all around.
+            score: 0
+- !question
+    value: You made a promise to appear on the meeting although there is nothing important going to be discussed. Moreover, you are tired after whole day and not feeling like going out. Will you appear anyway?
+    weight: 2
+    trait: conscientiousness 
+    choices:
+        - !answer
+            value: Yes, I'm not even considering another option - I made a promise.
+            score: 3
+        - !answer
+            value: 'Most likely I will finally force myself to appear.'
+            score: 2
+        - !answer
+            value: It's not an important meeting... Nothing will happen if I don't appear this time.
+            score: 0
+- !question
+    value: You are going to have unexpected guests in an hour. Do you have to make a quick cleaning at your place?
+    weight: 1
+    trait: conscientiousness 
+    choices:
+        - !answer
+            value: I always have an order at my place. I don't have to worry about it.
+            score: 3
+        - !answer
+            value: I have to hurry up and do some cleaning before their arrival.
+            score: 1
+        - !answer
+            value: Oh ****! Let's ask them to meet at another place. I won't clean it on time!
+            score: 0
+
+- !question
+    value: You prepared a list of things to do for the coming week. Will you stick to the plan?
+    weight: 2
+    trait: conscientiousness 
+    choices:
+        - !answer
+            value: Yes, I will accomplish every point on the list just like I set.
+            score: 3
+        - !answer
+            value: I will try to complete all the points on the list but most likely I won't manage to follow the plan strictly.
+            score: 1
+        - !answer
+            value: There is no point in making the list. It never works with me.
+            score: 0
+            
+- !question
+    value: There is a task waiting for you. Is it difficult for you to start working on it?
+    weight: 2
+    trait: conscientiousness 
+    choices:
+        - !answer
+            value: Not at all. The sooner I start - the sooner I will finish the task.
+            score: 3
+        - !answer
+            value: Yes, sometimes it is hard for me to get started.
+            score: 1
+        - !answer
+            value: Yes, it usually a real struggle to force myself to start working.
+            score: 0
+ 
+- !question
+    value: It's a typical day at work. How do you complete your tasks?
+    weight: 2
+    trait: conscientiousness 
+    choices:
+        - !answer
+            value: I always do my best and I always try to do more than it's expected from me.
+            score: 3
+        - !answer
+            value: I take my tasks seriously and I'm trying to do everything that I am expected to.
+            score: 2
+        - !answer
+            value: Sometimes I don't manage to do what's expected from me and I focus on doing just enough work to get by.
+            score: 0
+- !question
+    value: During discussion, you volunteer to make a project. Is it always a well - thought decision?
+    weight: 2
+    trait: conscientiousness 
+    choices: 
+        - !answer
+            value: Yes, I always think through everything before deciding.
+            score: 3
+        - !answer
+            value: I usually decide responsibly and I don't jump into things without thinking.
+            score: 2
+        - !answer
+            value: Sometimes I make rash decisions without thinking them through.
+            score: 0
+- !question
+    value: Do you pay attention to details?
+    weight: 1
+    trait: conscientiousness 
+    choices: 
+        - !answer
+            value: Yes, always see every small detail.
+            score: 2
+        - !answer
+            value: I usually pay attention to details.
+            score: 1
+        - !answer
+            value: I don't really pay attention to details, I focus on the main informations.
+            score: 0
+
+- !question
+    value: Do you spend your time wisely and responsible?
+    weight: 1
+    trait: conscientiousness 
+    choices:
+        - !answer
+            value: Yes, I always spend my time in a wise way, that's going to bring some benefits or progress at work.
+            score: 3
+        - !answer
+            value: I am trying to spend my free time with full awareness and I usually don't waste my time.
+            score: 1
+        - !answer
+            value: I often can't understand how much of my time passed on doing nothing specific and I waste my time very often.
+            score: 0
+
+- !question
+    value: You are in the middle of a task. Your friends are just going out and asking you to join them. What will you do?
+    weight: 1
+    trait: conscientiousness 
+    choices:
+        - !answer
+            value: I am not going. First I have to finish the task and then I can let myself to chill.
+            score: 3
+        - !answer
+            value: I will join them for some time that I can go back to the task as soon as I wake up.
+            score: 2
+        - !answer
+            value: I am going. I've spent enough time on working and I can finish it on some other day.
+            score: 0
+
+- !question
+    value: Your boss didn't set a meeting with you and unexpectedly wants to discuss progress on the project you are working on. How are you feeling?
+    weight: 2
+    trait: conscientiousness 
+    choices:
+        - !answer
+            value: No problem. I am always prepared and I can as well discus the project right now.
+            score: 3
+        - !answer
+            value: I would rather discuss it on another day but I have some things to present right now.
+            score: 1
+        - !answer
+            value: I have to reschedule it, otherwise I won't have anything to show.
+            score: 0
+
+- !question
+    value: There is a new rule at your workplace. Personally you don't agree with it and find it inconvenient. Will you abide that rule anyway?
+    weight: 2
+    trait: conscientiousness 
+    choices:
+        - !answer
+            value: Yes. I feel an obligation to follow all the rules.
+            score: 3
+        - !answer
+            value: Well, I will try to follow that rule, at least when someone can see me.
+            score: 1
+        - !answer
+            value: I don't agree with this rule - I would rather ostentaniuosly not abide this just to show my dissent.
+            score: 0
+
+- !question
+    value: Do you have important dates - birthday of your friends, meetings - written down in your callender?
+    weight: 1
+    trait: conscientiousness 
+    choices:
+        - !answer
+            value: Yes, I tend to write down all important dates. 
+            score: 3
+        - !answer
+            value: I have most of the important dates written down.
+            score: 2
+        - !answer
+            value: I don't really write down important dates.
+            score: 0
+
+- !question
+    value: Would you be recommended by your friends as an organiser for an upcoming social event?
+    weight: 1
+    trait: conscientiousness 
+    choices:
+        - !answer
+            value: Yes, absolutelly! I am always chosen for organising events.
+            score: 3
+        - !answer
+            value: I would probably be one of the people being considered for that responsibility.
+            score: 2
+        - !answer
+            value: Noo, it's definitelly not my thing.
+            score: 0
+
+- !question
+    value: You are supposed to meet friends at 7. What time will you arrive?
+    weight: 2
+    trait: conscientiousness 
+    choices:
+        - !answer
+            value: I will be few minutes earlier. Noone will have to wait for me.
+            score: 2
+        - !answer
+            value: I probably will be there just on time. There is just a slight chance of being few minutes late - it sometimes happens with me.
+            score: 1
+        - !answer
+            value: Most likely I will be late. Freinds usually wait for me.
+            score: 0

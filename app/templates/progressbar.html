@@ -1,0 +1,8 @@
+{% macro progressbar(title, value, colour) -%}
+<div class="progress">
+		<div class="progress-bar" style="background: {{ colour }}; width: {{ value }}%">
+			<h3 class="progress-title" style="color: {{ colour }}">{{ title }}</h3>
+			<div class="progress-value" style="color: {{ colour }}">{{ value }}%</div>
+        </div>
+    </div>
+{%- endmacro %}

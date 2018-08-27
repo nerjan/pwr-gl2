@@ -1,0 +1,18 @@
+{% extends "backbone.html" %}
+
+{% block content %}
+<header class="navbar">
+  <form action="/upload_image" method="post" enctype="multipart/form-data" >
+      <span class="btn btn-default btn-file">
+        Browse <input type="file" name="image">
+      </span>
+
+    <input type="submit" value="Upload your image" class="btn btn-primary">
+  </form>
+
+  <span class="navbar-text"> Image moderation with
+      <a href="https://sightengine.com/">Sightengine</a>
+  </span>
+</header>
+
+{% endblock %}

@@ -2,14 +2,19 @@
 {% extends "backbone.html" %}
 
 {% block content %}
-
-  <h1>Self-assessment questionare</h1>
+<br><br>
+  <h1>Personality test</h1>
+{% if visible %}
+    <p>How do you think {{user.name}} {{user.surname}} will answer?</p>
+{% endif %}
 
   <form method="post">
+	  <!--what is it for?-->
     {{ form.id(value=data.id) }}
-	<fieldset class="card form-group">
-      <h5 class="card-title">Question {{ data.id }}/{{ data.count }}:
-			  {{ data.question }}</h5>
+	<fieldset class="card form-group" style="border-width: medium; border-color: white">
+     <h4 class="card-title"><b> Question {% if data.id > data.count %}{{ data.id-data.count-1 }}{% endif %} {% if data.id<= data.count%} {{data.id}}{% endif %}/{{ data.count }}:
+			  {{ data.question }}</b>
+	</h4>
 	  <div class="card-body">
       {% for field in form.answers %}
         <div class="form-check">
@@ -17,13 +22,14 @@
 	      {{ field.label(class_='form-check-label') }}
         </div>
       {% endfor %}
-	</div>
+	  </div>
 	</fieldset>
-	<div class="form-group form-check">
+	<div class="form-group form-check" style="position:relative; left:10px">
 	{{ form.show_all(class_='form-check-input') }}
 	{{ form.show_all.label(class_='form-check-label') }}
 	</div>
-	<button type="submit" class="btn btn-primary"
+	&nbsp;&nbsp;
+  	<button type="submit" class="btn btn-success"
             name="{{ form.submit.name }}"
             id="{{ form.submit.id }}">{{ form.submit.label.text }}</button>
   </form>
