@@ -474,6 +474,9 @@ def search():
             connection = Friends(user_id=int(user_id),
                                 friend_id=int(friend_id))
             db.session.add(connection)
+            connection_back = Friends(user_id=int(friend_id),   #if you are my friends, I am your too
+                                 friend_id=int(user_id))
+            db.session.add(connection_back)
             db.session.commit()
     return render_template('search.html', results=results, form=form_request, user_id=user_id, user=current_user, text=text)
 
