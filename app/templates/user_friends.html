@@ -75,6 +75,13 @@ button:hover, a:hover {
   top: 16px;
 }
 
+.user_container:hover .user_image {
+  opacity: 0.3;
+}
+
+.user_container:hover .user_middle {
+  opacity: 1;
+}
 </style>
 {% set counter=0%}
 <br>
@@ -89,19 +96,31 @@ button:hover, a:hover {
     <tr>
     <form method="post" >
         <div class="user_card">
-          <h2 style="text-align:center; position: relative; top: -40px">User Profile Card</h2>
+        <h2 style="text-align:center; position: relative; top: -40px">User Profile Card</h2>
         <div class="user_container">
-        <img src="static/users_pictures/{{result.username}}.jpg" alt=" " style="width:100%" class="user_image" >
+        <img src="static/users_pictures/{{result.username}}.jpg" onerror="this.src='static/users_pictures/default-photo.jpg';" alt=" " style="width:100%" class="user_image" >
+            <div class="user_middle">
+                <form action="upload_image">
+                <button type="submit" name="submit" value="submit {{ result.id }}">Friend profilepage</button>
+                </form>
+            </div>
         </div>
         <br>
         <h3>{{result.name}} {{result.surname}}</h3>
         <p class="title">Username: <b>{{result.username}}</b></p>
         <p>Email: {{result.email}}</p>
+
+    </form>
+        <form method="post">
         <button type="submit" class="just_a_box"
             name="submit"
             value="{{ result.id }}">Make assessment</button>
         </div>
-    </form>
+        </form>
+
+
+
+
     </tr>
 {% if result.id in user_firends_which_answered_id %}
     {{results_from_friend[counter]}}

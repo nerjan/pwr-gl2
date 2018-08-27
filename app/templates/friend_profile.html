@@ -4,15 +4,17 @@
 <style>
 
 .user_card {
-  float: left;
+float: left;
   box-shadow: 4px 4px 8px 4px rgba(0, 0, 0, 0.2);
   max-width: 300px;
   min-width: 300px;
   position: relative;
   margin: auto;
   text-align: center;
-  top: 50px;
-  left: 0px;
+  top: 200px;
+  left: 250px;
+    top: 50px;
+    left: 0px;
 }
 
 .user_title {
@@ -33,9 +35,6 @@ button {
   font-size: 16px;
 }
 
-button:hover, a:hover {
-  opacity: 0.7;
-}
 
 .user_container {
     position: relative;
@@ -61,13 +60,7 @@ button:hover, a:hover {
   -ms-transform: translate(-50%, -50%)
 }
 
-.user_container:hover .user_image {
-  opacity: 0.3;
-}
 
-.user_container:hover .user_middle {
-  opacity: 1;
-}
 
 .user_text {
   color: white;
@@ -83,37 +76,35 @@ button:hover, a:hover {
   top: 16px;
 }
 
-</style>
+<!--Responsivity-->
+@media (max-width: 600px) {
+  .smthing { position: absolute; top: 700px; }
+}
+@media (min-width: 601px)  {
+  .smthing { position: relative; top: 0px; left:25px;}
+}
 
+
+</style>
 <br>
-   <form action="" method="post" novalidate style="position: relative; top: 10px; ">
-        {{ form.hidden_tag() }} <!-- Show text, like "Search" -->
-        <!-- Form for search -->
-        <p >
-            {{ form.searchfriend.label }}<br>
-            {{ form.searchfriend(size=50, placeholder="Look for new friends!") }}
-        </p>
-       <p>{{form.submit(class="btn btn-success")}}</p>
-   </form>
+<form method="post" >
 <div class="user_card">
   <h2 style="text-align:center; position: relative; top: -40px">User Profile Card</h2>
   <div class="user_container">
-  <img src="static/users_pictures/{{user.username}}.jpg" onerror="this.src='static/users_pictures/default-photo.jpg';" alt=" " style="width:100%" class="user_image" >
-  <div class="user_middle">
-    <form action="upload_image">
-      <button type="submit" value="Upload image">change photo</button></form>
-  </div>
+  <img src="static/users_pictures/{{result.username}}.jpg" onerror="this.src='static/users_pictures/default-photo.jpg';" alt=" " style="width:100%" class="user_image" >
   </div>
   <br>
-  <h3>{{user.name}} {{user.surname}}</h3>
-  <p class="title">Username: <b>{{user.username}}</b></p>
-  <p>Email: {{user.email}}</p>
-
- <p><div class="just_a_box"> &nbsp</div></p>
+  <h3>{{result.name}} {{result.surname}}</h3>
+  <p class="title">Username: <b>{{result.username}}</b></p>
+  <p>Email: {{result.email}}</p>
+   <p><div class="just_a_box"> &nbsp</div></p>
 </div>
 
-
-
-
-
+</form>
+<div  class="smthing">
+<p style="position: relative;">Send a request for filling the test about me</p>
+    <button type="submit" class="btn btn-success" style="width: 150px; position:relative;"
+        name="{{ form.submit.name }}"
+        value="{{ result.id }}">Send request</button>
+</div>
 {% endblock %}

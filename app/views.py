@@ -488,8 +488,13 @@ def search():
 def user_friends():
     form = FriendRequest()
     if form.is_submitted():
-        session['id']=request.form['submit']    #send friend ID to fiendassesment to know which friend to assess
-        return redirect(url_for("main.friend_choose_trait_test")) #could be friendasessment and will be ok too!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        if request.form['submit'].split()[0] == 'submit':
+            session['id'] = request.form['submit'].split()[1]
+            return redirect(url_for('main.friend_profile'))
+        else:
+            session['id']=request.form['submit']    #send friend ID to fiendassesment to know which friend to assess
+            return redirect(url_for("main.friend_choose_trait_test")) #could be friendasessment and will be ok too!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
     text=""
     user_friends= [User.query.filter_by(id=x.friend_id).first() for x in Friends.query.filter_by(user_id=current_user.id).all()]
     user_firends_which_answered_id = set([x.friend_id for x in FriendAnswer.query.filter_by(user_id=current_user.id)])
@@ -509,7 +514,14 @@ def user_friends():
     return render_template('user_friends.html', results=user_friends, user_id=current_user, text=text, form=form,
                            results_from_friend=results_from_friend, user_firends_which_answered_id=user_firends_which_answered_id )
 
+@main.route("/friend_profile", methods=['GET', 'POST'])
+@login_required
+def friend_profile():
+    form = ChooseTraitTestForm()
+    friend_id = session['id']
+    friend = db.session.query(User).filter_by(id=friend_id).first()
 
+    return render_template('friend_profile.html', result=friend, form=form)
 '''We dont use it, but it works fine if we weill want to'''
 #
 # x=0
