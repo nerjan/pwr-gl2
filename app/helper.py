@@ -34,8 +34,9 @@ def friend_mean_user_score(trait):
             question_weight = question.weight                                                           # weight of question that $answer is answer
             answer_score = answer.score                                                                 # How "good" is his answer, how many score has
             score += question_weight*answer_score                                                           # add real value of answer to score
+    how_many_friend_answered = len(set([x.friend_id for x in db.session.query(FriendAnswer).filter_by(user_id=current_user.id)]))
     try:
-        return int(score / max_trait_score(trait) * 100)  # in percentage
+        return int(score / max_trait_score(trait)/how_many_friend_answered * 100)  # in percentage
     except ZeroDivisionError:
         return 0 # if user didnt answer to any question then 0 to make it possible to show results without error
 
@@ -49,6 +50,20 @@ def max_trait_score(trait):
         weight = question.weight                                                    #take question weight
         score += max_score*weight                                                   #add to max_score
     return score                                                                    #return one trait max score
+
+def friend_answer_from_one(trait, friend_id):
+    score =0
+    user_answers=db.session.query(FriendAnswer).filter_by(user_id=current_user.id, friend_id=friend_id)                            #all user answers (with question_id and score for HIS answer)
+    for answer in user_answers:                                                                         #take 1 answer
+        question=db.session.query(Question).filter_by(id=answer.question_id).first()
+        if question.trait == trait:
+            question_weight = question.weight                                                           # weight of question that $answer is answer
+            answer_score = answer.score                                                                 # How "good" is his answer, how many score has
+            score += question_weight*answer_score                                                           # add real value of answer to score
+    try:
+        return int(score/max_trait_score(trait) * 100)  # in percentage
+    except ZeroDivisionError:
+        return 0 # if user didnt answer to any question then 0 to make it possible to show results without error
 
 def friend_mean_user_scores_percentage():
     return [friend_mean_user_score(x) for x in handled_traits] #in percentage

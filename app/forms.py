@@ -79,4 +79,4 @@ class SearchForm(FlaskForm):
                           message="Search request has to be between 4 and 50 characters")
     ])
     # id = HiddenField("User ID")
-    submit = SubmitField('Add')
+    submit = SubmitField('Search')

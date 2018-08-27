@@ -16,7 +16,8 @@ from random import randint
 from strgen import StringGenerator
 from .helper import flash_errors, genome, selfassesmenttraitsresults, \
                     mean_user_scores, mean_user_scores_percentage, \
-                    friend_assesment_result, make_filter, friend_mean_user_scores
+                    friend_assesment_result, make_filter, friend_mean_user_scores, \
+                    friend_mean_user_scores_percentage, friend_answer_from_one
 import app
 
 
@@ -247,7 +248,7 @@ def results_bars():
     answers = [mean_user_scores_percentage(),
                [int(x*100/5) for x in genome()[1].get("datasets")[0].get("data")],
                selfassesmenttraitsresults(),
-               friend_assesment_result()]
+               friend_mean_user_scores_percentage()]
     colours = ['#e95095', '#ffcc00', 'orange', 'deepskyblue', 'green']
     return render_template('all_in_one_results_bar.html',
                            trait=handled_traits,
@@ -488,10 +489,22 @@ def user_friends():
         return redirect(url_for("main.friend_choose_trait_test")) #could be friendasessment and will be ok too!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     text=""
     user_friends= [User.query.filter_by(id=x.friend_id).first() for x in Friends.query.filter_by(user_id=current_user.id).all()]
+    user_firends_which_answered_id = set([x.friend_id for x in FriendAnswer.query.filter_by(user_id=current_user.id)])
+    results_from_friend= [[friend_answer_from_one(trait, friend_id) for trait in handled_traits] for friend_id in
+                            user_firends_which_answered_id]
+
+    # for x in range(len(user_firends_which_answered_id)):
+
+
+    # user_firends_which_answered= {
+    #         'id' : user_firends_which_answered_id,    #id of friends which make assesment of current_user
+    #         'results_from_friend' : [[friend_answer_from_one(trait, friend_id) for trait in handled_traits] for friend_id in user_firends_which_answered_id] #table of tablech where each friend which answer answers is stored in table in order as handled_traits
+    #         }
 
     if not user_friends:
         text="There are no friends yet:< Try to find some!"
-    return render_template('user_friends.html', results=user_friends, user_id=current_user, text=text, form=form )
+    return render_template('user_friends.html', results=user_friends, user_id=current_user, text=text, form=form,
+                           results_from_friend=results_from_friend, user_firends_which_answered_id=user_firends_which_answered_id )
 
 
 '''We dont use it, but it works fine if we weill want to'''
