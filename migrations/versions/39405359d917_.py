@@ -128,7 +128,7 @@ def upgrade():
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('user_id', sa.Integer(), nullable=True),
     sa.Column('friend_id', sa.Integer(), nullable=True),
-    sa.Column('request', sa.Boolean(), nullable=False),
+    sa.Column('requestfriend', sa.Boolean(), nullable=False),
     sa.ForeignKeyConstraint(['friend_id'], ['user.id'], ),
     sa.ForeignKeyConstraint(['user_id'], ['user.id'], ),
     sa.PrimaryKeyConstraint('id')

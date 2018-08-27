@@ -13,12 +13,12 @@ from .forms import LoginForm, RegistrationForm, QuestionareForm, \
 from .token import generate_confirmation_token, confirm_token
 from .email import send_email
 from random import randint
-from .newfriends import isfriend, isrequest, getrecivedreq, getsentreq, getfriends
 from strgen import StringGenerator
 from .helper import flash_errors, genome, selfassesmenttraitsresults, \
                     mean_user_scores, mean_user_scores_percentage, \
                     friend_assesment_result, make_filter, friend_mean_user_scores, \
                     friend_mean_user_scores_percentage, friend_answer_from_one
+from sqlalchemy import or_
 import app
 
 
@@ -457,7 +457,7 @@ def search():
                                        User.id,
                                        User.email,
                                        User.username).filter(flt).all()
-    current_user_friends = [x.id for x in getfriends(current_user.id)]
+    current_user_friends = [x.friend_id for x in Friends.query.filter_by(user_id=current_user.id).all()]
     results = [x for x in results if not x[2] in current_user_friends] #add only firends which are not in your friends already
     if len(results)==0:
         text = "No new friends with this data :)"
@@ -465,17 +465,21 @@ def search():
     # Adding friends to DB
     if form_request.is_submitted():
         friend_id = request.form['submit']
-        is_friend = isfriend(current_user.id, friend_id)
+        is_friend = db.session.query(Friends).filter_by(user_id= current_user.id).filter_by(friend_id=friend_id).first()
         if user_id == friend_id:
             flash('You can not add yourself')
         elif is_friend:
             flash('You are friends already')
         else:
             flash('You added new friend')
-            connection = Friends(user_id=int(user_id),
-                                friend_id=int(friend_id),
-                                request=False)
-            db.session.add(connection)
+            # connection = Friends(user_id=int(user_id),
+            #                     friend_id=int(friend_id),
+            #                      requestfriend=False)
+            # db.session.add(connection)
+            connection_back = Friends(user_id=int(friend_id),   #if you are my friends, I am your too
+                                 friend_id=int(user_id),
+                                      requestfriend=False)
+            db.session.add(connection_back)
             db.session.commit()
     return render_template('search.html', results=results, form=form_request, user_id=user_id, user=current_user, text=text)
 
@@ -495,60 +499,7 @@ def user_friends():
             return redirect(url_for("main.friend_choose_trait_test")) #could be friendasessment and will be ok too!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
     text=""
-    #user_friends = [User.query.filter_by(id=x.friend_id).first() for x in Friends.query.filter_by(user_id=current_user.id).all()]
-    user_friends = getfriends(current_user.id)
-    if not user_friends:
-        text="There are no friends yet:< Try to find some!"
-    return render_template('user_friends.html', results=user_friends, user_id=current_user, text=text, form=form )
-
-@main.route("/friend_request", methods=['GET', 'POST'])
-@login_required
-@register_menu(main, '.friend_request', 'Friend Requests', order=9,
-               visible_when=lambda: current_user.is_authenticated)
-def friend_request():
-    form = FriendRequest()
-    if form.is_submitted():
-        friend_id=request.form['submit'] 
-        if request.form['status'].strip() == 'refuse':
-            if isrequest(current_user.id, friend_id):
-                fquery = Friends.query.filter_by(user_id = friend_id, friend_id = current_user.id).one()
-                db.session.delete(fquery)
-                db.session.commit()
-                flash("Your friend request refused", "info")
-        elif request.form['status'].strip() == 'accept':
-            if isrequest(current_user.id, friend_id):
-                fquery = db.session.query(Friends).\
-                    filter_by(user_id = friend_id, 
-                    friend_id = current_user.id, 
-                    request = False).\
-                    first()
-                fquery.request = True
-                db.session.commit()
-                flash("Your friend request succesfully accepted", "info")
-        else:
-            flash("An error occured during addition of friend")
-    text=""
-    friendrequests = getrecivedreq(current_user.id)
-    if not user_friends:
-        text="There are no friends requests yet:<"
-    return render_template('friend_request.html', results=friendrequests, user_id=current_user, text=text, form=form )
-
-@main.route("/user_friends", methods=['GET', 'POST'])
-@login_required
-@register_menu(main, '.user_friends', 'Your friends', order=8,
-               visible_when=lambda: current_user.is_authenticated)
-def user_friends():
-    form = FriendRequest()
-    if form.is_submitted():
-        if request.form['submit'].split()[0] == 'submit':
-            session['id'] = request.form['submit'].split()[1]
-            return redirect(url_for('main.friend_profile'))
-        else:
-            session['id']=request.form['submit']    #send friend ID to fiendassesment to know which friend to assess
-            return redirect(url_for("main.friend_choose_trait_test")) #could be friendasessment and will be ok too!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-    text=""
-    user_friends= [User.query.filter_by(id=x.friend_id).first() for x in Friends.query.filter_by(user_id=current_user.id).all()]
+    user_friends= [User.query.filter_by(id=x.friend_id).first() for x in Friends.query.filter_by(user_id=current_user.id, requestfriend=1).all()]
     user_firends_which_answered_id = set([x.friend_id for x in FriendAnswer.query.filter_by(user_id=current_user.id)])
     results_from_friend= [[friend_answer_from_one(trait, friend_id) for trait in handled_traits] for friend_id in
                             user_firends_which_answered_id]
@@ -569,11 +520,19 @@ def user_friends():
 @main.route("/friend_profile", methods=['GET', 'POST'])
 @login_required
 def friend_profile():
+    data=0
     form = ChooseTraitTestForm()
     friend_id = session['id']
     friend = db.session.query(User).filter_by(id=friend_id).first()
+    done_request = db.session.query(FriendAnswer).filter_by(user_id=current_user.id, friend_id=friend_id).first()
+    done=False
+    if done_request:
+        done=True
 
-    return render_template('friend_profile.html', result=friend, form=form)
+        data= friend_mean_user_scores_percentage()
+    colours = ['#e95095', '#ffcc00', 'orange', 'deepskyblue', 'green']
+    text="This friend's assemsent on you"
+    return render_template('friend_profile.html', result=friend, form=form, done=done, trait=handled_traits, colours=colours, text= text, data=data)
 '''We dont use it, but it works fine if we weill want to'''
 #
 # x=0
@@ -724,3 +683,70 @@ def friend_questionare():
 @main.route('/tos')
 def tos():
     return render_template('tos.html')
+
+
+@main.route("/friend_request", methods=['GET', 'POST'])
+@login_required
+@register_menu(main, '.friend_request', 'Friend Requests', order=9,
+               visible_when=lambda: current_user.is_authenticated)
+def friend_request():
+    form = FriendRequest()
+    if form.is_submitted():
+        friend_id=request.form['submit']
+        if request.form['status'].strip() == 'refuse':
+            if isrequest(current_user.id, friend_id):
+                fquery = Friends.query.filter_by(user_id =current_user.id, friend_id = friend_id).one()
+                db.session.delete(fquery)
+                db.session.commit()
+                flash("Your friend request refused", "info")
+        elif request.form['status'].strip() == 'accept':
+
+            fquery2 = db.session.query(Friends). \
+                filter_by(user_id=current_user.id,
+                          friend_id=friend_id,
+                          requestfriend=False). \
+                first()
+            flash(current_user.id)
+            flash(friend_id)
+
+            # return redirect(url_for('main.index'))
+            fquery2.requestfriend = True
+            friend = Friends(user_id=int(friend_id), friend_id=int(current_user.id), requestfriend=True)
+            db.session.add(friend)
+            db.session.commit()
+            flash("Your friend request succesfully accepted", "info")
+        else:
+            flash("An error occured during addition of friend")
+    text=""
+    friendrequests1 = [x.friend_id for x in db.session.query(Friends).filter_by(user_id=current_user.id, requestfriend=False).all()]
+    friendrequests = [db.session.query(User).filter_by(id=x).first() for x in friendrequests1]
+    if not user_friends:
+        text="There are no friends requests yet:<"
+    flash(friendrequests)
+    return render_template('friend_request.html', results=friendrequests, user_id=current_user, text=text, form=form )
+
+
+
+def isrequest(user_id, friend_id):
+    """
+    Checks whether friend request status is:
+    True if the request is still pending
+    False if the request is accepted
+    """
+    friendrequest = db.session.query(Friends).filter(or_(Friends.user_id == user_id, Friends.user_id == friend_id),
+                                                    or_(Friends.friend_id == friend_id, Friends.friend_id == user_id),
+                                                    Friends.requestfriend == False).first()
+    if friendrequest:
+        return True
+    else:
+        return False
+
+
+def getrecivedreq(user_id):
+    """
+    Returns users from which user recived friend request.
+    """
+    receive = db.session.query(User).filter(Friends.user_id == user_id,
+                                           Friends.requestfriend == False).join(Friends,
+                                           Friends.user_id == User.id).all()
+    return receive

@@ -1,5 +1,7 @@
 {% extends "backbone.html" %}
 
+{% import "progressbar.html" as widget %}
+
 {% block content %}
 <style>
 
@@ -84,6 +86,15 @@ button {
   .smthing { position: relative; top: 0px; left:25px;}
 }
 
+@media (max-width: 800px) {
+  .results_smthing { position: absolute; top: 700px; left: 60px; }
+  .h3_class{ width: 100%; font-size: 25px}
+}
+@media (min-width: 801px)  {
+  .results_smthing { position: relative; left:100px; top: 30px}
+  .h3_class{ width: 800px }
+
+}
 
 </style>
 <br>
@@ -102,9 +113,29 @@ button {
 
 </form>
 <div  class="smthing">
+{%if done==False %}
+
 <p style="position: relative;">Send a request for filling the test about me</p>
     <button type="submit" class="btn btn-success" style="width: 150px; position:relative;"
         name="{{ form.submit.name }}"
         value="{{ result.id }}">Send request</button>
+
+{% endif %}
+</div>
+
+
+<div class="results_smthing">
+{% if done %}
+<div class="col-md-6">
+            <br>
+	        <h3 class ="h3_class" >{{ text }}</h3>
+
+			{% for j in trait %}
+				<div class="row">
+					{{ widget.progressbar(trait[loop.index-1], data[loop.index-1], colours[loop.index-1]) }}
+				</div>
+			{% endfor %}
+        </div>
+{% endif %}
 </div>
 {% endblock %}
