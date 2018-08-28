@@ -1,0 +1,13 @@
+{% extends "backbone.html" %}
+
+{% block content %}
+<br>
+       <p><b>{{trait[0]}}</b></p>
+                <p>{{trait[1]}}</p>
+                <p>{{trait[2]}}</p>
+       <form method="post">
+        <button type="submit" class="btn btn-success"
+            name="submit"
+            value="yes">Take a test!</button>
+        </form>
+{% endblock %}

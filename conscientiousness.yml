@@ -56,7 +56,7 @@
             score: 0
 
 - !question
-    value: You prepared a list of things to do for the coming week. Will you stick to the plan?
+    value: You've prepared a list of things to do for the coming week. Will you stick to the plan?
     weight: 2
     trait: conscientiousness 
     choices:
@@ -76,13 +76,13 @@
     trait: conscientiousness 
     choices:
         - !answer
-            value: Not at all. The sooner I start - the sooner I will finish the task.
+            value: Not at all. The sooner I start - the sooner I finish the task.
             score: 3
         - !answer
             value: Yes, sometimes it is hard for me to get started.
             score: 1
         - !answer
-            value: Yes, it usually a real struggle to force myself to start working.
+            value: Yes, it usually is a real struggle to force myself to start working.
             score: 0
  
 - !question
@@ -100,7 +100,7 @@
             value: Sometimes I don't manage to do what's expected from me and I focus on doing just enough work to get by.
             score: 0
 - !question
-    value: During discussion, you volunteer to make a project. Is it always a well - thought decision?
+    value: During discussion, you volunteer to make a project. Is it always a well-thought decision?
     weight: 2
     trait: conscientiousness 
     choices: 
@@ -119,17 +119,17 @@
     trait: conscientiousness 
     choices: 
         - !answer
-            value: Yes, always see every small detail.
+            value: Yes, I always notice every small detail.
             score: 2
         - !answer
             value: I usually pay attention to details.
             score: 1
         - !answer
-            value: I don't really pay attention to details, I focus on the main informations.
+            value: I don't really pay attention to details, I focus on the main information.
             score: 0
 
 - !question
-    value: Do you spend your time wisely and responsible?
+    value: Do you spend your time wisely and responsibly?
     weight: 1
     trait: conscientiousness 
     choices:
@@ -149,10 +149,10 @@
     trait: conscientiousness 
     choices:
         - !answer
-            value: I am not going. First I have to finish the task and then I can let myself to chill.
+            value: I am not going. First I have to finish the task and then I can let myself chill.
             score: 3
         - !answer
-            value: I will join them for some time that I can go back to the task as soon as I wake up.
+            value: I will join them for some time that I can get back to the task as soon as I wake up.
             score: 2
         - !answer
             value: I am going. I've spent enough time on working and I can finish it on some other day.
@@ -179,7 +179,7 @@
     trait: conscientiousness 
     choices:
         - !answer
-            value: Yes. I feel an obligation to follow all the rules.
+            value: Yes. I feel obliget to follow all the rules.
             score: 3
         - !answer
             value: Well, I will try to follow that rule, at least when someone can see me.
@@ -189,7 +189,7 @@
             score: 0
 
 - !question
-    value: Do you have important dates - birthday of your friends, meetings - written down in your callender?
+    value: Do you have important dates - birthday of your friends, meetings - written down in your calender?
     weight: 1
     trait: conscientiousness 
     choices:
@@ -200,7 +200,7 @@
             value: I have most of the important dates written down.
             score: 2
         - !answer
-            value: I don't really write down important dates.
+            value: I don't really write any down important dates.
             score: 0
 
 - !question
@@ -215,16 +215,16 @@
             value: I would probably be one of the people being considered for that responsibility.
             score: 2
         - !answer
-            value: Noo, it's definitelly not my thing.
+            value: No, it's definitelly not my thing.
             score: 0
 
 - !question
-    value: You are supposed to meet friends at 7. What time will you arrive?
+    value: You are supposed to meet friends at 7. What time will you arrive at?
     weight: 2
     trait: conscientiousness 
     choices:
         - !answer
-            value: I will be few minutes earlier. Noone will have to wait for me.
+            value: I will be few minutes earlier. No one will have to wait for me.
             score: 2
         - !answer
             value: I probably will be there just on time. There is just a slight chance of being few minutes late - it sometimes happens with me.

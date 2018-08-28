@@ -3,22 +3,20 @@
 {% block content %}
 <br><h4  align="left">Choose test topic.</h4><br>
 
-    <table >
+    <table>
 <tr>
     <td>
 {% for trait in handled_traits %}
+
+
     <form action="" method="post" novalidate >
         <p align="center" style=" background: rgba(0,0,0,0.1); width: 300px; border-radius: 50px; height: 60px">
-             <input type="submit" name="submit" value={{trait}} style="background-color: {{colors.pop()}};
+            <input type="submit" name="submit" value={{trait}} style="background-color: {{colors.pop()}};
               border-color: {{b_colors.pop()}}; border-radius: 50px; padding: 10px; width: 280px;
               position: relative; top: 7px; text-transform: uppercase;" class="btn btn-success" ></p>
     </form>
 {% endfor %}
     </td>
-
 </tr>
-        <tr>
-        <td></td>
-        </tr>
     </table>
 {% endblock %}

@@ -12,7 +12,8 @@
   margin: auto;
   text-align: center;
   top: 50px;
-  left: 0px;
+  left: 0;
+  float:left;
 }
 
 .user_title {
@@ -86,6 +87,7 @@ button:hover, a:hover {
 </style>
 
 <br>
+
    <form action="" method="post" novalidate style="position: relative; top: 10px; ">
         {{ form.hidden_tag() }} <!-- Show text, like "Search" -->
         <!-- Form for search -->
@@ -95,6 +97,8 @@ button:hover, a:hover {
         </p>
        <p>{{form.submit(class="btn btn-success")}}</p>
    </form>
+
+
 <div class="user_card">
   <h2 style="text-align:center; position: relative; top: -40px">User Profile Card</h2>
   <div class="user_container">
@@ -111,6 +115,23 @@ button:hover, a:hover {
 
  <p><div class="just_a_box"> &nbsp</div></p>
 </div>
+
+<div style="position:relative; top:50px; left: 15px; float:left; clear: left; max-width: 500px">
+    {% for result, trait, text in results %}
+        <h3 style="text-transform: capitalize">{{trait}}</h3>  <!--agreeableness', 'conscientiousness', 'extraversion','neuroticism', 'openness'-->
+        {% if result== 0%}
+            <p>You haven`t done test yet</p>
+        {% elif result < 33 %}
+            <p>{{text[0]}}</p>
+        {% elif result > 70 %}
+            <p>{{text[2]}}</p>
+        {% else %}
+            <p>{{text[1]}}</p>
+        {% endif %}
+
+    {% endfor %}
+</div>
+
 
 
 
