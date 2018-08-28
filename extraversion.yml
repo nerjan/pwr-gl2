@@ -1,0 +1,254 @@
+- !question
+    value: What concerns you more - your own thoughts or your surrounding?
+    weight: 2
+    trait: extraversion 
+    choices:
+        - !answer
+            value: My surrounding conerns me more.
+            score: 2
+        - !answer
+            value: I'm quite equally concerned by both of them.
+            score: 1
+        - !answer
+            value: My own thoughts concern me more.
+            score: 0
+			
+- !question
+    value: What do you feel when you are in a group of people that you haven't met before?
+    weight: 2
+    trait: extraversion 
+    choices:
+        - !answer
+            value: Oh great! I will make new friends! I am not abashed at all.
+            score: 3
+        - !answer
+            value: I am a bit abashed at the beginning but later I feel fully confident and I enjoy new company.
+            score: 2
+        - !answer
+            value: Oh no! I feel totally abashed and it's difficult for me to behave natural. For the whole meeting I wish to be back home.
+            score: 0
+			
+- !question
+    value: You are having a conversation with coworkers during lunch break. What is your part in the conversation?
+    weight: 2
+    trait: extraversion 
+    choices:
+        - !answer
+            value: I am super talkative. I am always ready to start a new topic or tell a funny story. 
+            score: 3
+        - !answer
+            value: It's not hard for me to answer when I'm asked but I usually find it quite difficult to start a new topic.
+            score: 2
+        - !answer
+            value: I don't feel confident enough to start a new topic or to tell something about myself. My part is limited to short answers and I usually try to avoid being with people during the break.
+            score: 0
+			
+- !question
+    value: Your friends are having a lively discussion. Is it probable that you will get so absorbed by the conversation that you will inadvertently offend someone? 
+    weight: 2
+    trait: extraversion 
+    choices:
+        - !answer
+            value: Yes, sometimes I get so absorbed by conversations that I say something without thinking and regret it afterwards.
+            score: 3
+        - !answer
+            value: Usually I don't get so absorbed and I think before saying anything.
+            score: 2
+        - !answer
+            value: I don't really get that absorbed by discussions. I always have all the aspects in my mind and I say things which are well-thought.
+            score: 0
+			
+- !question
+    value: You are having a discussion with friends. Is it possible for you to inadvertently reveal something they shouldn't know?
+    weight: 2
+    trait: extraversion 
+    choices:
+        - !answer
+            value: Yes, sometimes I just talk too much and words are coming out of my mouth before I can realize.
+            score: 3
+        - !answer
+            value: I'm usually careful with my words but sometimes I get carried away by the discussion and forget about confidentiality.
+            score: 2
+        - !answer
+            value: No, I am always fully careful during the conversation and never get carried away.
+            score: 0
+			
+- !question
+    value: You are in a group of 4 people. Someone asked a question that you think you know the answer for but you are not absolutelly sure. Will you take a stand?
+    weight: 2
+    trait: extraversion 
+    choices:
+        - !answer
+            value: Yes, why not? Nothing will happen if I'm wrong.
+            score: 3
+        - !answer
+            value: I am waiting for a while if there is anyone willing to answer. If there is no one, I will eventually take a stand in the case.
+            score: 2
+        - !answer
+            value: Since I'm not sure, I don't want to answer. For the whole time I am waiting, hoping that someone will finally break the silence.
+            score: 0
+			
+- !question
+    value: You are planning how to spend next summer. Which option is the most tempting?
+    weight: 2
+    trait: extraversion 
+    choices:
+        - !answer
+            value: Going to a lot of places and meeting new people!
+            score: 3
+        - !answer
+            value: I would like to spend some time relaxing at home but also going out with friends.
+            score: 2
+        - !answer
+            value: I would love to spend that time just relaxing at home, reading books or taking walks.
+            score: 0
+			
+- !question
+    value: Do you trust people easily?
+    weight: 2
+    trait: extraversion 
+    choices:
+        - !answer
+            value: Yes, I think that most of the people are trustworthy.
+            score: 3
+        - !answer
+            value: I wisely choose people that I can trust. I think that some people are trustworthy and I don't have a problem with relying on them.
+            score: 2
+        - !answer
+            value: It's really hard for me to trust people. I usually feel insecure among them.
+            score: 0
+			
+- !question
+    value: How many people would you call your friends?
+    weight: 2
+    trait: extraversion 
+    choices:
+        - !answer
+            value: I have many (15+) friends.
+            score: 3
+        - !answer
+            value: I have few close friends and there is more than 10 people I would go out with when there is an occasion. 
+            score: 2
+        - !answer
+            value: I can count on one hand amount of people that I can call my friends but I am very close with them.
+            score: 0
+			
+- !question
+    value: You are at the party. There is loud music and a lot of people. How do you feel?
+    weight: 2
+    trait: extraversion 
+    choices:
+        - !answer
+            value: I love that! I'm having so much fun!
+            score: 3
+        - !answer
+            value: It's fun from time to time to take part in something like that - but only if I am there with my friends.
+            score: 2
+        - !answer
+            value: I wish I stayed at home. That isn't fun for me at all.
+            score: 0
+			
+- !question
+    value: You have been chosen to make a speech at the family gathering. Do you enjoy it?
+    weight: 2
+    trait: extraversion 
+    choices:
+        - !answer
+            value: I will think about something funny and enertaining to say! It's not stressing me at all.
+            score: 3
+        - !answer
+            value: Oh okay... I can try to entertain them but I won't feel much confident while speaking... 
+            score: 1
+        - !answer
+            value: It must be a joke that they have chosen me. I won't be able to speak in front of a large group of people. 
+            score: 0
+			
+- !question
+    value: How do you infuence conversations during meetings with your friends?
+    weight: 2
+    trait: extraversion 
+    choices:
+        - !answer
+            value: I usually bring a lot of life to the meeting! I am cheerful and that impacts others.
+            score: 3
+        - !answer
+            value: I sometimes make meetings more fun - when I am in a good mood and have some funny stories to tell. 
+            score: 2
+        - !answer
+            value: I don't have any impact on the meeting. I am usually sitting quiet and don't take part in conversations.
+            score: 0
+			
+- !question
+    value: You had a hard-working day. Your friends want to hang out in the evening. Are you up for this?
+    weight: 2
+    trait: extraversion 
+    choices:
+        - !answer
+            value: Sure! I am always up for a meeting! I never run out of energy!
+            score: 3
+        - !answer
+            value: I need a rest, I would prefer to do it some other day. But maybe I will find some energy to join them.
+            score: 2
+        - !answer
+            value: I just want to relax at home. I am too tired to go anywhere.
+            score: 0
+			
+- !question
+    value: You are in a group of people. One of them asked you a question. Now, when you are in a center of attention, do you feel comfortable?
+    weight: 2
+    trait: extraversion 
+    choices:
+        - !answer
+            value: Yes, sure. I act natural and enjoy the attention I'm getting.
+            score: 3
+        - !answer
+            value: It's fine. I act rather natural and answer the question without getting abashed.
+            score: 2
+        - !answer
+            value: When I realize that everyone is looking at me, I get unconfident and I hope someone will take the attention from me.
+            score: 0
+			
+- !question
+    value: You have just spent a lot of time with people. Do you need some time for yourself now?
+    weight: 2
+    trait: extraversion 
+    choices:
+        - !answer
+            value: No, I don't. I feel completely comfortable with people, no matter how much time I spend among them. 
+            score: 3
+        - !answer
+            value: Only sometimes. Generally I don't have that need. 
+            score: 2
+        - !answer
+            value: Yes, I need my alone time now. Being among people makes me quite tired.
+            score: 0
+			
+- !question
+    value: Someone has to present a group project at work. Will you volunteer for that?
+    weight: 2
+    trait: extraversion 
+    choices:
+        - !answer
+            value: Yes. I am a proper person for that task and I feel comfortable with it.
+            score: 3
+        - !answer
+            value: If there is noone else willing to volunteer, I can do that.
+            score: 1
+        - !answer
+            value: Noo, it's a bad idea. Even if people choose me, I won't agree to do that.
+            score: 0
+         
+- !question
+    value: You told a joke at work but noone laughed. What are you doing?
+    weight: 2
+    trait: extraversion 
+    choices:
+        - !answer
+            value: Well, maybe it wasn't that good. If I am sure it was, I tell it once again, because they just probably didn't catch it.
+            score: 3
+        - !answer
+            value: Oh. That's a bit embarassing...
+            score: 1
+        - !answer
+            value: It's soooo embarassing! I wish the ground would swollow me up. I'm not able to speak for a for moments...
+            score: 0
