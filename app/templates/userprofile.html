@@ -120,7 +120,7 @@ button:hover, a:hover {
     {% for result, trait, text in results %}
         <h3 style="text-transform: capitalize">{{trait}}</h3>  <!--agreeableness', 'conscientiousness', 'extraversion','neuroticism', 'openness'-->
         {% if result== 0%}
-            <p>You haven`t done test yet</p>
+            <p>You haven`t done a test yet</p>
         {% elif result < 33 %}
             <p>{{text[0]}}</p>
         {% elif result > 70 %}

@@ -20,6 +20,54 @@ depends_on = None
 def add_data():
     bind = op.get_bind()
     session = sa.orm.Session(bind=bind)
+    test_user = User(username='pkujawa',
+                     email='pkujawa@example.com',
+                     password='test',
+                     name='Paulina',
+                     surname='Kujawa')
+    test_user.confirmed = True
+    session.add(test_user)
+
+    test_user = User(username='Janek',
+                     email='Janek@example.com',
+                     password='test',
+                     name='Janek',
+                     surname='Belkner')
+    test_user.confirmed = True
+    session.add(test_user)
+
+    test_user = User(username='nerjan',
+                     email='nerjan@example.com',
+                     password='test',
+                     name='Jan',
+                     surname='Belkner')
+    test_user.confirmed = True
+    session.add(test_user)
+
+    test_user = User(username='boryszef',
+                     email='boryszef@example.com',
+                     password='test',
+                     name='Borys',
+                     surname='Szefczyk')
+    test_user.confirmed = True
+    session.add(test_user)
+
+    test_user = User(username='dwiczew',
+                     email='dwiczew@example.com',
+                     password='test',
+                     name='Daniel',
+                     surname='Wiczew')
+    test_user.confirmed = True
+    session.add(test_user)
+
+    test_user = User(username='filon',
+                     email='filon@example.com',
+                     password='test',
+                     name='Filon',
+                     surname='Kujawa')
+    test_user.confirmed = True
+    session.add(test_user)
+
     test_user = User(username='test',
                      email='test@example.com',
                      password='test',
@@ -91,6 +139,19 @@ def add_data():
         questions = yaml.load(fp.read())
     session.add_all(questions)
     session.commit()
+    with open(app_dir+"/agreableness.yml") as fp:
+        questions = yaml.load(fp.read())
+    session.add_all(questions)
+    session.commit()
+    with open(app_dir+"/extraversion.yml") as fp:
+        questions = yaml.load(fp.read())
+    session.add_all(questions)
+    session.commit()
+    with open(app_dir+"/neuroticism.yml") as fp:
+        questions = yaml.load(fp.read())
+    session.add_all(questions)
+    session.commit()
+
 
 
 def upgrade():

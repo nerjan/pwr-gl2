@@ -12,10 +12,9 @@
         - !answer
             value: I would be panic-stricken and give up on the task as there's no point of rushing things at the last moment and would shift my focus on the upcomng project.
             score: 0
-			
+
 - !question
     value: You are supposed to meet your date at 18:00. Its 18:20 and they still haven't showed up yet. What will be your reaction?
-
     weight: 2
     trait: neuroticism 
     choices:
@@ -28,10 +27,9 @@
         - !answer
             value: Would leave the place without informing them on phone.
             score: 0
-			
+
 - !question
     value: Do you sometimes see yourself in a state where your mood changes for no reason?
-
     weight: 2
     trait: neuroticism 
     choices:
@@ -44,7 +42,7 @@
         - !answer
             value: I seldomly have mood swings.
             score: 0
-            
+
 - !question
     value: Do you generally fear in the task or work you take up in life?
     weight: 2
@@ -58,11 +56,10 @@
             score: 2
         - !answer
             value: No. I usually put all my effort and dedication in the work without worrying about the outcome.
-           score: 0    
-            
+            score: 0    
+
 - !question
     value: Do you question yourself and are dubious about the decisions and choices you make in your life in general?
-
     weight: 2
     trait: neuroticism 
     choices:
@@ -75,8 +72,7 @@
         - !answer
             value: No. I hardly seek others' opinion as I know what is best for me and am confident over my decision-making quality.
             score: 0 
-            
-            
+      
 - !question
     value: Do you often forget to put things back in their proper place after taking them?
     weight: 2
@@ -91,7 +87,7 @@
         - !answer
             value: No. I make sure to keep the things in its respective place after use.
             score: 0          
-            
+
 - !question
     value: Do you get annoyed easily when someone teases you?
     weight: 2
@@ -121,7 +117,7 @@
         - !answer
             value: No. I try to look up for solutions if anything goes wrong. I always try to be calm and composed understanding others' opinion and line of action.
             score: 0            
-            
+
 - !question
     value: You are accused by your friend about something which you haven't done. What will your reaction be?
     weight: 2

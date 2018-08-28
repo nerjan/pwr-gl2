@@ -12,7 +12,6 @@
         - !answer
             value: No. I don't like to respond or relate to other person's suggestions as I know what is best for me and have a confidence in my own skills.
             score: 0
-			
 - !question
     value: While walking home, you are asked by a homeless person you for help. Will you stay with him and listen what he wants to say?
     weight: 2
@@ -27,7 +26,7 @@
         - !answer
             value: No. I walk away since I am not interested in his problem. 
             score: 0
-			
+
 - !question
     value: Do you find it difficult to trust people?
     weight: 2
@@ -42,7 +41,7 @@
         - !answer
             value: Yes, definitely. I don't feel safe among people and I expect mainly bad from them.
             score: 0
-			
+
 - !question
     value: Do you often feel pity for others when something bad happens to them?
     weight: 2
@@ -57,7 +56,7 @@
         - !answer
             value: No, I don't really feel pity for others. Others' problems don't concern me.
             score: 0
-			
+
 - !question
     value: Your friend made a mistake and behaved really badly. The whole group ignores him now. Hoow do you feel?
     weight: 2
@@ -72,7 +71,7 @@
         - !answer
             value: He deserved it. I don't feel pity for him.
             score: 0
-			
+
 - !question
     value: You are upset with your friend. The whole situation is his fault but he doesn't want to apologize to you. How do you feel?
     weight: 2
@@ -87,7 +86,7 @@
         - !answer
             value: I am dogged and I won't come to an agreement that easily. Even when he apologizes, I will remain a distance for a while.
             score: 0
-			
+
 - !question
     value: You have an opportunity to use someone's work for your own ends without him knowing. Will you do that?
     weight: 2
@@ -102,7 +101,7 @@
         - !answer
             value: Yes, probably I would do that. Morality doesn't count for me that much.
             score: 0
-			
+
 - !question
     value: You are playing a board game with friends. Would you cheat just to ensure your win?
     weight: 1
@@ -117,7 +116,7 @@
         - !answer
             value: Yeah, why not - as soon as no one notices.
             score: 0
-			
+
 - !question
     value: You are playing a board game with friends. One of your friends is cheating. How are you reacting?
     weight: 1
@@ -132,7 +131,7 @@
         - !answer
             value: I am getting angry - I am taking the game seriously.
             score: 0
-			
+
 - !question
     value: Your coworker is facing a problem. You know him only at a professional level. Will you try to help him?
     weight: 2
@@ -146,94 +145,4 @@
             score: 2
         - !answer
             value: No, I won't help him. He is also my concurrence at work.
-            score: 0
-			
-- !question
-    value: 
-    weight: 2
-    trait: agreeableness 
-    choices:
-        - !answer
-            value: 
-            score: 3
-        - !answer
-            value: 
-            score: 2
-        - !answer
-            value: .
-            score: 0
-			
-- !question
-    value: 
-    weight: 2
-    trait: agreeableness 
-    choices:
-        - !answer
-            value: 
-            score: 3
-        - !answer
-            value: 
-            score: 2
-        - !answer
-            value: .
-            score: 0
-			
-- !question
-    value: 
-    weight: 2
-    trait: agreeableness 
-    choices:
-        - !answer
-            value: 
-            score: 3
-        - !answer
-            value: 
-            score: 2
-        - !answer
-            value: .
-            score: 0
-			
-- !question
-    value: 
-    weight: 2
-    trait: agreeableness 
-    choices:
-        - !answer
-            value: 
-            score: 3
-        - !answer
-            value: 
-            score: 2
-        - !answer
-            value: .
-            score: 0
-			
-- !question
-    value: 
-    weight: 2
-    trait: agreeableness 
-    choices:
-        - !answer
-            value: 
-            score: 3
-        - !answer
-            value: 
-            score: 2
-        - !answer
-            value: .
-            score: 0
-			
-- !question
-    value: 
-    weight: 2
-    trait: agreeableness 
-    choices:
-        - !answer
-            value: 
-            score: 3
-        - !answer
-            value: 
-            score: 2
-        - !answer
-            value: .
             score: 0

@@ -12,7 +12,7 @@
         - !answer
             value: My own thoughts concern me more.
             score: 0
-			
+
 - !question
     value: What do you feel when you are in a group of people that you haven't met before?
     weight: 2
@@ -27,7 +27,7 @@
         - !answer
             value: Oh no! I feel totally abashed and it's difficult for me to behave natural. For the whole meeting I wish to be back home.
             score: 0
-			
+
 - !question
     value: You are having a conversation with coworkers during lunch break. What is your part in the conversation?
     weight: 2
@@ -42,7 +42,7 @@
         - !answer
             value: I don't feel confident enough to start a new topic or to tell something about myself. My part is limited to short answers and I usually try to avoid being with people during the break.
             score: 0
-			
+
 - !question
     value: Your friends are having a lively discussion. Is it probable that you will get so absorbed by the conversation that you will inadvertently offend someone? 
     weight: 2
@@ -57,7 +57,7 @@
         - !answer
             value: I don't really get that absorbed by discussions. I always have all the aspects in my mind and I say things which are well-thought.
             score: 0
-			
+
 - !question
     value: You are having a discussion with friends. Is it possible for you to inadvertently reveal something they shouldn't know?
     weight: 2
@@ -72,7 +72,7 @@
         - !answer
             value: No, I am always fully careful during the conversation and never get carried away.
             score: 0
-			
+
 - !question
     value: You are in a group of 4 people. Someone asked a question that you think you know the answer for but you are not absolutelly sure. Will you take a stand?
     weight: 2
@@ -87,7 +87,7 @@
         - !answer
             value: Since I'm not sure, I don't want to answer. For the whole time I am waiting, hoping that someone will finally break the silence.
             score: 0
-			
+
 - !question
     value: You are planning how to spend next summer. Which option is the most tempting?
     weight: 2
@@ -102,7 +102,7 @@
         - !answer
             value: I would love to spend that time just relaxing at home, reading books or taking walks.
             score: 0
-			
+
 - !question
     value: Do you trust people easily?
     weight: 2
@@ -117,7 +117,7 @@
         - !answer
             value: It's really hard for me to trust people. I usually feel insecure among them.
             score: 0
-			
+
 - !question
     value: How many people would you call your friends?
     weight: 2
@@ -132,7 +132,7 @@
         - !answer
             value: I can count on one hand amount of people that I can call my friends but I am very close with them.
             score: 0
-			
+
 - !question
     value: You are at the party. There is loud music and a lot of people. How do you feel?
     weight: 2
@@ -147,7 +147,7 @@
         - !answer
             value: I wish I stayed at home. That isn't fun for me at all.
             score: 0
-			
+
 - !question
     value: You have been chosen to make a speech at the family gathering. Do you enjoy it?
     weight: 2
@@ -162,7 +162,7 @@
         - !answer
             value: It must be a joke that they have chosen me. I won't be able to speak in front of a large group of people. 
             score: 0
-			
+
 - !question
     value: How do you infuence conversations during meetings with your friends?
     weight: 2
@@ -177,7 +177,7 @@
         - !answer
             value: I don't have any impact on the meeting. I am usually sitting quiet and don't take part in conversations.
             score: 0
-			
+
 - !question
     value: You had a hard-working day. Your friends want to hang out in the evening. Are you up for this?
     weight: 2
@@ -192,7 +192,7 @@
         - !answer
             value: I just want to relax at home. I am too tired to go anywhere.
             score: 0
-			
+
 - !question
     value: You are in a group of people. One of them asked you a question. Now, when you are in a center of attention, do you feel comfortable?
     weight: 2
@@ -207,7 +207,7 @@
         - !answer
             value: When I realize that everyone is looking at me, I get unconfident and I hope someone will take the attention from me.
             score: 0
-			
+
 - !question
     value: You have just spent a lot of time with people. Do you need some time for yourself now?
     weight: 2
@@ -222,7 +222,7 @@
         - !answer
             value: Yes, I need my alone time now. Being among people makes me quite tired.
             score: 0
-			
+
 - !question
     value: Someone has to present a group project at work. Will you volunteer for that?
     weight: 2
@@ -237,7 +237,7 @@
         - !answer
             value: Noo, it's a bad idea. Even if people choose me, I won't agree to do that.
             score: 0
-         
+
 - !question
     value: You told a joke at work but noone laughed. What are you doing?
     weight: 2

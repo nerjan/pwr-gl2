@@ -6,15 +6,25 @@
         <p>{{quote}}</p>
     {% endif %}
 <br>
-    <p>
-<h2>Welcome to Show YourShelf!</h2> <br />The application which allows you to compare your thoughts about YourShelf (I mean yourselfe) (<b>Self-assesment</b> in menu), your personality, confirmed by <b>Personality Test</b> (created by our lovely psychologist) and what is in your genes, from Genomelink.
-Connect Show YourShelf with Genomelink to obtain all features.</p>
+{% if login %}
+<h2>You decided to Show YourShelf!</h2> <br />You can now compare your thoughts about YourShelf (I mean yourself) (<b>Self-assessment</b> in menu), your personality score confirmed by <b>Personality Test</b> (created by our lovely psychologist - love you my love<3) and the score coded in your own genome - provided by Genomelink.
+Connect Show YourShelf with Genomelink to obtain all the features.</p>
 
-<p> We give you 2 ways of presentation of your results - radar, which looks like spider's web (<b>Results</b> in menu) or by progress bars which show your "progress" in particular traits (<b>Results bars</b> in menu).</p>
-<p>What about traits? There are 5 aviable traits - Big Five of traits: agreeableness, conscientiousness, extraversion, neuroticism and openness.
-    You can read about each of them after choosing "<b>Personality test</b>" and choosing a trait.</p>
-<p>Invate friends to use this applications, then you can add them in <b>YourShelf</b> where you can search for them, or accept their invitation in <b>Friend Requests</b> </p>
-<p>With friends you can try to "walk in their's shoes" and make a test one more time answering as you they would answer. Then you can check if you were close to what is in their genes.</p>
-<p>You can as well send request to friends to remind them to make your test, and see what they think about you!</p>
-
+<p> We give you 2 designs of your results - radar, which looks like a spider's web (<b>Results</b> in menu) and progress bars showing percentage scores for all particular traits separately(<b>Results bars</b> in menu).</p>
+<p>What about traits? There are 5 available traits - Big Five of traits: Agreeableness, Conscientiousness, Extraversion, Neuroticism and Openness.
+You can get to know about each of them by choosing "<b>Personality test</b>" and clicking on a trait.</p>
+<p>Invite friends to Show YourShelf! To search for them - go to the <b>YourShelf</b> in menu. From this place, you can add them to your friend list and in <b>Friend Requests</b> you can accept friend requests. </p>
+<p>You can also try to "walk in their shoes" and make a test one more time - answering as you think they would answer. Then you can check if you were close to their genome score. Both results you can see on their profile pages.</p>
+<p>Results obtained from each of your friends answering about you are presented in the friend list - each respectively by the profile card of the given friend.</p>
+<p>You can also send a test request to a friend! Let them know that you are waiting for their answers!</p>
+{% else %}
+<h2>Welcome to Show YourShelf!</h2>
+<p>The application will take you for an adventure which even the least open people will like!</p>
+We would like to present you your own <b>Personality Shelves</b> – Agreeableness, Consciousness, Extraversion, Neuroticism and Openness.
+<p>Fill in our test! We would like to take you to different places, face you with various situations and make you wonder about your own reactions and ways of handling the problems.</p>
+<p>But the most incredible part is written not in words, not even in application code. It is written in your own genetic code! With the <b>Genomelink</b> tool you can now get to know your personality (and not only!) straight from your genome!</p>
+<p>Compare the score obtained from your genetics and the score from your everyday behavior! Is it similar? Maybe your Nervous Shelf is way higher than is should be? Maybe you should check your diet, your health or think about your environment. Or maybe you should fight your shyness? Maybe you feel better among people?</p>
+<p>And here is the fun part - <b>invite your friends!</b> Let them answer the same questions – about you! Are you ready to get to know how they see you? Are you ready to answer the questions about them?  When you fill the test, you get to see their genetic Shelves. Are they similar to reality?</p>
+<h3>Show them YourShelf!</h3>
+{% endif %}
 {% endblock %}
