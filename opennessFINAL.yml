@@ -1,0 +1,241 @@
+- !question
+    value: You just got a task to write a chapter of a book about whatever you want. Your work will be checked by a critic.
+    weight: 1
+    trait: openness
+    choices:
+        - !answer
+            value: It's awesome that I have an opportunity to try something like that. I am good at writing and I use rich vocabulary. I will come up with an interesting idea.
+            score: 3
+        - !answer
+            value: I can try but I don't feel confident with this task.
+            score: 1
+        - !answer
+            value: I don't want to try, I've never been good at writing and I use rather poor vocabulary.
+            score: 0
+- !question
+    value: You have to wait in an empty room for a long time. What are your thoughts focusing on?
+    weight: 1
+    trait: openness
+    choices:
+        - !answer
+            value: I'm in a fantasy world with superpowers and nonexistent creatures.
+            score: 3
+        - !answer
+            value: I'm thinking about possible situations and conversations that may take place.
+            score: 1
+        - !answer
+            value: I'm thinking about my work, current problems and I'm trying to find ways of dealing with them.
+            score: 0
+
+- !question
+    value: There has been a complication at your workplace. What solution will you come up with?
+    weight: 2
+    trait: openness
+    choices:
+        - !answer
+            value: I will probably come up with a new, non-obvious idea and will be thinking outside the box.
+            score: 2
+        - !answer
+            value: I will think outside the box but probably will focus on tried-and-true methods.
+            score: 1
+        - !answer
+            value: I will consider only tried-and-true methods.
+            score: 0
+- !question
+    value: When you are thinking about a solution for a problem, how hard is it for you to make a decision?
+    weight: 1
+    trait: openness
+    choices:
+        - !answer
+            value: It always takes me much time to decide.
+            score: 2
+        - !answer
+            value: It depends on the problem, it takes me average amount of time.
+            score: 1
+        - !answer
+            value: I am thinking very quickly to solve any problem I am faced with.
+            score: 0
+- !question
+    value: Your friend is calling. Are you up for visiting an art museum on your next free Saturday?
+    weight: 2
+    trait: openness
+    choices:
+        - !answer
+            value: Sure! I love admiring art.
+            score: 2
+        - !answer
+            value: I don't mind going there and taking a look on the exhibition but it doesn't make me excited.
+            score: 1
+        - !answer
+            value: Let's do something else. Art is boring for me.
+            score: 0
+- !question
+    value: Your friend gave you a poetry book for your birthday. How do you like it?
+    weight: 2
+    trait: openness
+    choices:
+        - !answer
+            value: That person really knows me. I am waiting impatiently for a calm evening to open the book and indulge myself in it.
+            score: 2
+        - !answer
+            value: I will open the book soon and find out if there are some poems that speak to my emotions.
+            score: 1
+        - !answer
+            value: I don't see much value in such an impractical thing. I will probably never open the book – it's boring.
+            score: 0
+
+- !question
+    value: Do you consider yourself a practical person?
+    weight: 1
+    trait: openness
+    choices: 
+        - !answer
+            value: Not really, I am more of a dreamer.
+            score: 2
+        - !answer
+            value: I make decisions considering practical choices as much as the ones based on emotions.
+            score: 1
+        - !answer
+            value: Yes, I always look for the most practical choices.
+            score: 0
+- !question
+    value: While walking, do you often get lost in thoughts and don't pay attention to anything around?
+    weight: 1
+    trait: openness
+    choices:
+        - !answer
+            value: Yes, that happens very often.
+            score: 2
+        - !answer
+            value: Sometimes.
+            score: 1
+        - !answer
+            value: Not really, only when something important is taking my mind.
+            score: 0
+- !question
+    value: When you have the possibility to change something in your life, do you take it?
+    weight: 2
+    trait: openness
+    choices:
+        - !answer
+            value: Yes, almost always – I like changes.
+            score: 3
+        - !answer
+            value: I don't mind the change if it's a better option.
+            score: 1
+        - !answer
+            value: I don't like changes, I feel more comfortable in the position I already know and I am used to.
+            score: 0
+- !question
+    value: Do you always understand your feelings and can express them?
+    weight: 1
+    trait: openness
+    choices:
+        - !answer
+            value: Yes, I always know what I feel and why I feel in that way. My behavior corresponds with them.
+            score: 2
+        - !answer
+            value: I usually know why I feel upset, happy or not confident and I control expression of my emotions.
+            score: 1
+        - !answer
+            value: There are often situations when I don't know why I feel upset or happy. I have a problem with properly expressing my emotions.
+            score: 0
+- !question
+    value: Assume that you don't have any plans for future holidays. If given a chance, will you be up for a long trip, visiting countries and trying some new activities?
+    weight: 2
+    trait: openness
+    choices:
+        - !answer
+            value: Of course! I love adventures and trying new things!
+            score: 2
+        - !answer
+            value: I would like to visit new countries I would probably be up for most of possible new activities.
+            score: 1
+        - !answer
+            value: I don't feel comfortable trying new things, I would rather go to the place I know or stay at home, spending the time in my usual way.
+            score: 0
+
+- !question
+    value: When your friends are starting a philosophical discussion, what is your part in it?
+    weight: 1
+    trait: openness
+    choices:
+        - !answer
+            value: It's often me who is starting it. I love that kind of conversations.
+            score: 2
+        - !answer
+            value: I can exchange few opinions, it is interesting sometimes.
+            score: 1
+        - !answer
+            value: So boring! I am changing the topic or make myself busy with something else.
+            score: 0
+- !question
+    value: Are you looking for a deeper meaning in everyday situations?
+    weight: 1
+    trait: openness
+    choices:
+        - !answer
+            value: Yes, I am looking for a deeper meaning in all the prosaic situations and sometimes I see the bigger meaning than there really was.
+            score: 2
+        - !answer
+            value: I usually see all the hidden meanings.
+            score: 1
+        - !answer
+            value: If there is a deeper meaning in the situation, I don't really notice that. I just pay attention to actions and results.
+            score: 0
+- !question
+    value: When you are not involved in the situation, is it easy for you to feel others' emotions?
+    weight: 1
+    trait: openness
+    choices:
+        - !answer
+            value: Yes, I can easily put myself in others' place and understand their emotions.
+            score: 2
+        - !answer
+            value: In most cases I can understand others' emotions.
+            score: 1
+        - !answer
+            value: I have a problem in feeling others' emotions, usually I read them in a wrong way.
+            score: 0
+- !question
+    value: When someone is talking about some abstract ideas, how do you like the conversation?
+    weight: 1
+    trait: openness
+    choices:
+        - !answer
+            value: I enjoy hearing any new ideas and having an opportunity to discuss them.
+            score: 2
+        - !answer
+            value: I don't enjoy abstract ideas that much but it can be interesting sometimes.
+            score: 1
+        - !answer
+            value: I don't enjoy talking about abstract ideas, sometimes I have difficulty in understanding them.
+            score: 0
+- !question
+    value: What would you like your job to be like?
+    weight: 2
+    trait: openness
+    choices:
+        - !answer
+            value: I would like to have a lot of new challenges.
+            score: 2
+        - !answer
+            value: I don't mind routine at my work but also would like some new challenges from time to time.
+            score: 1
+        - !answer
+            value: I actually prefer routine at my work.
+            score: 0
+- !question
+    value: In which way do you look at people?
+    weight: 2
+    trait: openness
+    choices:
+        - !answer
+            value: I look at them taking into account also circumstances guiding their decisions and I believe that people can change.
+            score: 3
+        - !answer
+            value: I sometimes tend to categorize people as good or bad but generally I try to understand the motives and reasons for their behaviour.
+            score: 2
+        - !answer
+            value: I perceive people mainly as good or bad.
+            score: 0
