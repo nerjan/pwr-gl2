@@ -1,0 +1,239 @@
+- !question
+    value: Generally, do you respond or relate to other person's suggestions and ideas?
+    weight: 2
+    trait: agreeableness 
+    choices:
+        - !answer
+            value: Yes. I always have a broad-minded approach and take decisions which are best for the particular scenario.
+            score: 3
+        - !answer
+            value: I sometimes relate to other person's suggestion but only when I am not confident about my own.
+            score: 2
+        - !answer
+            value: No. I don't like to respond or relate to other person's suggestions as I know what is best for me and have a confidence in my own skills.
+            score: 0
+			
+- !question
+    value: While walking home, you are asked by a homeless person you for help. Will you stay with him and listen what he wants to say?
+    weight: 2
+    trait: agreeableness 
+    choices:
+        - !answer
+            value: Yes. I will definitely try my best to help him out.
+            score: 3
+        - !answer
+            value: It is very difficult to help all the needy people out there. If I help one, several will follow - so I avoid helping them.
+            score: 2
+        - !answer
+            value: No. I walk away since I am not interested in his problem. 
+            score: 0
+			
+- !question
+    value: Do you find it difficult to trust people?
+    weight: 2
+    trait: agreeableness 
+    choices:
+        - !answer
+            value: Not at all. I usually assume that the person has good intentions.
+            score: 3
+        - !answer
+            value: Only sometimes. It depends on the person. But generally I don't have a big problem with trust.
+            score: 2
+        - !answer
+            value: Yes, definitely. I don't feel safe among people and I expect mainly bad from them.
+            score: 0
+			
+- !question
+    value: Do you often feel pity for others when something bad happens to them?
+    weight: 2
+    trait: agreeableness 
+    choices:
+        - !answer
+            value: Yes. I get touched very easily by others' suffering.
+            score: 3
+        - !answer
+            value: Yes, I feel pity for a person if it's something really horrible and unlucky happening to him/her.
+            score: 2
+        - !answer
+            value: No, I don't really feel pity for others. Others' problems don't concern me.
+            score: 0
+			
+- !question
+    value: Your friend made a mistake and behaved really badly. The whole group ignores him now. Hoow do you feel?
+    weight: 2
+    trait: agreeableness 
+    choices:
+        - !answer
+            value: Although he behaved really bad and unmoral, I feel pity for him.
+            score: 3
+        - !answer
+            value: I feel a bit pity for him when I see him alone and sad but I have in mind what he has done and I think that he deserves this.
+            score: 2
+        - !answer
+            value: He deserved it. I don't feel pity for him.
+            score: 0
+			
+- !question
+    value: You are upset with your friend. The whole situation is his fault but he doesn't want to apologize to you. How do you feel?
+    weight: 2
+    trait: agreeableness 
+    choices:
+        - !answer
+            value: I can't be upset with anyone for a long time. Finally it will be me to reach for agreement.
+            score: 3
+        - !answer
+            value: I will hold ill feelings for a while but when he apologizes, I will forgive him and forget the blame.
+            score: 2
+        - !answer
+            value: I am dogged and I won't come to an agreement that easily. Even when he apologizes, I will remain a distance for a while.
+            score: 0
+			
+- !question
+    value: You have an opportunity to use someone's work for your own ends without him knowing. Will you do that?
+    weight: 2
+    trait: agreeableness 
+    choices:
+        - !answer
+            value: No, I would never do that. Unmorality disgusts me.
+            score: 3
+        - !answer
+            value: I don't think so. But probably I would break if it was a huge opportunity.
+            score: 2
+        - !answer
+            value: Yes, probably I would do that. Morality doesn't count for me that much.
+            score: 0
+			
+- !question
+    value: You are playing a board game with friends. Would you cheat just to ensure your win?
+    weight: 1
+    trait: agreeableness 
+    choices:
+        - !answer
+            value: No, I would never cheat - the game is about having fun, not about winning.
+            score: 3
+        - !answer
+            value: Generally I don't cheat in games but when I get more competitive and I am sure that no one can see me cheating - I can take an advantage of that.
+            score: 2
+        - !answer
+            value: Yeah, why not - as soon as no one notices.
+            score: 0
+			
+- !question
+    value: You are playing a board game with friends. One of your friends is cheating. How are you reacting?
+    weight: 1
+    trait: agreeableness 
+    choices:
+        - !answer
+            value: I don't respect that kind of behavior but it's just a game - let's not make a problem of that.
+            score: 3
+        - !answer
+            value: I am getting a bit angry but I am not making a big problem of that. 
+            score: 2
+        - !answer
+            value: I am getting angry - I am taking the game seriously.
+            score: 0
+			
+- !question
+    value: Your coworker is facing a problem. You know him only at a professional level. Will you try to help him?
+    weight: 2
+    trait: agreeableness 
+    choices:
+        - !answer
+            value: Yes, of course. I will be glad if I am able to help him.
+            score: 3
+        - !answer
+            value: I am not willing to help him and I have my own problems. But if he asks, then I will dedicate some time for it.
+            score: 2
+        - !answer
+            value: No, I won't help him. He is also my concurrence at work.
+            score: 0
+			
+- !question
+    value: 
+    weight: 2
+    trait: agreeableness 
+    choices:
+        - !answer
+            value: 
+            score: 3
+        - !answer
+            value: 
+            score: 2
+        - !answer
+            value: .
+            score: 0
+			
+- !question
+    value: 
+    weight: 2
+    trait: agreeableness 
+    choices:
+        - !answer
+            value: 
+            score: 3
+        - !answer
+            value: 
+            score: 2
+        - !answer
+            value: .
+            score: 0
+			
+- !question
+    value: 
+    weight: 2
+    trait: agreeableness 
+    choices:
+        - !answer
+            value: 
+            score: 3
+        - !answer
+            value: 
+            score: 2
+        - !answer
+            value: .
+            score: 0
+			
+- !question
+    value: 
+    weight: 2
+    trait: agreeableness 
+    choices:
+        - !answer
+            value: 
+            score: 3
+        - !answer
+            value: 
+            score: 2
+        - !answer
+            value: .
+            score: 0
+			
+- !question
+    value: 
+    weight: 2
+    trait: agreeableness 
+    choices:
+        - !answer
+            value: 
+            score: 3
+        - !answer
+            value: 
+            score: 2
+        - !answer
+            value: .
+            score: 0
+			
+- !question
+    value: 
+    weight: 2
+    trait: agreeableness 
+    choices:
+        - !answer
+            value: 
+            score: 3
+        - !answer
+            value: 
+            score: 2
+        - !answer
+            value: .
+            score: 0
