@@ -1,0 +1,10 @@
+<h2>You decided to Show YourShelf!</h2> <br />You can now compare your thoughts about YourShelf (I mean yourself) (<b>Self-assessment</b> in menu), your personality score confirmed by <b>Personality Test</b> (created by our lovely psychologist - love you my love<3) and the score coded in your own genome - provided by Genomelink.
+Connect Show YourShelf with Genomelink to obtain all the features.</p>
+
+<p> We give you 2 designs of your results - radar, which looks like a spider's web (<b>Results</b> in menu) and progress bars showing percentage scores for all particular traits separately(<b>Results bars</b> in menu).</p>
+<p>What about traits? There are 5 available traits - Big Five of traits: Agreeableness, Conscientiousness, Extraversion, Neuroticism and Openness.
+You can get to know about each of them by choosing "<b>Personality test</b>" and clicking on a trait.</p>
+<p>Invite friends to Show YourShelf! To search for them - go to the <b>YourShelf</b> in menu. From this place, you can add them to your friend list and in <b>Friend Requests</b> you can accept friend requests. </p>
+<p>You can also try to "walk in their shoes" and make a test one more time - answering as you think they would answer. Then you can check if you were close to their genome score. Both results you can see on their profile pages.</p>
+<p>Results obtained from each of your friends answering about you are presented in the friend list - each respectively by the profile card of the given friend.</p>
+<p>You can also send a test request to a friend! Let them know that you are waiting for their answers!</p>
