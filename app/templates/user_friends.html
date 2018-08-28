@@ -1,17 +1,20 @@
 {% extends "backbone.html" %}
+{% import "progressbar.html" as widget %}
+
 {% block content %}
 <style>
     .user_card {
   box-shadow: 4px 4px 8px 4px rgba(0, 0, 0, 0.2);
   max-width: 300px;
   min-width: 300px;
-  position: relative;
+  position: absolute;
   text-align: center;
   top: 0px;
   left: 0px;
   align: left;
 margin-top: 100px;
-margin-bottom: 100px
+margin-bottom: 100px;
+
 }
 
 .user_title {
@@ -74,6 +77,17 @@ button:hover, a:hover {
   position: relative;
   top: 16px;
 }
+.user_results{
+    opacity:0;
+    transition:opacity 1s;
+
+}
+.user_card:hover + .user_results
+{
+    opacity:1;
+}
+
+
 
 .user_container:hover .user_image {
   opacity: 0.3;
@@ -82,20 +96,43 @@ button:hover, a:hover {
 .user_container:hover .user_middle {
   opacity: 1;
 }
+
+<!--#container:hover + #cube { background-color: yellow; }-->
+
+<!--Responsivity-->
+<!--@media (min-width: 601px) {-->
+  <!--.smthing { position: relative; left: 0px}-->
+<!--}-->
+@media (max-width: 600px)  {
+  .smthing { position: relative; top: 0px; }
+}
+
+<!--@media (min-width: 601px) {-->
+  <!--.results_smthing { position: absolute; left: 0px }-->
+  <!--.h3_class{ width: 100%; font-size: 25px}-->
+<!--}-->
+@media (max-width:600px)  {
+  .results_smthing { position: relative;  top: 30px}
+  .h3_class{ width: 800px }
+
+}
+
 </style>
-{% set counter=0%}
+{% set counter=0 %}
 <br>
 <h1 style="text-align:left">Your friends</h1>
 {%if text != ""%}
 <p style="text-align:center">{{text}}</p>
 {% endif %}
-<table>
-    <td>
-{% for result in results if not result.id == user_id %}
 
-    <tr>
+
+
+
+{% for result in results if not result.id == user_id %}
+{% set counter=loop.index %}
+ <div class="user_card" style="top:{{(counter-1)*700+80}}px; left: 50px">
     <form method="post" >
-        <div class="user_card">
+
         <h2 style="text-align:center; position: relative; top: -40px">User Profile Card</h2>
         <div class="user_container">
         <img src="static/users_pictures/{{result.username}}.jpg" onerror="this.src='static/users_pictures/default-photo.jpg';" alt=" " style="width:100%" class="user_image" >
@@ -109,24 +146,24 @@ button:hover, a:hover {
         <h3>{{result.name}} {{result.surname}}</h3>
         <p class="title">Username: <b>{{result.username}}</b></p>
         <p>Email: {{result.email}}</p>
-
     </form>
         <form method="post">
         <button type="submit" class="just_a_box"
             name="submit"
             value="{{ result.id }}">Make assessment</button>
-        </div>
         </form>
+        </div>
+        <div class="user_results">
+		<div class="col-md-6" style="position: absolute ;top:{{(counter-1)*700+150}}px; max-width: 500px; left:450px">
 
+        <h3 style="text-align: center">How do you see {{result.username}}</h3>
+			{% for j in trait %}
+				<div class="row">
+					{{ widget.progressbar(trait[loop.index-1], list_of_answers[counter-1][loop.index-1], colours[loop.index-1]) }}
+				</div>
+			{% endfor %}
+        </div>
+        </div>
 
-
-
-    </tr>
-{% if result.id in user_firends_which_answered_id %}
-    {{results_from_friend[counter]}}
-    {% set counter= counter+1 %}
-{% endif %}
 {% endfor %}
-    </td>
-</table>
 {% endblock %}

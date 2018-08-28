@@ -1,5 +1,4 @@
 {% extends "backbone.html" %}
-
 {% import "progressbar.html" as widget %}
 
 {% block content %}
@@ -79,22 +78,13 @@ button {
 }
 
 <!--Responsivity-->
-@media (max-width: 600px) {
-  .smthing { position: absolute; top: 700px; }
+@media (max-width: 700px) {
+  .smthing { position: relative; top: 700px; }
 }
-@media (min-width: 601px)  {
-  .smthing { position: relative; top: 0px; left:25px;}
+@media (min-width: 701px)  {
+  .smthing { position: relative; top: 0px; left:50px;}
 }
 
-@media (max-width: 800px) {
-  .results_smthing { position: absolute; top: 700px; left: 60px; }
-  .h3_class{ width: 100%; font-size: 25px}
-}
-@media (min-width: 801px)  {
-  .results_smthing { position: relative; left:100px; top: 30px}
-  .h3_class{ width: 800px }
-
-}
 
 </style>
 <br>
@@ -110,32 +100,37 @@ button {
   <p>Email: {{result.email}}</p>
    <p><div class="just_a_box"> &nbsp</div></p>
 </div>
-
 </form>
-<div  class="smthing">
-{%if done==False %}
 
-<p style="position: relative;">Send a request for filling the test about me</p>
-    <button type="submit" class="btn btn-success" style="width: 150px; position:relative;"
-        name="{{ form.submit.name }}"
-        value="{{ result.id }}">Send request</button>
 
-{% endif %}
+{% if not done %}
+<div style=" position:relative; left:15px">
+<p>Send a request for filling the test about me</p>
+    <form method="post">
+    <button type="submit" class="btn btn-success" style="width: 150px; position:relative; left:15px"
+        name="submit"
+        value="{{ result.id }}">Send request</button></form>
 </div>
-
-
-<div class="results_smthing">
+{% endif %}
 {% if done %}
-<div class="col-md-6">
-            <br>
-	        <h3 class ="h3_class" >{{ text }}</h3>
-
-			{% for j in trait %}
-				<div class="row">
-					{{ widget.progressbar(trait[loop.index-1], data[loop.index-1], colours[loop.index-1]) }}
-				</div>
-			{% endfor %}
-        </div>
-{% endif %}
+<div style="position: absolute; top: 720px">
+    <h3 style="position:relative; ">What {{ result.username }} thinks about you:</h3>
+{% for j in trait %}
+    <div class="row" style="max-width: 500px; position: relative; ">
+        {{ widget.progressbar(trait[loop.index-1], results_from_friend[loop.index-1], colours[loop.index-1]) }}
+    </div>
+{% endfor %}
 </div>
+
+
+<br>
+<div style="position: absolute; top: 1400px">
+<h3 style="position:relative; ">{{result.username}}'s Genomelink results</h3>
+{% for j in trait %}
+    <div class="row" style="max-width:500px; position:relative; ">
+        {{ widget.progressbar(trait[loop.index-1], genome[loop.index-1], colours[loop.index-1]) }}
+    </div>
+{% endfor %}
+</div>
+{% endif %}
 {% endblock %}

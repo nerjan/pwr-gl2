@@ -5,7 +5,7 @@
   box-shadow: 4px 4px 8px 4px rgba(0, 0, 0, 0.2);
   max-width: 300px;
   min-width: 300px;
-  position: relative;
+  position: absolute;
   margin: auto;
   text-align: center;
   top: 0px;
@@ -67,31 +67,30 @@ tr {
     height: 550px;
     }
 </style>
+{% set counter=0 %}
 <br>
-<h1 style="text-align:center">Your friends</h1>
-<br><br><br><br>
+<h1 style="text-align:left">Friends invitations</h1>
 {%if text != ""%}
 <p style="text-align:center">{{text}}</p>
 {% endif %}
-<table>
-    <tr>
+
+
+
+
 {% for result in results if not result.id == user_id %}
-{% set counter = loop.index %}
-<!--Make 3 friends in a row-->
-    {% if counter%3 == 0 %}
-        <tr>
-    {% endif %}
-    <td style="padding: 0px 30px 0px">
-    
-        <div class="user_card">
-          <h2 style="text-align:center; position: relative; top: -40px">Friend request card</h2>
+{% set counter=loop.index %}
+ <div class="user_card" style="top:{{(counter-1)*700+200}}px; left: 50px">
+    <form method="post" >
+
+        <h2 style="text-align:center; position: relative; top: -40px">User Profile Card</h2>
         <div class="user_container">
-        <img src="static/users_pictures/{{result.username}}.jpg" alt=" " style="width:100%" class="user_image" >
+        <img src="static/users_pictures/{{result.username}}.jpg" onerror="this.src='static/users_pictures/default-photo.jpg';" alt=" " style="width:100%" class="user_image" >
         </div>
         <br>
         <h3>{{result.name}} {{result.surname}}</h3>
         <p class="title">Username: <b>{{result.username}}</b></p>
         <p>Email: {{result.email}}</p>
+    </form>
         <form method="post" >
         <input type="hidden" name="status" value="accept" />
         <button type="submit" class="just_a_box"
@@ -105,13 +104,8 @@ tr {
             value="{{ result.id }}">Refuse request</button>
         </form>
         </div>
+</div>
         </div>
-    </td>
-    {% if counter == 3 %}
-        </td>
-        {% set counter = 0 %}
-    {% endif %}
+
 {% endfor %}
-    </tr>
-</table>
 {% endblock %}

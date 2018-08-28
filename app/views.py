@@ -17,7 +17,8 @@ from strgen import StringGenerator
 from .helper import flash_errors, genome, selfassesmenttraitsresults, \
                     mean_user_scores, mean_user_scores_percentage, \
                     friend_assesment_result, make_filter, friend_mean_user_scores, \
-                    friend_mean_user_scores_percentage, friend_answer_from_one
+                    friend_mean_user_scores_percentage, friend_answer_from_one,\
+                    user_answer_for_friend
 from sqlalchemy import or_
 import app
 
@@ -73,7 +74,7 @@ def questionare():
     '''WHEN ALL TRAITS WILL BE AVAILABLE WE CAN DELETE THIS'''
     if not trait_questions.count():
         flash("There is no question for this trait", "info")
-        return redirect(url_for('main.index'))
+        return redirect(url_for('main.choose_trait_test'))
 
     number_of_questions = trait_questions.count() #idk if it is important
     first_id = trait_questions.first().id #id of 1st question in this trait, start from here
@@ -91,7 +92,7 @@ def questionare():
         try:# if there is no more questions in trait_questions, finish
             x= trait_questions.filter_by(id=next_id).first().id
         except AttributeError:
-            return redirect(url_for("main.index"))
+            return redirect(url_for("main.choose_trait_test"))
     else:
         # Showing only unanswered quesitons, so take the next one
         my_answers = Answer.query.filter_by(author=current_user)
@@ -109,7 +110,7 @@ def questionare():
         question = questions_to_answer.first()
         if not question:
             flash("You already answered to all questions")
-            return redirect(url_for("main.index"))
+            return redirect(url_for("main.choose_trait_test"))
 
     answers = []
     for choice in range(len(question.choices)):
@@ -419,7 +420,7 @@ def upload_file():
     file.filename = current_user.username+".jpg"    #rename to username.jpg -important for the rest functions
     f = os.path.join(app.app.config['UPLOAD_FOLDER'], file.filename)
     file.save(f)
-    return render_template('index.html')
+    return render_template('index.userprofile')
 
 
 
@@ -471,7 +472,7 @@ def search():
         elif is_friend:
             flash('You are friends already')
         else:
-            flash('You added new friend')
+            flash('You send friend request')
             # connection = Friends(user_id=int(user_id),
             #                     friend_id=int(friend_id),
             #                      requestfriend=False)
@@ -499,23 +500,26 @@ def user_friends():
             return redirect(url_for("main.friend_choose_trait_test")) #could be friendasessment and will be ok too!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
     text=""
-    user_friends= [User.query.filter_by(id=x.friend_id).first() for x in Friends.query.filter_by(user_id=current_user.id, requestfriend=1).all()]
-    user_firends_which_answered_id = set([x.friend_id for x in FriendAnswer.query.filter_by(user_id=current_user.id)])
-    results_from_friend= [[friend_answer_from_one(trait, friend_id) for trait in handled_traits] for friend_id in
-                            user_firends_which_answered_id]
-
-    # for x in range(len(user_firends_which_answered_id)):
-
-
-    # user_firends_which_answered= {
-    #         'id' : user_firends_which_answered_id,    #id of friends which make assesment of current_user
-    #         'results_from_friend' : [[friend_answer_from_one(trait, friend_id) for trait in handled_traits] for friend_id in user_firends_which_answered_id] #table of tablech where each friend which answer answers is stored in table in order as handled_traits
-    #         }
+    '''Show how this user asses you.'''
+    user_friends= [User.query.filter_by(id=x.friend_id).first() for x in Friends.query.filter_by(user_id=current_user.id, requestfriend=1).all()] #search all friends
+    user_firends_which_user_answered_id = set([x.user_id for x in FriendAnswer.query.filter_by(friend_id=current_user.id)])
+    list_of_answers =[]
+    for friend in user_friends:
+        if friend.id in user_firends_which_user_answered_id :
+            list_of_answers.append([user_answer_for_friend(trait, friend.id) for trait in handled_traits])
+        else:
+            list_of_answers.append([0,0,0,0,0])
+    # flash(list_of_answers)
+    # return redirect(url_for('main.index'))
+    results_from_friend= [user_answer_for_friend(trait, current_user.id) for trait in handled_traits]
 
     if not user_friends:
         text="There are no friends yet:< Try to find some!"
+    done=False######################################################################################################################################
+    colors = ["#e95095", "#ffcc00", "orange", "deepskyblue", "green"]
     return render_template('user_friends.html', results=user_friends, user_id=current_user, text=text, form=form,
-                           results_from_friend=results_from_friend, user_firends_which_answered_id=user_firends_which_answered_id )
+                           results_from_friend=results_from_friend, user_firends_which_answered_id=user_firends_which_user_answered_id,
+                           done=done, list_of_answers=list_of_answers, colours=colors, trait=handled_traits)
 
 @main.route("/friend_profile", methods=['GET', 'POST'])
 @login_required
@@ -528,11 +532,19 @@ def friend_profile():
     done=False
     if done_request:
         done=True
-
         data= friend_mean_user_scores_percentage()
+    if form.is_submitted():
+        friend=db.session.query(Friends).filter_by(user_id=friend_id, friend_id=current_user.id).first()
+        friend.testrequest=True
+        db.session.commit()
+        flash("The request has been sent","info")
+        return redirect(url_for('main.index'))
     colours = ['#e95095', '#ffcc00', 'orange', 'deepskyblue', 'green']
     text="This friend's assemsent on you"
-    return render_template('friend_profile.html', result=friend, form=form, done=done, trait=handled_traits, colours=colours, text= text, data=data)
+    genomee = [int(x*100/5) for x in genome()[1].get("datasets")[0].get("data")]
+    return render_template('friend_profile.html', result=friend, form=form, done=done, trait=handled_traits,
+                           colours=colours, text= text, data=data,results_from_friend=data,
+                           genome = genomee)
 '''We dont use it, but it works fine if we weill want to'''
 #
 # x=0
@@ -706,8 +718,7 @@ def friend_request():
                           friend_id=friend_id,
                           requestfriend=False). \
                 first()
-            flash(current_user.id)
-            flash(friend_id)
+
 
             # return redirect(url_for('main.index'))
             fquery2.requestfriend = True
@@ -722,7 +733,6 @@ def friend_request():
     friendrequests = [db.session.query(User).filter_by(id=x).first() for x in friendrequests1]
     if not user_friends:
         text="There are no friends requests yet:<"
-    flash(friendrequests)
     return render_template('friend_request.html', results=friendrequests, user_id=current_user, text=text, form=form )
 
 
@@ -750,3 +760,25 @@ def getrecivedreq(user_id):
                                            Friends.requestfriend == False).join(Friends,
                                            Friends.user_id == User.id).all()
     return receive
+
+
+@main.route("/test_request", methods=['GET', 'POST'])
+@login_required
+@register_menu(main, '.test_request', 'Test Requests', order=10,
+               visible_when=lambda: current_user.is_authenticated)
+def friend_request_test():
+    form = FriendRequest()
+    if form.is_submitted():
+        if request.form['submit']:
+            session['id'] = request.form['submit']
+            friend = db.session.query(Friends).filter_by(user_id=int(session['id']), friend_id=current_user.id).first()
+            friend.testrequest = False
+            db.session.commit()
+            return redirect(url_for('main.friend_choose_trait_test'))
+
+    text=""
+    friendrequests1 = [x.friend_id for x in db.session.query(Friends).filter_by(user_id=current_user.id, testrequest=True).all()]
+    friendrequests = [db.session.query(User).filter_by(id=x).first() for x in friendrequests1]
+    if not user_friends:
+        text="There are no friends requests"
+    return render_template('test_request.html', results=friendrequests, user_id=current_user, text=text, form=form )

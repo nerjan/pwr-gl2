@@ -145,6 +145,7 @@ class Friends(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     friend_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     requestfriend = db.Column(db.Boolean, nullable=False)
+    testrequest=db.Column(db.Boolean)
 
     user = db.relationship("User", foreign_keys=[user_id], uselist=False)
     friend = db.relationship("User", foreign_keys=[friend_id], uselist=False)
