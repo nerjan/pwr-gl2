@@ -1,0 +1,30 @@
+- !question
+    value: Generally, do you respond or relate to other person's suggestions and ideas?
+    weight: 2
+    trait: agreeableness 
+    choices:
+        - !answer
+            value: Yes. I always have a broad-minded approach and take decisions which are best for the particular scenario.
+            score: 3
+        - !answer
+            value: I sometimes relate to other person's suggestion but only when I am not confident about my own.
+            score: 2
+        - !answer
+            value: No. I don't like to respond or relate to other person's suggestions as I know what is best for me and have a confidence in my own skills.
+            score: 0
+			
+- !question
+    value: Generally, do you respond or relate to other person's suggestions and ideas?
+    weight: 2
+    trait: agreeableness 
+    choices:
+        - !answer
+            value: Yes. I always have a broad-minded approach and take decisions which are best for the particular scenario.
+            score: 3
+        - !answer
+            value: I sometimes relate to other person's suggestion but only when I am not confident about my own.
+            score: 2
+        - !answer
+            value: No. I don't like to respond or relate to other person's suggestions as I know what is best for me and have a confidence in my own skills.
+            score: 0
+			
