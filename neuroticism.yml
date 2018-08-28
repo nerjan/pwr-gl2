@@ -1,0 +1,153 @@
+- !question
+    value: You are at work and a new project is in pipeline, but is not up and running yet. You still have time to get started with it. How would you react? 
+    weight: 2
+    trait: neuroticism 
+    choices:
+        - !answer
+            value: I would be calm and composed and try to make a detailed schedule of what tasks needs to be done depending on the timeframe I have.
+            score: 3
+        - !answer
+            value: I will be stressed about the situation but would at least try to get the work done.
+            score: 2
+        - !answer
+            value: I would be panic-stricken and give up on the task as there's no point of rushing things at the last moment and would shift my focus on the upcomng project.
+            score: 0
+			
+- !question
+    value: You are supposed to meet your date at 18:00. Its 18:20 and they still haven't showed up yet. What will be your reaction?
+
+    weight: 2
+    trait: neuroticism 
+    choices:
+        - !answer
+            value: Would wait patiently for some more time.
+            score: 3
+        - !answer
+            value: Keep calling them impatiently trying to find out if he/she will be coming or not.
+            score: 2
+        - !answer
+            value: Would leave the place without informing them on phone.
+            score: 0
+			
+- !question
+    value: Do you sometimes see yourself in a state where your mood changes for no reason?
+
+    weight: 2
+    trait: neuroticism 
+    choices:
+        - !answer
+            value: It happens to me a lot.
+            score: 3
+        - !answer
+            value: My mood changes only if something drastic or unexpected has happened to me.
+            score: 2
+        - !answer
+            value: I seldomly have mood swings.
+            score: 0
+            
+- !question
+    value: Do you generally fear in the task or work you take up in life?
+    weight: 2
+    trait: neuroticism 
+    choices:
+        - !answer
+            value: Yes. It happens to me frequently. There remains a constant fear of not living up to my expectations.
+            score: 3
+        - !answer
+            value: Sometimes in stressful situations I panic and start fearing about the outcome.
+            score: 2
+        - !answer
+            value: No. I usually put all my effort and dedication in the work without worrying about the outcome.
+           score: 0    
+            
+- !question
+    value: Do you question yourself and are dubious about the decisions and choices you make in your life in general?
+
+    weight: 2
+    trait: neuroticism 
+    choices:
+        - !answer
+            value: Yes. I need to take several back-up opinions to make sure that decision I made is best for me.
+            score: 3
+        - !answer
+            value: Generally I am confident about my decisions but sometimes I don't mind a second opinion for confirmation about my thoughts.
+            score: 2
+        - !answer
+            value: No. I hardly seek others' opinion as I know what is best for me and am confident over my decision-making quality.
+            score: 0 
+            
+            
+- !question
+    value: Do you often forget to put things back in their proper place after taking them?
+    weight: 2
+    trait: neuroticism 
+    choices:
+        - !answer
+            value: Yes. I do that a lot. I get completely lost in my work that I forget to keep the thing in its proper place after use.
+            score: 3
+        - !answer
+            value: Sometimes I do forget to keep the things from where it belongs but as soon as I remember it, I keep it back.
+            score: 2
+        - !answer
+            value: No. I make sure to keep the things in its respective place after use.
+            score: 0          
+            
+- !question
+    value: Do you get annoyed easily when someone teases you?
+    weight: 2
+    trait: neuroticism 
+    choices:
+        - !answer
+            value: Yes. I immediately get annoyed and react when someone teases me or makes fun of me in front of others.
+            score: 3
+        - !answer
+            value: Generally no. But I get annoyed if the situation gets too far or if the matter spoken is sensitive to me.
+            score: 2
+        - !answer
+            value: No. I try to analyse the situation and the tone in which it has been spoken before reacting. 
+            score: 0 
+
+- !question
+    value: Is it quite often that you get paranoid and angry on people?
+    weight: 2
+    trait: neuroticism 
+    choices:
+        - !answer
+            value: Yes. I have the tendency of being irritated and frustrated in things which don't go according to my plan and lashing on to the people responsible for it.
+            score: 3
+        - !answer
+            value: Sometimes I get annoyed due to stressful conditions and if people make mistakes that can affect my life in general.
+            score: 2
+        - !answer
+            value: No. I try to look up for solutions if anything goes wrong. I always try to be calm and composed understanding others' opinion and line of action.
+            score: 0            
+            
+- !question
+    value: You are accused by your friend about something which you haven't done. What will your reaction be?
+    weight: 2
+    trait: neuroticism 
+    choices:
+        - !answer
+            value: I would be sad and angry on him to accuse me for no reason.
+            score: 3
+        - !answer  
+            value: I would be frustrated at first, but would try to sort the matter with him, by proving my innocence.
+            score: 2
+        - !answer
+            value: I would remain cool and explain him the scenario.
+            score: 0 
+
+- !question
+    value: You experienced a huge failure in your project at work which added to the awful day you were already having. How would you tackle the situation?
+    weight: 2
+    trait: neuroticism 
+    choices:
+        - !answer
+            value: I would remain calm and composed and try to sort out things in my life and analyze the root cause of the failure.
+            score: 3
+        - !answer  
+            value: I will affect my current state of mind but I would try to handle the situation which yields mental peace.
+            score: 2
+        - !answer
+            value: I would be anxious and be paranoid with the current scenario which would lead me to depression. 
+            score: 0                     
