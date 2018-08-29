@@ -62,23 +62,22 @@ def trait_description():
         return redirect(url_for("main.questionare", trait=trait))
 
     trait_desription= {
-                    "agreeableness":["agreeableness",
-                        "",
-                        ""],
+                    "agreeableness":["How agreeable are you? Let’s find out!",
+                        "Score obtained in this trait will tell you how compassionate and cooperative you are. The test will measure your kindness, trust and a tendecy to feel competitive. Do you forgive people easily? Do you believe in the importance of morality? ",
+                        "Find your Agreeableness shelf and share it with friends! "],
                     "conscientiousness":["How conscientious are you? Let’s find out!",
                         "Score obtained in this trait will tell you how hard-working you are. The test will measure your ability of sticking to the plan, abiding rules and the effort that you put into tasks. Is it hard for you to start working? Are you making obligations that you haven’t thought through?",
                         "Find your conscientiousness shelf and share it with friends! "],
-                    "extraversion": ["extraversion",
-                        "",
-                        ""],
-                    "neuroticism":["neuroticism",
-                        "",
-                        ""],
+                    "extraversion": ["How extravertive are you? Let’s find out!",
+                        "Score obtained in this trait will tell you how social you are. The test will measure comfort that you feel when you are among people and where you are alone. Are you the life of a party? Do you enjoy social gatherings? Do you like being in the center of attention?",
+                        "Find your Extraversion shelf and share it with friends! "],
+                    "neuroticism":["How neurotic are you? Let’s find out!",
+                        "Score obtained in this trait will tell you how you handle stressful situations. The test will measure your ability to remain calm and composed when required. It evaluates your susceptibility to the negative emotions in tensed circumstances. Do you get depressed easily or are you vulnerable to exasperating scenarios?",
+                        "Find your Neuroticism shelf and share it with friends! "],
                     "openness":["How open are you? Let’s find out!",
                         "Score obtained in this trait will tell you if you are a practical person or more of a dreamer. The test will measure your creativity, ability of finding solutions for problems and your relationship with art, poetry and abstract ideas. Do you enjoy philosophical discussion? Are you up for an unexpected trip?",
                         "Find your Openness shelf and share it with friends!",
-                        "",
-                        ""]
+                    ]
     }
     return render_template('trait_description.html', trait=trait_desription.get(trait))
 
@@ -480,21 +479,21 @@ def userprofile():
     if not results:
         results=[-1,-1,-1,-1,-1]
     text_results=[
-        ["""agreeableness low""",
-         """medium""",
-         """high"""
+        ["""Low: You scored low in Agreeableness! You tend to put your own interest above others. You don't shy away from contradicting others. You think people should generaly rely more on themselves than on others. You are wary of people's intentions and don't trust them easily. You tend to be distanced and uncooperative.""",
+         """Average: You scored Medium in Agreeableness! It is quite important for you to get along with others but usually you put your interests above theirs. You don't find it difficult to trust people but you don't think that everyone deserves it. It takes some time but finally you are willing to forgive people and forget their mistakes.""",
+         """High: You scored high in Agreeableness! It is important for you to get along with others. You are willing to put aside your interest to help others. As an individual, you display facets like friendliness, generosity and consideration.Your basic belief in people are fundamentally fair, honest and trustworthy."""
          ],
         ["""Low: You scored low in Conscientiousness! Usually you work hard to get things done irrespective of whether you want to do it or not. You tend to waste your time and you don’t respect rules. Although, you tend to be more flexible, you often make obligations without thinking it through. Sometimes you don’t complete your work on time and it’s hard for you to complete working in a stressed atmosphere. You always do things at the last moment and usually you don’t have time to check them.""",
          """Average: You scored Medium in Conscientiousness! You usually get things done before a deadline and sometimes you try to do more than is expected from you. You don’t tend to jump into things without thinking. You usually keep promises and try to follow the rules. It’s usually hard for you to start your work and you finish your work really often just at the last moment.""",
          """High: You scored high in Conscientiousness! You are always prepared and you don’t waste your time. You always finish what you have started and you try to do more than is expected from you. You usually finish your work long before a deadline and you have time to check everything and refine it. You also don’t leave things undone. You always make obligations after thinking them through and you never make rash decisions. You keep promises and follow all the rules."""
          ],
-        ["""extraversion low""",
-         """medium""",
-         """high"""
+        ["""Low: You scored low in Extraversion! You prefer to spend time alone than among people. You don't feel comfortable in the center of attention. Making a speech in from of people would be a struggle for you. You don't talk much but when you do - every word is already well-thought. You don't have much energy and social gatherings make you exhausted.""",
+         """Average: You scored Medium in Extraversion!  You enjoy time spent among people but you also like spending some time on your own. You can make a speech if that is expected from you and being in the center of attention doesn't make you abashed. You are quite energetic and usually you bring good vibes to the party!""",
+         """High: You scored high in Extraversion! You enjoy being among people. You are always energetic, cheerful and ready to rock the party! Making speeches in front of people doesn't make you abashed. You are expressive and get enthusiastic easily. Although, you often say things without thinking and that can bring some troubles."""
          ],
-        ["""neurotism low""",
-         """medium""",
-         """high"""
+        ["""Low: You scored low in Neuroticism! You are very calm and definite in your decisions. You have an ability to stay composed in stressful situations. You are generaly confident about your decision-making skills and don't get depressed easily by failures. You are usually contented and optimistic.""",
+         """Average: You scored Medium in Neuroticism! Sometimes when you are emotionally weak you get depressed easily after small failures. You often get overwhelmed by tough sitations but after analyzing the root cause you try to conquer them. """,
+         """High: You scored high in Neuroticism! You respond to stress with irritability and you are heavy on mood swings. You get depressed easily and it's hard for you to overcome the failure. You are likely to be emotinally unstable to little things. You are also more susceptible to the negative emotions."""
          ],
         ["Low: You scored low in Openness! You prefer routine more than new challenges. You don’t rely on new, non-tried methods. You are analytical and you try to find the most practical solutions. When faced with a problem, you can decide really quickly. You don’t see value in art or abstract ideas. ",
          """Average: You scored Medium in Openness! When faced with a problem, you are able to find a balance between practical, already tried ideas and ideas outside the box. You have a good imagination. At work, you expect tasks requiring creativity but sometimes you prefer the same routine. You usually try to understand reasons for someone’s behavior and you don’t categorize them as just black or white. """,
